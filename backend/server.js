@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 const db = require('../backend/db/db')
+const authRouter = require('../backend/src/routers/auth_router')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -8,11 +9,11 @@ const PORT = process.env.PORT || 5000
 app.get('/', (req,  res) =>{
   res.send({message: "Server test running"})
 })
-
 app.listen(PORT, () =>{
   console.log(`Server running on port ${PORT}`)
 })
-
+app.use(express.json())
+app.use('/api/auth', authRouter)
 
 // Test db connection
 app.get('/db-test', async (req, res) =>{

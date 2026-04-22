@@ -1,4 +1,4 @@
-const db = require('../db/db')
+const db = require('../../db/db')
 
 const getUserByUsername = (username) => {
   return db('users').where({username}).first() 
@@ -8,9 +8,9 @@ const getUserByEmail = (email) => {
   return db('users').where({email}).first()
 };
 
-const createUser = async(username, email, password_hash, role) => {
+const createUser = async(username, email, password_hash) => {
   const [user] = await db('users')
-    .insert({username, email, password_hash, role})
+    .insert({username, email, password_hash})
     .returning('*')
   return user
 }
