@@ -2,6 +2,7 @@ require('dotenv').config()
 const express = require('express')
 const db = require('../backend/db/db')
 const authRouter = require('../backend/src/routers/auth_router')
+const eventRouter = require('../backend/src/routers/event_router')
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -14,6 +15,7 @@ app.listen(PORT, () =>{
 })
 app.use(express.json())
 app.use('/api/auth', authRouter)
+app.use('/api/event', eventRouter)
 
 // Test db connection
 app.get('/db-test', async (req, res) =>{
