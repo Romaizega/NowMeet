@@ -1,4 +1,4 @@
-const e = require('express')
+const express = require('express')
 const eventModel = require('../models/events_model')
 const userModer = require('../models/users_model')
 
