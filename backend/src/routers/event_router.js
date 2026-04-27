@@ -3,7 +3,8 @@ const {
   createEvent,
   getEventById,
   getAllEvents,
-  deleteEvent
+  deleteEvent,
+  updateEventContr
   
 } = require('../controllers/event_controller')
 const {joinEvent} = require('../controllers/event_participant_controller')
@@ -20,5 +21,6 @@ router.delete('/:id', authenticateJWT, deleteEvent)
 router.post('/:id/join', authenticateJWT, joinEvent)
 router.post('/:id/messages', authenticateJWT, sendMessage)
 router.get('/:id/messages', authenticateJWT, getMessage)
+router.put('/:id/edit', authenticateJWT, updateEventContr)
 
 module.exports = router

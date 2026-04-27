@@ -48,9 +48,50 @@ const createEvent = async(
       .del()
   }
 
+  const updateEvent = async (
+    event_id,
+    title,
+    description,
+    event_start,
+    duration,
+    max_participants,
+    place_name,
+    latitude,
+    longitude,
+    status
+  ) => {
+    const updateEvent = {}
+    if(title !== undefined)
+      updateEvent.title = title
+    if(description !== undefined)
+      updateEvent.description = description
+    if(event_start !== undefined)
+      updateEvent.event_start = event_start
+    if(duration !== undefined)
+      updateEvent.duration = duration
+    if(max_participants !== undefined)
+      updateEvent.max_participants = max_participants
+    if(place_name !== undefined)
+      updateEvent.place_name = place_name
+    if(latitude !== undefined)
+      updateEvent.latitude = latitude
+    if(longitude !== undefined)
+      updateEvent.longitude = longitude
+    if(status !== undefined)
+      updateEvent.status = status
+    updateEvent.updated_at = db.fn.now()
+    
+    const [newUpdateEvent] = await db('events')
+      .where({id: event_id})
+      .update(updateEvent)
+      .returning('*')
+    return newUpdateEvent  
+  }
+
   module.exports = {
     createEvent,
     getEventById,
     getAllEvents,
-    deleteEvent
+    deleteEvent,
+    updateEvent
   }
