@@ -15,10 +15,40 @@ const createUser = async(username, email, password_hash) => {
   return user
 }
 
+const updateUserprofile = async (
+  user_id,
+  first_name,
+  last_name,
+  date_of_birth,
+  photo,
+  about
+) => {
+  const updateProfile = {}
+  
+  if(first_name !== undefined)
+    updateProfile.first_name = first_name
+  if(last_name !== undefined)
+    updateProfile.last_name =last_name
+  if(date_of_birth !== undefined)
+    updateProfile.date_of_birth = date_of_birth
+  if(photo !== undefined)
+    updateProfile.photo = photo
+  if(about !== undefined)
+    updateProfile.about = about
+  
+  updateProfile.updated_at = db.fn.now()
+  
+  const [newProfile] = await db('users')
+    .where({id: user_id})
+    .update(updateProfile)
+    .returning('*')
+  return newProfile
+}
 
 
 module.exports = {
   getUserByUsername,
   getUserByEmail,
-  createUser
+  createUser,
+  updateUserprofile
 }
