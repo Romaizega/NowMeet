@@ -75,9 +75,72 @@ const deleteEvent = async (req, res) => {
   }
 }
 
+const updateEventContr = async (req, res) => {
+  try {
+    const {id} = req.params
+    const creator_id = req.user.user_id
+    const event = await eventModel.getEventById(id)
+    if(!event){
+      return res.status(404).json({message: "The event not found"})
+    }
+    if(creator_id !== event.creator_id){
+      return res.status(403).json({message: "You can  update only your own events"})
+    }
+    const {
+      title,
+      description,
+      event_start,
+      duration,
+      max_participants,
+      place_name,
+      latitude,
+      longitude,
+      status
+    } = req.body || {}
+
+    const minDurationInmin = 15
+    const minMaxParicipant = 1
+    if(title !== undefined && title.length < 3){
+      return res.status(400).json({message: "Event title must contain at least 3 characters"})
+    }
+    if(description !== undefined && description.length < 25){
+      return res.status(400).json({message: "Description must contain at least 25 characters"})
+    }
+    if (duration !== undefined && (isNaN(Number(duration)) || Number(duration) < minDurationInmin))
+      return res.status(400).json({message: "Duration must be at least 15 minutes"})
+    if(max_participants !== undefined && (isNaN(Number(max_participants)) || Number(max_participants) < minMaxParicipant))
+      return res.status(400).json({message: "Maximum participants must be a positive number"})
+    if(place_name !== undefined && place_name.length < 3)
+      return res.status(400).json({message: "Place name must be at least 3 characters"})
+    if(latitude !== undefined && (isNaN(Number(latitude)) || Number(latitude) < -90 || Number(latitude) > 90))
+      return res.status(400).json({message: "Latitude must be a number between -90 and 90"})
+    if(longitude !== undefined && (isNaN(Number(longitude)) || Number(longitude) <-180 || Number(longitude) > 180))
+      return res.status(400).json({message: "Longitude must be a number between -180 and 180"})
+    if (status !== undefined && status !== 'open' && status !== 'closed')
+      return res.status(400).json({message: "Status must be open or closed"})
+
+    const editEvent = await eventModel.updateEvent(
+      id,      
+      title,
+      description,
+      event_start,
+      duration,
+      max_participants,
+      place_name,
+      latitude,
+      longitude,
+      status
+    )
+    return res.status(200).json({message: "Event was update", editEvent})
+  } catch (error) {
+    return res.status(500).json({message: "Server error", error: error.message})    
+  }
+}
+
 module.exports = {
   createEvent,
   getEventById,
   getAllEvents,
-  deleteEvent
+  deleteEvent,
+  updateEventContr
 }
