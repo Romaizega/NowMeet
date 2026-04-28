@@ -52,11 +52,19 @@ const updateUsername = async (user_id, newUsername) =>{
     .returning(['username'])
 }
 
+const updateEmail = async (user_id, newEmail) => {
+  return db('users')
+    .where({id: user_id})
+    .update({email: newEmail})
+    .returning(['email'])
+}
+
 
 module.exports = {
   getUserByUsername,
   getUserByEmail,
   createUser,
   updateUserprofile,
-  updateUsername
+  updateUsername,
+  updateEmail
 }
