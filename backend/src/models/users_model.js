@@ -45,10 +45,18 @@ const updateUserprofile = async (
   return newProfile
 }
 
+const updateUsername = async (user_id, newUsername) =>{
+  return db('users')
+    .where({id:user_id})
+    .update({username: newUsername})
+    .returning(['username'])
+}
+
 
 module.exports = {
   getUserByUsername,
   getUserByEmail,
   createUser,
-  updateUserprofile
+  updateUserprofile,
+  updateUsername
 }

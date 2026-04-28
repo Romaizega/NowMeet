@@ -43,6 +43,27 @@ const updateProfileUser = async (req, res) => {
   }
 }
 
+const updateUsername = async (req, res) =>{
+  try {
+    const user_id = req.user.user_id
+    if(!user_id) {
+      return res.status(403).json({message: "User is unauthorized"})
+    }
+    const {username} = req.body
+    if(username.trim().length < 3)
+      return res.status(400).json({message: "Username must be at least 3 characters"})
+    const existingUsername = await userModel.getUserByUsername(username)
+    if(existingUsername){
+      return res.status(400).json({message: "Username already exists"})
+    }
+    const newUsername = await userModel.updateUsername(user_id, username)
+    return res.status(200).json({message: "Username updated", newUsername})
+  } catch (error) {
+    return res.status(500).json({message: "Server error", error: error.message})
+  }
+}
+
 module.exports = {
-  updateProfileUser
+  updateProfileUser,
+  updateUsername
 }   
