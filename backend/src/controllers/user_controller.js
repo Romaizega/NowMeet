@@ -63,7 +63,30 @@ const updateUsername = async (req, res) =>{
   }
 }
 
+const updateEmail = async (req, res) => {
+  try {
+    const user_id = req.user.user_id
+    if(!user_id){
+      return res.status(403).json({message: 'User is unauthorized'})
+    }
+    const {email} =req.body
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    if(!emailRegex.test(email)) {
+    return res.status(400).json({message: "Invalid email format"})
+    }
+    const existingEmail = await userModel.getUserByEmail(email)
+    if(existingEmail){
+      return res.status(400).json({message: "Email already exist"})
+    }
+    const newEmail = await userModel.updateEmail(user_id, email)
+    res.status(200).json({message: "Email updated", newEmail})
+  } catch (error) {
+    return res.status(500).json({message: "Server error", error: error.message})
+  }
+}
+
 module.exports = {
   updateProfileUser,
-  updateUsername
+  updateUsername,
+  updateEmail
 }   
