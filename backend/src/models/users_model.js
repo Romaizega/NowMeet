@@ -8,6 +8,10 @@ const getUserByEmail = (email) => {
   return db('users').where({email}).first()
 };
 
+const getUserById = (id) => {
+  return db('users').where({id}).first()
+}
+
 const createUser = async(username, email, password_hash) => {
   const [user] = await db('users')
     .insert({username, email, password_hash})
@@ -59,6 +63,12 @@ const updateEmail = async (user_id, newEmail) => {
     .returning(['email'])
 }
 
+const updatePassword = async (user_id, newPassword_hash) => {
+  return db('users')
+    .where({id: user_id})
+    .update({password_hash: newPassword_hash})
+}
+
 
 module.exports = {
   getUserByUsername,
@@ -66,5 +76,7 @@ module.exports = {
   createUser,
   updateUserprofile,
   updateUsername,
-  updateEmail
+  updateEmail,
+  updatePassword,
+  getUserById
 }
