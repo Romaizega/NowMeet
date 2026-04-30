@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const userModel = require('../models/users_model')
 
 
@@ -85,8 +86,39 @@ const updateEmail = async (req, res) => {
   }
 }
 
+const updatePassword = async (req, res) => {
+  try {
+    const user_id = req.user.user_id
+    if(!user_id){
+      return res.status(403).json({message: 'User is unauthorized'})
+    }
+    const user = await userModel.getUserById(user_id)
+    const {currentPassword, newPassword} = req.body
+    if(!currentPassword || ! newPassword) {
+      return res.status(404).json({message: "Current password and new password are required"})
+    }
+    const isMatchesPassword = await bcrypt.compare(currentPassword, user.password_hash)
+    if(!isMatchesPassword){
+      return res.status(400).json({message: "Current password is not correct"})
+    }
+    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/
+    if(!strongPassword.test(newPassword)) {
+      return res.status(400).json({
+      message: "Password must be at least 8 characters long and include at least one capital letter and one number"
+    })
+    }
+    const hashNewPassword = await bcrypt.hash(newPassword, 10)
+    await userModel.updatePassword(user_id, hashNewPassword)
+    return res.status(200).json({message: "Password changed successfully"})
+
+  } catch (error) {
+    return res.status(500).json({message: "Server error", error: error.message})
+  }
+}
+
 module.exports = {
   updateProfileUser,
   updateUsername,
-  updateEmail
+  updateEmail,
+  updatePassword
 }   
