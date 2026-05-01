@@ -69,6 +69,21 @@ const updatePassword = async (user_id, newPassword_hash) => {
     .update({password_hash: newPassword_hash})
 }
 
+const generateCode =  (user_id, code, expiresAt) => {
+  return db('users')
+    .where({id: user_id})
+    .update({verification_code: code, code_expires_at: expiresAt})
+}
+
+const clearCode = (user_id) => {
+  return db('users')
+    .where({id: user_id})
+    .update({
+      is_verified: true,
+      verification_code: null,
+      code_expires_at: null
+    })
+}
 
 module.exports = {
   getUserByUsername,
@@ -78,5 +93,7 @@ module.exports = {
   updateUsername,
   updateEmail,
   updatePassword,
-  getUserById
+  getUserById,
+  generateCode,
+  clearCode
 }
