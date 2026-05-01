@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const userModel = require('../models/users_model')
+const {sendverificationEmail} = require('../utild/sendEmail')
 
 const register = async(req, res) => {
   const {username, email, password} = req.body
@@ -34,6 +35,11 @@ const register = async(req, res) => {
     }
     const hashPassword = await bcrypt.hash(password, 10)
     const newUser = await userModel.createUser(username, email, hashPassword)
+    const code = Math.floor(100000 + Math.random() * 900000)
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000)
+    await userModel.generateCode(newUser.id, code, expiresAt)
+    await sendverificationEmail(email, code)
+
 
     res.status(201).json({message:"New user created successfully",
       user: {id: newUser.id, username: newUser.username, email: newUser.email}
@@ -76,8 +82,50 @@ const getMe = async (req, res) => {
   return res.status(200).json({user: req.user})
 } 
 
+
+const sendCode = async (req, res) =>{
+  const user_id = req.user.user_id
+  try {
+    if(!user_id){
+      return res.status(403).json({message: 'User is unauthorized'})
+    }
+    const code = Math.floor(100000 + Math.random() * 900000)
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000)    
+    const user = await userModel.getUserById(user_id)
+    await userModel.generateCode(user_id, code, expiresAt)
+    await sendverificationEmail(user.email, code)
+    return res.status(200).json({message: "Verification code sent"})
+  } catch (error) {
+    return res.status(500).json({message:"Server error", error: error.message})
+  }
+}
+
+const verifyCode = async(req, res) => {
+  const user_id = req.user.user_id
+  const {code} = req.body
+  try {
+    const user = await userModel.getUserById(user_id)
+    if(!code){
+      return res.status(400).json({message: "You must to enter your verification code"})
+    }
+    if(Number(code) != user.verification_code){
+      return res.status(400).json({message: "Wrong the verification code"})
+    }
+    if(Date.now() > user.code_expires_at){
+      return res.status(400).json({message: "Your verification code expired"})
+    }
+    await userModel.clearCode(user_id)
+    return res.status(200).json({message: "Verification code is correct"})
+  } catch (error) {
+    return res.status(500).json({message:"Server error", error: error.message})
+  }
+  }
+  
+
 module.exports = {
   register,
   login,
-  getMe
+  getMe,
+  sendCode,
+  verifyCode
 }
