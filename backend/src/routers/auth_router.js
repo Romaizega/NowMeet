@@ -4,7 +4,9 @@ const {
   login,
   getMe,
   sendCode,
-  verifyCode
+  verifyCode,
+  forgotPassword,
+  resetPassword
 } = require('../controllers/auth_controller')
 const authenticateJWT = require('../middleware/auth_middleware')
 
@@ -15,5 +17,7 @@ router.post('/login', login)
 router.get('/me', authenticateJWT, getMe)
 router.post('/send-code', authenticateJWT, sendCode)
 router.post('/verify', authenticateJWT, verifyCode)
+router.post('/forgot-password', forgotPassword)
+router.post('/reset-password',resetPassword)
 
 module.exports = router

@@ -120,12 +120,58 @@ const verifyCode = async(req, res) => {
     return res.status(500).json({message:"Server error", error: error.message})
   }
   }
-  
+
+const forgotPassword = async (req, res) => {
+  const { email} = req.body
+  try {
+    if(!email){
+      return res.status(403).json({message: 'Email not found'})
+    }
+    const code = Math.floor(100000 + Math.random() * 900000)
+    const expiresAt = new Date(Date.now() + 15 * 60 * 1000)    
+    const user = await userModel.getUserByEmail(email)
+    await userModel.generateCode(user.id, code, expiresAt)
+    await sendverificationEmail(user.email, code)
+    return res.status(200).json({message: "Verification code sent"})
+  } catch (error) {
+    return res.status(500).json({message:"Server error", error: error.message})
+  }
+}
+
+const resetPassword = async (req, res) => {
+  const {email, code, newPassword} = req.body
+  try {
+    const user = await userModel.getUserByEmail(email)
+      if(!code){
+    return res.status(400).json({message: "You must to enter your verification code"})
+    }
+    if(Number(code) != user.verification_code){
+      return res.status(400).json({message: "Wrong the verification code"})
+    }
+    if(Date.now() > user.code_expires_at){
+      return res.status(400).json({message: "Your verification code expired"})
+    }
+    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/
+    if(!strongPassword.test(newPassword)) {
+      return res.status(400).json({
+      message: "Password must be at least 8 characters long and include at least one capital letter and one number"
+    })
+    }
+    const hashNewPassword = await bcrypt.hash(newPassword, 10)
+    await userModel.updatePassword(user.id, hashNewPassword)
+    await userModel.clearCode(user.id)
+    return res.status(200).json({message: "Password changed successfully"})
+  } catch (error) {
+    return res.status(500).json({message:"Server error", error: error.message})
+  }
+}
 
 module.exports = {
   register,
   login,
   getMe,
   sendCode,
-  verifyCode
+  verifyCode,
+  forgotPassword,
+  resetPassword
 }
