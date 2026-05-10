@@ -7,6 +7,8 @@ const interestRouter = require('../backend/src/routers/interests_router')
 const profileRouter = require('../backend/src/routers/profile_router')
 const {Server} = require('socket.io')
 const http = require('http')
+const cors = require('cors')
+const socketAuth = require('../backend/src/socket/socketAuth')
 
 const app = express()
 const server = http.createServer(app)
@@ -22,6 +24,8 @@ const PORT = process.env.PORT || 5000
 app.get('/', (req,  res) =>{
   res.send({message: "Server test running"})
 })
+io.use(socketAuth)
+app.use(cors())
 app.use(express.json())
 app.use('/api/auth', authRouter)
 app.use('/api/event', eventRouter)
