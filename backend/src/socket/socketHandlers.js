@@ -22,7 +22,7 @@ const socketHandlers = (io) => {
 
     socket.on('privateMessage', async(data) => {
       const {recipientId, text} = data
-      const roomId = [socket.user.id, recipientId].sort().join('_')
+      const roomId = [socket.user.user_id, recipientId].sort().join('_')
       try {
         const privateMessage = await PrivateMessage.sendPrivateMessage(socket.user.user_id, recipientId, text)
         io.to(`private_${roomId}`).emit('private_message',privateMessage)
@@ -33,7 +33,7 @@ const socketHandlers = (io) => {
 
     socket.on('joinPrivate', (data) => {
     const {recipientId} = data
-    const  roomId = [socket.user.id, recipientId].sort().join('_')
+    const  roomId = [socket.user.user_id, recipientId].sort().join('_')
     socket.join(`private_${roomId}`)
     console.log(`User ${socket.user.user_id} joined private_${roomId}`)
     })
