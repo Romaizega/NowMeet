@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AUTH_STATUS } from "./authConstants";
+import {registerUser} from "./authThunk"
 
 const initialState = {
   user: null,
@@ -33,6 +34,17 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+    .addCase(registerUser.pending, (state) =>{
+      state.status = AUTH_STATUS.LOADING
+      state.error = null
+    })
+    .addCase(registerUser.fulfilled, (state) =>{
+      state.status = AUTH_STATUS.SUCCEEDED
+    })
+    .addCase(registerUser.rejected, (state, action) =>{
+      state.status = AUTH_STATUS.FAILED
+      state.error = action.payload
+    })
   }
 })
 
