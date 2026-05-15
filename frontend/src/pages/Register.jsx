@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {useDispatch, useSelector} from "react-redux"
 import {useNavigate} from "react-router-dom"
 import { registerUser } from "../features/auth/authThunk"
@@ -43,16 +43,26 @@ export default function Register () {
       navigate('/login')
     }
   }
+      useEffect (()=> {
+      if (localError) {
+        const timer = setTimeout (() => setLocalError(''), 10000)
+        return () => clearTimeout(timer)
+      }
+    }, [localError])
+
     return (
       <>
       <div className="flex items-center justify-center min-h-screen">
-        {(localError || error) && (
-          <div>
-            <span>{localError || error}</span>
-          </div>
-        )}
-        <div>
-          <form onSubmit={handleSubmit}>
+        <div className="card w-96 bg-base-100 shadow-xl">
+          <div className="card-body">
+            {(localError || error) && (
+              <div className="text-error text-sm text-center">
+                <span>{localError || error}</span>
+              </div>
+            )}
+            <h2 className="card-title justify-center text-2xl"> Create Account</h2>
+
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2">
             <label  className="input input-bordered flex items-center gap-2 w-full">
               <input type="text"
               placeholder="Username"
@@ -84,9 +94,10 @@ export default function Register () {
               onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </label>
-            <button type="submit" className="btn btn-primary">Sign Up</button>
+            <button type="submit" className="btn btn-neutral w-full mt-2">Sign Up</button>
 
           </form>
+          </div>
         </div>
       </div>
       </>
