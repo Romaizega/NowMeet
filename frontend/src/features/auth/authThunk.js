@@ -41,8 +41,22 @@ const sendCodeNewCode = createAsyncThunk(
   }
 )
 
+const login = createAsyncThunk(
+  'auth/login',
+  async({email, password}, {rejectWithValue}) => {
+    try {
+      const {data} = await api.post('/auth/login', {email, password})
+      return data
+    } catch (error) {
+      const message = error.response?.data.message || error.message || 'No any verification codes'
+      return rejectWithValue(message)
+    }
+  }
+)
+
 export {
   registerUser,
   verifyEmail,
-  sendCodeNewCode
+  sendCodeNewCode,
+  login
 }
