@@ -15,6 +15,34 @@ const registerUser = createAsyncThunk(
     }
 )
 
+const verifyEmail = createAsyncThunk(
+  'auth/verifyEmail',
+  async({email, code}, {rejectWithValue}) => {
+    try {
+      const {data} = await api.post('/auth/verify', {email, code})
+      return data
+    } catch (error) {
+      const message = error.response?.data.message || error.message || 'Wrong verification code'
+      return rejectWithValue(message)
+    }
+  }
+)
+
+const sendCodeNewCode = createAsyncThunk(
+  'auth/sendCode',
+  async({email}, {rejectWithValue}) => {
+    try {
+      const {data} = await api.post('/auth/send-code', {email})
+      return data
+    } catch (error) {
+      const message = error.response?.data.message || error.message || 'No any verification codes'
+      return rejectWithValue(message)
+    }
+  }
+)
+
 export {
-  registerUser
+  registerUser,
+  verifyEmail,
+  sendCodeNewCode
 }

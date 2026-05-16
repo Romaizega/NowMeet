@@ -40,7 +40,7 @@ export default function Register () {
     const result = await dispatch(registerUser({username, email, password}))
   
     if(registerUser.fulfilled.match(result)) {
-      navigate('/login')
+      navigate('/verify-email')
     }
   }
       useEffect (()=> {

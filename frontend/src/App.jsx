@@ -7,6 +7,7 @@ import Events from "./pages/Events"
 import EventDetails from "./pages/EventDetails"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
+import VerifyEmail from "./pages/VerifyEmail"
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Route path="/profile" element= {<Profile/>}/>
       <Route path="/events/:id" element= {<Events/>}/>
       <Route path="/event-details" element= {<EventDetails/>}/>
+      <Route path="verify-email" element={<VerifyEmail/>}/>
     </Routes>
     <Footer/>
     </div>

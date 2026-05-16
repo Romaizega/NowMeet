@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AUTH_STATUS } from "./authConstants";
-import {registerUser} from "./authThunk"
+import {registerUser, verifyEmail} from "./authThunk"
 
 const initialState = {
   user: null,
@@ -43,6 +43,18 @@ const authSlice = createSlice({
       state.user = action.payload.user
     })
     .addCase(registerUser.rejected, (state, action) =>{
+      state.status = AUTH_STATUS.FAILED
+      state.error = action.payload
+    })
+    .addCase(verifyEmail.pending, (state) => {
+      state.status = AUTH_STATUS.LOADING
+      state.error = null
+    })
+    .addCase(verifyEmail.fulfilled, (state) => {
+      state.status = AUTH_STATUS.SUCCEEDED
+      state.error = null
+    })
+    .addCase(verifyEmail.rejected, (state, action) => {
       state.status = AUTH_STATUS.FAILED
       state.error = action.payload
     })
