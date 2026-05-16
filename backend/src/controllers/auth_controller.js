@@ -101,10 +101,12 @@ const sendCode = async (req, res) =>{
 }
 
 const verifyCode = async(req, res) => {
-  const user_id = req.user.user_id
-  const {code} = req.body
+  const {email, code} = req.body
   try {
-    const user = await userModel.getUserById(user_id)
+    const user = await userModel.getUserByEmail(email)
+    if(!user) {
+      return res.status(400).json({message: "User not found"})
+    }
     if(!code){
       return res.status(400).json({message: "You must to enter your verification code"})
     }
@@ -114,7 +116,7 @@ const verifyCode = async(req, res) => {
     if(Date.now() > user.code_expires_at){
       return res.status(400).json({message: "Your verification code expired"})
     }
-    await userModel.clearCode(user_id)
+    await userModel.clearCode(user.id)
     return res.status(200).json({message: "Verification code is correct"})
   } catch (error) {
     return res.status(500).json({message:"Server error", error: error.message})
