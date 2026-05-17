@@ -8,6 +8,8 @@ import EventDetails from "./pages/EventDetails"
 import Header from "./components/Header"
 import Footer from "./components/Footer"
 import VerifyEmail from "./pages/VerifyEmail"
+import ProtectedRoute from "./components/ProtectedRoute"
+import GuestRoute from "./components/GuestRoute"
 
 function App() {
   return (
@@ -15,13 +17,15 @@ function App() {
     <div>
     <Header/>
     <Routes>
+      <Route path="/register" element= {<GuestRoute><Register/> </GuestRoute>} />
+      <Route path="/login" element= {<GuestRoute><Login/> </GuestRoute>}/>
+      <Route path="verify-email" element={<GuestRoute><VerifyEmail/> </GuestRoute>} />
+      
+      <Route path="/profile" element= {<ProtectedRoute><Profile /></ProtectedRoute>} />
+      <Route path="/events/:id" element= {<ProtectedRoute><Events /></ProtectedRoute>} />
+      <Route path="/event-details" element= {<ProtectedRoute><EventDetails /></ProtectedRoute>} />
+      
       <Route path="/" element= {<Home/>}/>
-      <Route path="/register" element= {<Register/>}/>
-      <Route path="/login" element= {<Login/>}/>
-      <Route path="/profile" element= {<Profile/>}/>
-      <Route path="/events/:id" element= {<Events/>}/>
-      <Route path="/event-details" element= {<EventDetails/>}/>
-      <Route path="verify-email" element={<VerifyEmail/>}/>
     </Routes>
     <Footer/>
     </div>
