@@ -3,11 +3,20 @@ import {Link} from 'react-router-dom'
 export default function Header () {
   return (
     <>
-<div className="navbar bg-base-100 shadow-sm">
-  <div className="flex-1">
-    <Link to="/" className= "btn btn-ghost text-xl">NowMeet</Link>
+<div className="navbar bg-base-100 shadow-sm px-8">
+  <div className='navbar-start'>
+    <Link to="/" className= "btn btn-ghost text-xl"><b>NowMeet</b></Link>
   </div>
-  <div className="flex gap-2">
+  <div className='navbar-center hidden md:flex'>
+    <ul className="menu menu-horizontal gap-2 text-base">
+    <li><Link to="/explore">Explore</Link></li>   
+    <li><Link to="/meetups">Meetups</Link></li>   
+    <li><Link to="/how-works">How It Works</Link></li>   
+    <li><Link to="/about">About Us</Link></li>   
+    </ul>
+  </div>
+
+  <div className="navbar-end">
     {/* <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" /> */}
     <div className="dropdown dropdown-end">
       <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">

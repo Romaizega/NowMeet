@@ -10,6 +10,10 @@ import Footer from "./components/Footer"
 import VerifyEmail from "./pages/VerifyEmail"
 import ProtectedRoute from "./components/ProtectedRoute"
 import GuestRoute from "./components/GuestRoute"
+import AboutUs from "./pages/AboutUs"
+import Explore from "./pages/Explore"
+import HowToWorks from './pages/HowToWorks'
+import Meetups from './pages/Meetups'
 
 function App() {
   return (
@@ -24,7 +28,11 @@ function App() {
       <Route path="/profile" element= {<ProtectedRoute><Profile /></ProtectedRoute>} />
       <Route path="/events/:id" element= {<ProtectedRoute><Events /></ProtectedRoute>} />
       <Route path="/event-details" element= {<ProtectedRoute><EventDetails /></ProtectedRoute>} />
-      
+
+      <Route path="/about" element={<AboutUs/>} />
+      <Route path="/explore" element={<Explore/>} />
+      <Route path="/how-works" element={<HowToWorks/>} />
+      <Route path="/meetups" element={<Meetups/>} />
       <Route path="/" element= {<Home/>}/>
     </Routes>
     <Footer/>
