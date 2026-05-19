@@ -3,9 +3,9 @@ import { AUTH_STATUS } from "./authConstants";
 import {
   registerUser,
   verifyEmail,
-  login
+  login,
+  getMe
 } from "./authThunk"
-import { act } from "react";
 
 const initialState = {
   user: null,
@@ -74,6 +74,18 @@ const authSlice = createSlice({
     })
     .addCase(login.rejected, (state, action) =>{
       state.status = AUTH_STATUS.FAILED
+      state.error = action.payload
+    })
+    .addCase(getMe.pending, (state) => {
+      state.status = AUTH_STATUS.LOADING
+      state.error = null
+    })
+    .addCase(getMe.fulfilled, (state, action) => {
+      state.status = AUTH_STATUS.SUCCEEDED
+      state.user = action.payload.user
+    })
+    .addCase(getMe.rejected, (state, action) => {
+      state.status =AUTH_STATUS.FAILED
       state.error = action.payload
     })
   }
