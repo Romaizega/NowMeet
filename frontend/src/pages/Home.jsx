@@ -55,7 +55,7 @@ export default function Home() {
                 Create a Meetup
               </Link>
             </div>
-            <div className="flex gap-14 mt-10">
+            <div className="flex gap-14 mt-15">
               <div className="flex items-center gap-2">
                 <Users className="text-primary w-8 h-8" />
                 <div>
