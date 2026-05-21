@@ -27,6 +27,7 @@ export default function Profile() {
     about: "",
     photo: "",
   });
+  const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
     dispatch(getMe());
@@ -37,7 +38,7 @@ export default function Profile() {
       setForm({
         first_name: user.first_name || "",
         last_name: user.last_name || "",
-        date_of_birth: user.date_of_birth?.slice(0,10) || "",
+        date_of_birth: user.date_of_birth?.slice(0, 10) || "",
         about: user.about || "",
         photo: user.photo || "",
       });
@@ -61,7 +62,14 @@ export default function Profile() {
       return setLocalError("You must be at least 18");
     }
     try {
-      await axios.put("/profiles/profile", form);
+      const formData = new FormData();
+      formData.append("first_name", form.first_name);
+      formData.append("last_name", form.last_name);
+      formData.append("date_of_birth", form.date_of_birth);
+      formData.append("about", form.about);
+      if (photo) formData.append("photo", photo);
+
+      await axios.put("/profiles/profile", formData);
       dispatch(getMe());
       setEdit(false);
       setLocalError("");
@@ -71,6 +79,12 @@ export default function Profile() {
       );
     }
   };
+
+  const handleFileChange = (e) => {
+    setPhoto(e.target.files[0]);
+  };
+  
+    console.log("user photo:", user?.photo);
 
   return (
     <>
@@ -87,7 +101,13 @@ export default function Profile() {
           <div className="flex items-center gap-6">
             <div className="avatar">
               <div className="w-40 rounded-full">
-                <img src="https://img.daisyui.com/images/profile/demo/gordon@192.webp" />
+                <img
+                  src={
+                    user?.photo
+                      ? `${import.meta.env.VITE_SERVER_URL}/uploads/${user.photo}`
+                      : "https://img.daisyui.com/images/profile/demo/gordon@192.webp"
+                  }
+                />
               </div>
             </div>
             <div>
@@ -235,9 +255,10 @@ export default function Profile() {
               <label className="input input-bordered flex items-center gap-2">
                 <Image className="w-7 h-7" />
                 <input
-                  type="text"
-                  value={user?.photo || ""}
-                  disabled
+                  onChange={handleFileChange}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  disabled={!edit}
                   className="grow"
                 />
               </label>

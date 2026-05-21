@@ -33,6 +33,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/event', eventRouter)
 app.use('/api/interests', interestRouter)
 app.use('/api/profiles', profileRouter)
+app.use("/uploads", express.static("uploads"))
 
 
 // Test db connection
