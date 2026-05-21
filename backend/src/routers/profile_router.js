@@ -1,4 +1,5 @@
 const express = require('express')
+const upload = require('../middleware/upload')
 
 const authenticateJWT = require('../middleware/auth_middleware')
 const {
@@ -11,7 +12,7 @@ const {
 
 const router = express.Router()
 
-router.put('/profile', authenticateJWT, updateProfileUser)
+router.put('/profile', authenticateJWT, upload.single("photo"), updateProfileUser)
 router.put('/username', authenticateJWT, updateUsername)
 router.put('/email', authenticateJWT, updateEmail)
 router.put('/password', authenticateJWT, updatePassword)
