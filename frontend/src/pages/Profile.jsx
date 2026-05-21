@@ -2,16 +2,75 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { getMe } from "../features/auth/authThunk";
 import heroImgProfile from "../assests/hero_profile.png";
-import { Pencil, User  } from "lucide-react";
+import {
+  Pencil,
+  User,
+  LockKeyhole,
+  Bell,
+  HatGlasses,
+  Mail,
+  CalendarDays,
+  Image,
+  NotebookPen,
+} from "lucide-react";
+import axios from "../services/axios";
 
 export default function Profile() {
   const dispatch = useDispatch();
   const { status, error, user } = useSelector((state) => state.auth);
   const [localError, setLocalError] = useState();
+  const [edit, setEdit] = useState(false);
+  const [form, setForm] = useState({
+    first_name: "",
+    last_name: "",
+    date_of_birth: "",
+    about: "",
+    photo: "",
+  });
 
   useEffect(() => {
     dispatch(getMe());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user) {
+      setForm({
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        date_of_birth: user.date_of_birth?.slice(0,10) || "",
+        about: user.about || "",
+        photo: user.photo || "",
+      });
+    }
+  }, [user]);
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSave = async () => {
+    const birth = new Date(form.date_of_birth);
+    const now = new Date();
+    if (!form.date_of_birth) {
+      return setLocalError("You must fill in your date of bith");
+    }
+    if (birth.getFullYear() > now.getFullYear()) {
+      return setLocalError("Date of birth cannot be in the future");
+    }
+    if (now.getFullYear() - birth.getFullYear() < 18) {
+      return setLocalError("You must be at least 18");
+    }
+    try {
+      await axios.put("/profiles/profile", form);
+      dispatch(getMe());
+      setEdit(false);
+      setLocalError("");
+    } catch (error) {
+      setLocalError(
+        error.response?.data?.message || "Failed to update profile",
+      );
+    }
+  };
 
   return (
     <>
@@ -26,39 +85,193 @@ export default function Profile() {
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="relative z-10 flex items-center justify-between p-8 h-full">
           <div className="flex items-center gap-6">
-            
-          <div className="avatar">
-            <div className="w-40 rounded-full">
-              <img src="https://img.daisyui.com/images/profile/demo/gordon@192.webp" />
+            <div className="avatar">
+              <div className="w-40 rounded-full">
+                <img src="https://img.daisyui.com/images/profile/demo/gordon@192.webp" />
+              </div>
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold">My Profile</h2>
+              <p className="text-sm opacity-70 text-primary">
+                Manage your personal information and how
+                <br />
+                others see you on NowMeet
+              </p>
             </div>
           </div>
-          <div>
-            <h2 className="text-3xl font-bold">My Profile</h2>
-            <p className="text-sm opacity-70 text-primary">Manage your personal information and how<br/>
-              others see you on NowMeet
-            </p>
-          </div>
-          </div>
-        <button className="btn btn-outline btn-primary self-end">
-          <Pencil className="w-4 h-16"/>
-           Edit Profile
-           </button>
+          <button
+            onClick={() => setEdit(!edit)}
+            className="btn btn-outline btn-primary self-end"
+          >
+            <Pencil className="w-4 h-16" />
+            Edit Profile
+          </button>
         </div>
       </div>
-        <div className="flex gap-8">
-          <div className="w-64">
-            <ul className="menu bg-base-100 rounded-xl shadow-xl">
-              <li><a className="text-xl active"> 
-                <User/>
+      <div className="flex gap-8">
+        <div className="w-64">
+          <ul className="menu bg-base-100 rounded-xl shadow-xl">
+            <li>
+              <a className="text-xl active">
+                <User />
                 Profile information
-                 </a></li>
-                 <li>
-                  <a>
-                  </a>
-                 </li>
-            </ul>
-          </div>
+              </a>
+            </li>
+            <li>
+              <a className="text-xl ">
+                <LockKeyhole />
+                Account Settings
+              </a>
+            </li>
+            <li>
+              <a className="text-xl ">
+                <Bell />
+                Notifications
+              </a>
+            </li>
+            <li>
+              <a className="text-xl ">
+                <HatGlasses />
+                Privacy
+              </a>
+            </li>
+          </ul>
         </div>
+        <div className=" flex-1 bg-base-200 rounded-xl p-8">
+          <div>
+            <a className=" text-primary text-xl font-bold">
+              Personal information
+            </a>
+            <p className="text-primary opacity-70">
+              This information will be visible for other users
+            </p>
+          </div>
+          {(localError || error) && (
+            <div className="text-error text-sm text-center">
+              <span>{localError || error}</span>
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-6">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text text-primary">Username</span>
+              </label>
+              <label className="input input-bordered flex items-center gap-2">
+                <User className="w-7 h-7" />
+                <input
+                  type="text"
+                  value={user?.username || ""}
+                  disabled
+                  className="grow"
+                />
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text text-primary">Email</span>
+              </label>
+              <label className="input input-bordered flex items-center gap-2">
+                <Mail className="w-7 h-7" />
+                <input
+                  type="text"
+                  value={user?.email || ""}
+                  disabled
+                  className="grow"
+                />
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text text-primary">First name</span>
+              </label>
+              <label className="input input-bordered flex items-center gap-2">
+                <User className="w-7 h-7" />
+                <input
+                  name="first_name"
+                  onChange={handleChange}
+                  type="text"
+                  value={form.first_name}
+                  disabled={!edit}
+                  className="grow"
+                />
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text text-primary">Last name</span>
+              </label>
+              <label className="input input-bordered flex items-center gap-2">
+                <User className="w-7 h-7" />
+                <input
+                  onChange={handleChange}
+                  name="last_name"
+                  type="text"
+                  value={form.last_name}
+                  disabled={!edit}
+                  className="grow"
+                />
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text text-primary">Date of birth</span>
+              </label>
+              <label className="input input-bordered flex items-center gap-2">
+                <CalendarDays className="w-7 h-7" />
+                <input
+                  onChange={handleChange}
+                  name="date_of_birth"
+                  type="date"
+                  value={form.date_of_birth}
+                  disabled={!edit}
+                  className="grow"
+                />
+              </label>
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text text-primary">Photo</span>
+              </label>
+              <label className="input input-bordered flex items-center gap-2">
+                <Image className="w-7 h-7" />
+                <input
+                  type="text"
+                  value={user?.photo || ""}
+                  disabled
+                  className="grow"
+                />
+              </label>
+            </div>
+          </div>
+          <div className="form-control mt-4">
+            <label className="label">
+              <span className="label-text text-primary">About</span>
+            </label>
+            <textarea
+              className="textarea textarea-bordered w-full"
+              onChange={handleChange}
+              name="about"
+              value={form.about}
+              disabled={!edit}
+              rows={3}
+              maxLength={150}
+              placeholder="Tell others about yourself..."
+            />
+            <div className="label">
+              <span></span>
+              <span className="label-text-alt text-primary">
+                {form.about?.length || 0} / 150
+              </span>
+            </div>
+          </div>
+
+          {edit && (
+            <button onClick={handleSave} className="btn btn-primary mt-4">
+              Save Changes
+            </button>
+          )}
+        </div>
+      </div>
     </>
   );
 }
