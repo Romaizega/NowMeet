@@ -73,11 +73,49 @@ const getMe = createAsyncThunk("auth/getMe", async (_, { rejectWithValue }) => {
     return data;
   } catch (error) {
     const message =
-      error.response?.data.message ||
-      error.message ||
-      "Failed to load profile";
+      error.response?.data.message || error.message || "Failed to load profile";
     return rejectWithValue(message);
   }
 });
 
-export { registerUser, verifyEmail, sendCodeNewCode, login, getMe };
+const updateUsername = createAsyncThunk(
+  "profile/username",
+  async ({ username }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.put("/profiles/username", { username });
+      return data;
+    } catch (error) {
+      const message =
+        error.response?.data.message ||
+        error.message ||
+        "Failed to update username";
+      return rejectWithValue(message);
+    }
+  },
+);
+
+const updatePassword = createAsyncThunk(
+  "profile/password",
+  async ({ currentPassword, newPassword }, { rejectWithValue }) => {
+    try {
+      const { data } = await api.put("/profiles/password", { currentPassword, newPassword });
+      return data;
+    } catch (error) {
+      const message =
+        error.response?.data.message ||
+        error.message ||
+        "Failed update password";
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export {
+  registerUser,
+  verifyEmail,
+  sendCodeNewCode,
+  login,
+  getMe,
+  updateUsername,
+  updatePassword,
+};

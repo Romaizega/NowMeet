@@ -4,7 +4,9 @@ import {
   registerUser,
   verifyEmail,
   login,
-  getMe
+  getMe,
+  updatePassword,
+  updateUsername
 } from "./authThunk"
 
 const initialState = {
@@ -86,6 +88,17 @@ const authSlice = createSlice({
     })
     .addCase(getMe.rejected, (state, action) => {
       state.status =AUTH_STATUS.FAILED
+      state.error = action.payload
+    })
+    .addCase(updateUsername.pending, (state) =>{
+      state.status = AUTH_STATUS.LOADING
+      state.error = null
+    })
+    .addCase(updateUsername.fulfilled, (state) => {
+      state.status = AUTH_STATUS.SUCCEEDED
+    })
+    .addCase(updateUsername.rejected, (state, action) => {
+      state.status = AUTH_STATUS.FAILED
       state.error = action.payload
     })
   }

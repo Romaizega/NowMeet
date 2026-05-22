@@ -14,6 +14,7 @@ import {
   NotebookPen,
 } from "lucide-react";
 import axios from "../services/axios";
+import AccountSettings from "../pages/AccountSettings";
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -28,6 +29,7 @@ export default function Profile() {
     photo: "",
   });
   const [photo, setPhoto] = useState(null);
+  const [activeTab, setActiveTab] = useState("profile");
 
   useEffect(() => {
     dispatch(getMe());
@@ -83,8 +85,6 @@ export default function Profile() {
   const handleFileChange = (e) => {
     setPhoto(e.target.files[0]);
   };
-  
-    console.log("user photo:", user?.photo);
 
   return (
     <>
@@ -132,166 +132,197 @@ export default function Profile() {
         <div className="w-64">
           <ul className="menu bg-base-100 rounded-xl shadow-xl">
             <li>
-              <a className="text-xl active">
+              <a
+                className={`text-xl ${activeTab === "profile" ? "active" : ""}`}
+                onClick={() => setActiveTab("profile")}
+              >
                 <User />
                 Profile information
               </a>
             </li>
             <li>
-              <a className="text-xl ">
+              <a
+                className={`text-xl ${activeTab === "account" ? "active" : ""}`}
+                onClick={() => setActiveTab("account")}
+              >
                 <LockKeyhole />
                 Account Settings
               </a>
             </li>
             <li>
-              <a className="text-xl ">
+              <a
+                className={`text-xl ${activeTab === "notification" ? "active" : ""}`}
+                onClick={() => setActiveTab("notification")}
+              >
                 <Bell />
                 Notifications
               </a>
             </li>
             <li>
-              <a className="text-xl ">
+              <a
+                className={`text-xl ${activeTab === "privacy" ? "active" : ""}`}
+                onClick={() => setActiveTab("privacy")}
+              >
                 <HatGlasses />
                 Privacy
               </a>
             </li>
           </ul>
         </div>
-        <div className=" flex-1 bg-base-200 rounded-xl p-8">
-          <div>
-            <a className=" text-primary text-xl font-bold">
-              Personal information
-            </a>
-            <p className="text-primary opacity-70">
-              This information will be visible for other users
-            </p>
-          </div>
-          {(localError || error) && (
-            <div className="text-error text-sm text-center">
-              <span>{localError || error}</span>
-            </div>
-          )}
-          <div className="grid grid-cols-2 gap-6">
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text text-primary">Username</span>
-              </label>
-              <label className="input input-bordered flex items-center gap-2">
-                <User className="w-7 h-7" />
-                <input
-                  type="text"
-                  value={user?.username || ""}
-                  disabled
-                  className="grow"
-                />
-              </label>
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text text-primary">Email</span>
-              </label>
-              <label className="input input-bordered flex items-center gap-2">
-                <Mail className="w-7 h-7" />
-                <input
-                  type="text"
-                  value={user?.email || ""}
-                  disabled
-                  className="grow"
-                />
-              </label>
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text text-primary">First name</span>
-              </label>
-              <label className="input input-bordered flex items-center gap-2">
-                <User className="w-7 h-7" />
-                <input
-                  name="first_name"
+        {activeTab === "profile" && (
+          <>
+            <div className=" flex-1 bg-base-200 rounded-xl p-8">
+              <div>
+                <a className=" text-primary text-xl font-bold">
+                  Personal information
+                </a>
+                <p className="text-primary opacity-70">
+                  This information will be visible for other users
+                </p>
+              </div>
+              {(localError || error) && (
+                <div className="text-error text-sm text-center">
+                  <span>{localError || error}</span>
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-6">
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text text-primary">Username</span>
+                  </label>
+                  <label className="input input-bordered flex items-center gap-2">
+                    <User className="w-7 h-7" />
+                    <input
+                      type="text"
+                      value={user?.username || ""}
+                      disabled
+                      className="grow"
+                    />
+                  </label>
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text text-primary">Email</span>
+                  </label>
+                  <label className="input input-bordered flex items-center gap-2">
+                    <Mail className="w-7 h-7" />
+                    <input
+                      type="text"
+                      value={user?.email || ""}
+                      disabled
+                      className="grow"
+                    />
+                  </label>
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text text-primary">First name</span>
+                  </label>
+                  <label className="input input-bordered flex items-center gap-2">
+                    <User className="w-7 h-7" />
+                    <input
+                      name="first_name"
+                      onChange={handleChange}
+                      type="text"
+                      value={form.first_name}
+                      disabled={!edit}
+                      className="grow"
+                    />
+                  </label>
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text text-primary">Last name</span>
+                  </label>
+                  <label className="input input-bordered flex items-center gap-2">
+                    <User className="w-7 h-7" />
+                    <input
+                      onChange={handleChange}
+                      name="last_name"
+                      type="text"
+                      value={form.last_name}
+                      disabled={!edit}
+                      className="grow"
+                    />
+                  </label>
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text text-primary">
+                      Date of birth
+                    </span>
+                  </label>
+                  <label className="input input-bordered flex items-center gap-2">
+                    <CalendarDays className="w-7 h-7" />
+                    <input
+                      onChange={handleChange}
+                      name="date_of_birth"
+                      type="date"
+                      value={form.date_of_birth}
+                      disabled={!edit}
+                      className="grow"
+                    />
+                  </label>
+                </div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text text-primary">Photo</span>
+                  </label>
+                  <label className="input input-bordered flex items-center gap-2">
+                    <Image className="w-7 h-7" />
+                    <input
+                      onChange={handleFileChange}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      disabled={!edit}
+                      className="grow"
+                    />
+                  </label>
+                </div>
+              </div>
+              <div className="form-control mt-4">
+                <label className="label">
+                  <span className="label-text text-primary">About</span>
+                </label>
+                <textarea
+                  className="textarea textarea-bordered w-full"
                   onChange={handleChange}
-                  type="text"
-                  value={form.first_name}
+                  name="about"
+                  value={form.about}
                   disabled={!edit}
-                  className="grow"
+                  rows={3}
+                  maxLength={150}
+                  placeholder="Tell others about yourself..."
                 />
-              </label>
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text text-primary">Last name</span>
-              </label>
-              <label className="input input-bordered flex items-center gap-2">
-                <User className="w-7 h-7" />
-                <input
-                  onChange={handleChange}
-                  name="last_name"
-                  type="text"
-                  value={form.last_name}
-                  disabled={!edit}
-                  className="grow"
-                />
-              </label>
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text text-primary">Date of birth</span>
-              </label>
-              <label className="input input-bordered flex items-center gap-2">
-                <CalendarDays className="w-7 h-7" />
-                <input
-                  onChange={handleChange}
-                  name="date_of_birth"
-                  type="date"
-                  value={form.date_of_birth}
-                  disabled={!edit}
-                  className="grow"
-                />
-              </label>
-            </div>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text text-primary">Photo</span>
-              </label>
-              <label className="input input-bordered flex items-center gap-2">
-                <Image className="w-7 h-7" />
-                <input
-                  onChange={handleFileChange}
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  disabled={!edit}
-                  className="grow"
-                />
-              </label>
-            </div>
-          </div>
-          <div className="form-control mt-4">
-            <label className="label">
-              <span className="label-text text-primary">About</span>
-            </label>
-            <textarea
-              className="textarea textarea-bordered w-full"
-              onChange={handleChange}
-              name="about"
-              value={form.about}
-              disabled={!edit}
-              rows={3}
-              maxLength={150}
-              placeholder="Tell others about yourself..."
-            />
-            <div className="label">
-              <span></span>
-              <span className="label-text-alt text-primary">
-                {form.about?.length || 0} / 150
-              </span>
-            </div>
-          </div>
+                <div className="label">
+                  <span></span>
+                  <span className="label-text-alt text-primary">
+                    {form.about?.length || 0} / 150
+                  </span>
+                </div>
+              </div>
 
-          {edit && (
-            <button onClick={handleSave} className="btn btn-primary mt-4">
-              Save Changes
-            </button>
-          )}
-        </div>
+              {edit && (
+                <button onClick={handleSave} className="btn btn-primary mt-4">
+                  Save Changes
+                </button>
+              )}
+            </div>
+          </>
+        )}
+        {activeTab === "account" && <AccountSettings/>}
+
+        {activeTab === "notification" && (
+          <div>
+            <h3 className="text-xl font-bold text-primary">Notifications</h3>
+          </div>
+        )}
+        {activeTab === "privacy" && (
+          <div>
+            <h3 className="text-xl font-bold text-primary">Privacy</h3>
+          </div>
+        )}
+
       </div>
     </>
   );
