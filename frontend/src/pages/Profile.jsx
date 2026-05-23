@@ -310,7 +310,7 @@ export default function Profile() {
             </div>
           </>
         )}
-        {activeTab === "account" && <AccountSettings/>}
+        {activeTab === "account" && <AccountSettings edit={edit}/>}
 
         {activeTab === "notification" && (
           <div>

@@ -8,17 +8,17 @@ import {
 import { User, RotateCcwKey } from "lucide-react";
 import { useEffect } from "react";
 
-export default function AccountSettings() {
+export default function AccountSettings({ edit }) {
   const dispatch = useDispatch();
   const { user, error } = useSelector((state) => state.auth);
 
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  // const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [localError, setLocalError] = useState("");
-  const [succesMsg, setSuccesMsg] = useState("")
+  const [succesMsg, setSuccesMsg] = useState("");
 
   const handleUsernameChange = async () => {
     if (username.trim().length < 3) {
@@ -28,10 +28,10 @@ export default function AccountSettings() {
     const result = await dispatch(updateUsername({ username }));
     if (updateUsername.fulfilled.match(result)) {
       dispatch(getMe());
-      setSuccesMsg("Username update successfully")
-      setUsername("")
+      setSuccesMsg("Username update successfully");
+      setUsername("");
     } else {
-      setLocalError(result.payload)
+      setLocalError(result.payload);
     }
   };
 
@@ -59,12 +59,12 @@ export default function AccountSettings() {
     );
     if (updatePassword.fulfilled.match(result)) {
       dispatch(getMe());
-      setSuccesMsg("Password changed successfuly!")
-      setCurrentPassword("")
-      setNewPassword("")
-      setConfirmPassword("")
+      setSuccesMsg("Password changed successfuly!");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
     } else {
-      setLocalError(result.payload)
+      setLocalError(result.payload);
     }
   };
 
@@ -74,7 +74,7 @@ export default function AccountSettings() {
       return () => clearTimeout(timer);
     }
   }, [localError]);
-  
+
   useEffect(() => {
     if (succesMsg) {
       const timer = setTimeout(() => setSuccesMsg(""), 10000);
@@ -88,9 +88,11 @@ export default function AccountSettings() {
         <h3 className="text-xl font-bold text-primary">Account Setting</h3>
         <p className="text-primary opacity-70 mb-6">
           {" "}
-          Change your username, email or password
+          Change your username or password
         </p>
-        {succesMsg && <div className="alert alert-success mb-4">{succesMsg}</div>}
+        {succesMsg && (
+          <div className="alert alert-success mb-4">{succesMsg}</div>
+        )}
         {(localError || error) && (
           <div className="text-error text-sm text-center">
             <span>{localError || error}</span>
@@ -113,14 +115,17 @@ export default function AccountSettings() {
                 onChange={(e) => setUsername(e.target.value)}
                 value={username}
                 className="grow"
+                disabled={!edit}
               />
             </label>
-            <button
-              onClick={handleUsernameChange}
-              className="btn btn-primary mt-4"
-            >
-              Save Username
-            </button>
+            {edit && (
+              <button
+                onClick={handleUsernameChange}
+                className="btn btn-primary mt-4"
+              >
+                Save Username
+              </button>
+            )}
           </div>
           <div className="form-control">
             <label className="label">
@@ -140,6 +145,7 @@ export default function AccountSettings() {
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 value={currentPassword}
                 className="grow"
+                disabled={!edit}
               />
             </label>
             <span className="label-text text-primary text-sm mt-2 opacity-70">
@@ -152,6 +158,7 @@ export default function AccountSettings() {
                 onChange={(e) => setNewPassword(e.target.value)}
                 value={newPassword}
                 className="grow"
+                disabled={!edit}
               />
             </label>
             <span className="label-text text-primary text-sm mt-2 opacity-70">
@@ -165,14 +172,15 @@ export default function AccountSettings() {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 value={confirmPassword}
                 className="grow"
+                disabled={!edit}
               />
             </label>
-            <button
+            {edit && <button
               onClick={handlepasswordChange}
               className="btn btn-primary mt-4"
             >
               Save Password
-            </button>
+            </button>}
           </div>
         </div>
       </div>
