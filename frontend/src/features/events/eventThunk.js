@@ -54,4 +54,18 @@ const getAllEvents = createAsyncThunk(
   },
 );
 
-export { createEvent, getAllEvents };
+const getEventById = createAsyncThunk(
+  "events/getEventById",
+  async (id, { rejectWithValue }) => {
+    try {
+      const { data } = await api.get(`/event/${id}`);
+      return data;
+    } catch (error) {
+      const message =
+        error.response?.data.message || error.message || "Failed to get event";
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export { createEvent, getAllEvents, getEventById };

@@ -26,8 +26,8 @@ function App() {
       <Route path="verify-email" element={<GuestRoute><VerifyEmail/> </GuestRoute>} />
       
       <Route path="/profile" element= {<ProtectedRoute><Profile /></ProtectedRoute>} />
-      <Route path="/events/:id" element= {<ProtectedRoute><Events /></ProtectedRoute>} />
-      <Route path="/event-details" element= {<ProtectedRoute><EventDetails /></ProtectedRoute>} />
+      <Route path="/event/:id" element= {<ProtectedRoute><EventDetails /></ProtectedRoute>} />
+      {/* <Route path="/event-details" element= {<ProtectedRoute><EventDetails /></ProtectedRoute>} /> */}
 
       <Route path="/about" element={<AboutUs/>} />
       <Route path="/explore" element={<Explore/>} />
