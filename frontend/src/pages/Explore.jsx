@@ -2,6 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { getAllEvents } from "../features/events/eventThunk";
 import { useNavigate } from "react-router-dom";
+import heroImgExplore from "../assests/hero_explore.png"
 
 export default function Events() {
   const dispatch = useDispatch();
@@ -12,13 +13,14 @@ export default function Events() {
     dispatch(getAllEvents());
   }, [dispatch]);
 
- 
-
   if (status === "loading")
     return <span className="loading loading-spinner"> Loading events...</span>;
   if (status === "failed") return <p className="text-red-500">{error}</p>;
   return (
     <>
+    {/* <div className="hero min-h-[420] bg-cover bg-center"
+    style={{backgroundImage: `url(${heroImgExplore})`}}> */}
+
       <div className="relative z-10 flex w-full min-h-screen items-start pl-16 pt-24">
         <div className="w-full lg:w-3/4 text-left">
           <h1 className="text-5xl lg:text-3xl font-bold leading-tight text-primary">
@@ -54,8 +56,8 @@ export default function Events() {
                       className="btn btn-primary"
                       type="button"
                       onClick={() => navigate(`/event/${event.id}`)}
-                    >
-                      Detailes
+                      >
+                      Details
                     </button>
                   </div>
                 </div>
@@ -64,6 +66,7 @@ export default function Events() {
           </div>
         </div>
       </div>
+            {/* </div> */}
     </>
   );
 }
