@@ -14,6 +14,7 @@ import AboutUs from "./pages/AboutUs"
 import Explore from "./pages/Explore"
 import HowToWorks from './pages/HowToWorks'
 import Meetups from './pages/Meetups'
+import CreateEvent from "./pages/CreateEvent"
 
 function App() {
 
@@ -28,7 +29,7 @@ function App() {
       
       <Route path="/profile" element= {<ProtectedRoute><Profile /></ProtectedRoute>} />
       <Route path="/event/:id" element= {<ProtectedRoute><EventDetails /></ProtectedRoute>} />
-      {/* <Route path="/event-details" element= {<ProtectedRoute><EventDetails /></ProtectedRoute>} /> */}
+      <Route path="/event/create" element= {<ProtectedRoute><CreateEvent /></ProtectedRoute>} />
 
       <Route path="/about" element={<AboutUs/>} />
       <Route path="/explore" element={<Explore/>} />
