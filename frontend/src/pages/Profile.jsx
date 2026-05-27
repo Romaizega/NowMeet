@@ -13,7 +13,7 @@ import {
   Image,
   NotebookPen,
 } from "lucide-react";
-import axios from "../services/axios";
+import api from "../services/axios";
 import AccountSettings from "../pages/AccountSettings";
 
 export default function Profile() {
@@ -71,7 +71,7 @@ export default function Profile() {
       formData.append("about", form.about);
       if (photo) formData.append("photo", photo);
 
-      await axios.put("/profiles/profile", formData);
+      await api.put("/profiles/profile", formData);
       dispatch(getMe());
       setEdit(false);
       setLocalError("");
