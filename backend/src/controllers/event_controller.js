@@ -1,5 +1,6 @@
 const eventModel = require('../models/events_model')
 const userModer = require('../models/users_model')
+const eventParticipantsModel = require('../models/event_participants_model')
 
 const createEvent = async (req, res) => {
   const creator_id = req.user.user_id
@@ -42,7 +43,8 @@ const getEventById = async (req, res) => {
     if(!event){
       return res.status(404).json({message: "The event not found"})
     }
-    return res.status(200).json({message:"Event's details:", event})
+    const participants = await eventParticipantsModel.getEventParticipants(id)
+    return res.status(200).json({message:"Event's details:", event, participants})
   } catch (error) {
     return res.status(500).json({message: "Server error", error:error.message}) 
   }

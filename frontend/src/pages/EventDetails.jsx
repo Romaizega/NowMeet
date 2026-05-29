@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getEventById } from "../features/events/eventThunk";
+import { getEventById, joinToEvent } from "../features/events/eventThunk";
 import { Calendar, Clock4, MapPin, Users } from "lucide-react";
 
 export default function EventDetails() {
   const { id } = useParams();
-  const { status, error, currentEvent } = useSelector((state) => state.event);
+  const { status, error, currentEvent, participants } = useSelector((state) => state.event);
+  const {user} = useSelector((state) => state.auth)
   const dispatch = useDispatch()
+  const isJoined = participants?.some(participant => participant.id === user.id)
 
  useEffect (()=> {
   dispatch(getEventById(id))
@@ -17,6 +19,10 @@ export default function EventDetails() {
     return <span className="loading loading-spinner"> Loading events...</span>;
   if (status === "failed") return <p className="text-red-500">{error}</p>;
   if (!currentEvent) return null;
+
+  const handleJoin = () => {
+    dispatch(joinToEvent(id))
+  }
 
   return (
     <>
@@ -43,6 +49,12 @@ export default function EventDetails() {
           {currentEvent.max_participants}
         </span>
       </div>
+        <button 
+        className="btn btn-primary mt-3"
+        type="button" 
+        onClick={handleJoin}
+        
+        > {isJoined ? "Joined" :"Join Meetup"}</button>
       </div>
     </div>
     </>

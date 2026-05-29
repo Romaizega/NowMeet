@@ -16,8 +16,18 @@ const addParticipant = async (event_id, user_id) => {
   .returning('*')
 }
 
+const getEventParticipants = async (event_id) => {
+  return db('event_participants')
+  .join('users', 'event_participants.user_id', 'users.id')
+  .select('users.id','username', 'first_name', 'last_name', 'date_of_birth', 'photo', 'about')
+  .where({event_id})
+  .orderBy('username', 'asc')
+}
+
+
 module.exports = {
   getParticipant,
   countParticipant,
-  addParticipant
+  addParticipant,
+  getEventParticipants
 }

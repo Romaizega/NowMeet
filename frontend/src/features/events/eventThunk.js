@@ -68,4 +68,20 @@ const getEventById = createAsyncThunk(
   },
 );
 
-export { createEvent, getAllEvents, getEventById };
+const joinToEvent = createAsyncThunk(
+  "event/joinToEvent",
+  async ( id , { rejectWithValue }) => {
+    try {
+      const { data } = await api.post(`/event/${id}/join`);
+      return data;
+    } catch (error) {
+      const message =
+        error.response?.data.message ||
+        error.message ||
+        "Failed to join to event";
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export { createEvent, getAllEvents, getEventById, joinToEvent };
