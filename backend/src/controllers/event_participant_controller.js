@@ -24,7 +24,8 @@ const joinEvent = async (req, res) => {
       return res.status(400).json({message: "There is no available room"})
     }
     const addParticipant = await eventParticipant.addParticipant(id, user_id)
-    return res.status(200).json({message: "You was joined to the event"})
+    const participants = await eventParticipant.getEventParticipants(id)
+    return res.status(200).json({message: "You was joined to the event", participants})
   } catch (error) {
     return res.status(500).json({message: "Server error", error:error.message})
   }
