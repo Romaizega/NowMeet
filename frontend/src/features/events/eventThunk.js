@@ -84,4 +84,20 @@ const joinToEvent = createAsyncThunk(
   },
 );
 
-export { createEvent, getAllEvents, getEventById, joinToEvent };
+const cancelEvent = createAsyncThunk(
+  "event/cancelEvent",
+  async(id, {rejectWithValue}) => {
+    try {
+      const {data} = await api.delete(`/event/${id}/cancel`)
+      return data
+    } catch (error) {
+      const message = 
+      error.response?.data.message || 
+      error.message ||
+      "Failed to cancel event"
+      return rejectWithValue(message)
+    }
+  }
+)
+
+export { createEvent, getAllEvents, getEventById, joinToEvent, cancelEvent };

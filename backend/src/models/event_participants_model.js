@@ -24,10 +24,17 @@ const getEventParticipants = async (event_id) => {
   .orderBy('username', 'asc')
 }
 
+const cancelEvent = async(event_id, user_id) => {
+  return db('event_participants')
+  .where({event_id, user_id})
+  .del()
+}
+
 
 module.exports = {
   getParticipant,
   countParticipant,
   addParticipant,
-  getEventParticipants
+  getEventParticipants,
+  cancelEvent
 }

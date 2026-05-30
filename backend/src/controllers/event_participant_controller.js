@@ -31,6 +31,30 @@ const joinEvent = async (req, res) => {
   }
 }
 
+const cancelEvent = async (req, res) => {
+  try {
+    const {id} = req.params
+    const user_id = req.user.user_id
+    const event = await eventModel.getEventById(id)
+    if(!event){
+      return res.status(404).json({message: "The event not found"})
+    }
+    if(event.creator_id == user_id){
+      return res.status(400).json({message: "You cannot join your own event"})
+    }
+    const existing = await eventParticipant.getParticipant(id, user_id)
+    if(!existing) {
+      return res.status(400).json({message: "User did not join"})
+    }
+    const cancelResult = await eventParticipant.cancelEvent(id, user_id)
+    const participants = await eventParticipant.getEventParticipants(id)
+    return res.status(200).json({message: "You was cancled event", participants})
+  } catch (error) {
+    return res.status(500).json({message: "Server error", error:error.message})
+  }
+}
+
 module.exports = {
-  joinEvent
+  joinEvent,
+  cancelEvent
 }
