@@ -31,7 +31,9 @@ const createEvent = async(
 
   const getEventById = (id) => {
     return db('events')
-      .where('id', id)
+      .join('users', 'events.creator_id', 'users.id')
+      .select('events.*', 'users.id as creator_user_id', 'users.username as creator_username', 'users.photo as creator_photo', 'users.about as creator_about')
+      .where('events.id', id)
       .first()
   }
 

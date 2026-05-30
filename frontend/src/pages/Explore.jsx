@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { getAllEvents } from "../features/events/eventThunk";
 import { useNavigate } from "react-router-dom";
-import heroImgExplore from "../assests/hero_explore.png"
+import heroImgExplore from "../assests/hero_explore.png";
 
 export default function Events() {
   const dispatch = useDispatch();
@@ -16,9 +16,21 @@ export default function Events() {
   if (status === "loading")
     return <span className="loading loading-spinner"> Loading events...</span>;
   if (status === "failed") return <p className="text-red-500">{error}</p>;
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  };
+
   return (
     <>
-    {/* <div className="hero min-h-[420] bg-cover bg-center"
+      {/* <div className="hero min-h-[420] bg-cover bg-center"
     style={{backgroundImage: `url(${heroImgExplore})`}}> */}
 
       <div className="relative z-10 flex w-full min-h-screen items-start pl-16 pt-24">
@@ -44,7 +56,7 @@ export default function Events() {
                     <p>{event.place_name}</p>
 
                     <h2 className="card-title text-primary">Start</h2>
-                    <p>{event.event_start}</p>
+                    <p>{formatDate(event.event_start)}</p>
 
                     <h2 className="card-title text-primary">Duration</h2>
                     <p>{event.duration} min</p>
@@ -56,7 +68,7 @@ export default function Events() {
                       className="btn btn-primary"
                       type="button"
                       onClick={() => navigate(`/event/${event.id}`)}
-                      >
+                    >
                       Details
                     </button>
                   </div>
@@ -66,7 +78,7 @@ export default function Events() {
           </div>
         </div>
       </div>
-            {/* </div> */}
+      {/* </div> */}
     </>
   );
 }
