@@ -1,12 +1,22 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   getEventById,
   joinToEvent,
   cancelEvent,
 } from "../features/events/eventThunk";
-import { Calendar, Clock4, MapPin, Users, ChartPie } from "lucide-react";
+import {
+  Calendar,
+  Clock4,
+  MapPin,
+  Users,
+  ChartPie,
+  Handshake,
+  MessageCircleMore,
+  UserStar,
+  PartyPopper  
+} from "lucide-react";
 import heroEventDetail from "../assests/hero_eventDetail.png";
 import defultAvatar from "../assests/default_avatar.png";
 
@@ -17,6 +27,7 @@ export default function EventDetails() {
   );
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const isJoined = participants?.some(
     (participant) => participant.id === user.id,
   );
@@ -100,8 +111,9 @@ export default function EventDetails() {
                 </span>
               </span>
             </div>
+          </div>
             <button
-              className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-8 py-7 mr-430 "
+              className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-2 py-2 mr-500 "
               type="button"
               onClick={isJoined ? handleCancel : handleJoin}
             >
@@ -109,7 +121,6 @@ export default function EventDetails() {
                 {isJoined ? "Cancel" : "Join Meetup"}
               </span>
             </button>
-          </div>
         </div>
       </div>
 
@@ -137,7 +148,7 @@ export default function EventDetails() {
                     : defultAvatar
                 }
                 alt={currentEvent.creator_username}
-                className="w-20 h-25 rounded-full border-2 border-white"
+                className="w-30 h-30 rounded-full border-2 border-white object-cover cursor-pointer transition-transform duration-300 hover:scale-210"
                 title={currentEvent.creator_username}
               />
               <div>
@@ -147,7 +158,8 @@ export default function EventDetails() {
                 <p className="text-primary text-xl opacity-50">
                   {currentEvent.creator_about}
                 </p>
-                <button className="btn btn" type="button">
+                <button className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
+                onClick={() => navigate(`/profile/${currentEvent.creator_user_id}`)}>
                   View profile
                 </button>
               </div>
@@ -170,8 +182,9 @@ export default function EventDetails() {
                         : defultAvatar
                     }
                     alt={participant.username}
-                    className="w-17 h-17 rounded-full border-2 border-white"
+                    className="w-17 h-17 rounded-full border-2 border-white object-cover cursor-pointer transition-transform duration-300 hover:scale-210"
                     title={participant.username}
+                    onClick={() => navigate(`/profile/${participant.id}`)}
                   />
                 ))}
               </div>
@@ -247,6 +260,41 @@ export default function EventDetails() {
             <h3 className="text text-xl font-bold text-orange-400">
               What to expect
             </h3>
+            <span className="flex items-center gap-2 mt-4">
+              <Handshake className="h-10 w-10 text-primary" />
+              <span className="text-primary text-xl">
+                {" "}
+                Meet New People
+                <p className="opacity-50">Connect and build new friendships</p>
+              </span>
+            </span>
+            <span className="flex items-center gap-2 mt-4">
+              <MessageCircleMore className="w-12 h-12 text-primary" />
+              <span className="text-primary text-xl">
+                Great Conversations
+                <p className="opacity-50 ">
+                  Share ideas and meaningful discussions
+                </p>
+              </span>
+            </span>
+            <span className="flex items-center gap-2 mt-4">
+              <UserStar  className="w-12 h-12 text-primary" />
+              <span className="text-primary text-xl">
+                New Experiences
+                <p className="opacity-50 ">
+                  Try something new and explore together
+                </p>
+              </span>
+            </span>
+            <span className="flex items-center gap-2 mt-4">
+              <PartyPopper   className="w-12 h-12 text-primary" />
+              <span className="text-primary text-xl">
+                Relaxed Atmosphere
+                <p className="opacity-50 ">
+                  Friendly, welcoming, and pressure-free
+                </p>
+              </span>
+            </span>
           </div>
         </div>
       </div>

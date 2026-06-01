@@ -85,6 +85,13 @@ const clearCode = (user_id) => {
     })
 }
 
+const viewProfile = (id) => {
+  return db('users')
+  .where({id})
+  .select('username', 'first_name', 'last_name', 'date_of_birth', 'photo', 'about', 'created_at')
+  .first()
+}
+
 module.exports = {
   getUserByUsername,
   getUserByEmail,
@@ -95,5 +102,6 @@ module.exports = {
   updatePassword,
   getUserById,
   generateCode,
-  clearCode
+  clearCode,
+  viewProfile
 }
