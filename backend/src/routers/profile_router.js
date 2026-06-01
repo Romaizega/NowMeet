@@ -6,7 +6,8 @@ const {
   updateProfileUser,
   updateUsername,
   updateEmail,
-  updatePassword
+  updatePassword,
+  viewProfile
   
 } = require('../controllers/user_controller')
 
@@ -16,6 +17,7 @@ router.put('/profile', authenticateJWT, upload.single("photo"), updateProfileUse
 router.put('/username', authenticateJWT, updateUsername)
 router.put('/email', authenticateJWT, updateEmail)
 router.put('/password', authenticateJWT, updatePassword)
+router.get('/:id', viewProfile)
 
 
 module.exports = router

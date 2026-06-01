@@ -15,6 +15,7 @@ import Explore from "./pages/Explore"
 import HowToWorks from './pages/HowToWorks'
 import Meetups from './pages/Meetups'
 import CreateEvent from "./pages/CreateEvent"
+import ProfileView from "./pages/ProfileView"
 
 function App() {
 
@@ -36,6 +37,7 @@ function App() {
       <Route path="/how-works" element={<HowToWorks/>} />
       <Route path="/meetups" element={<Meetups/>} />
       <Route path="/" element= {<Home/>}/>
+      <Route path="/profile/:id" element={<ProfileView/>}/>
     </Routes>
     <Footer/>
     </div>
