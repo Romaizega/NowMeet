@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { profileView } from "../features/profile/profileThunk";
+import {
+  profileView,
+  getUserInterests,
+} from "../features/profile/profileThunk";
 import heroProfileView from "../assests/hero_profileview.png";
 import defultAvatar from "../assests/default_avatar.png";
-import { setUser } from "../features/auth/authSlice";
-import { setStatus } from "../features/profile/profileSlice";
+import { clearPublicProfile } from "../features/profile/profileSlice";
 
 export default function ProfileView() {
   const { id } = useParams();
-  const { status, error, publicProfile } = useSelector(
+  const { status, error, publicProfile, userInterests } = useSelector(
     (state) => state.profile,
   );
   const dispatch = useDispatch();
@@ -17,6 +19,10 @@ export default function ProfileView() {
 
   useEffect(() => {
     dispatch(profileView(id));
+    dispatch(getUserInterests(id));
+    return () => {
+      dispatch(clearPublicProfile());
+    };
   }, [dispatch, id]);
 
   if (status === "loading")
@@ -124,6 +130,26 @@ export default function ProfileView() {
         </div>
         <div className="flex flex-col gap-6">
           {/* Right column — Interests, etc */}
+          <div className="bg-base-200 rounded-xl p-6">
+            <h3 className="text-2xl font-bold text-orange-400 mb-2">
+              Interests
+            </h3>
+            {userInterests && userInterests.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {userInterests.map((interest) => (
+                  <span key={interest.id} className=" text-primary">
+                    {interest.name} 
+                  </span>
+                ))}{" "}
+                
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-3 py-6">
+                <p className="text-primary">No interests yet</p>
+              </div>
+            )}{" "}
+          
+          </div>
         </div>
       </div>
     </>

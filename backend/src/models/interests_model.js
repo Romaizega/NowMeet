@@ -23,6 +23,7 @@ const getInterestByUserId = async (user_id) => {
   return db('user_interests')
   .join('interests', 'user_interests.interest_id', '=', 'interests.id')
   .where({user_id})
+  .select('interests.id', 'interests.name')
   .orderBy('name', 'desc')
 }
 
