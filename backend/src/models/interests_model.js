@@ -34,10 +34,17 @@ const getInterestByEventId = async (event_id) => {
   .orderBy('name', 'desc')
 }
 
+const deleteInterestByUserId = async (user_id, interest_id) => {
+  return db('user_interests')
+  .where({user_id, interest_id})
+  .del()
+}
+
 module.exports = {
   addInterestToUser,
   addInterestToEvent,
   getAllInterests,
   getInterestByEventId,
-  getInterestByUserId
+  getInterestByUserId,
+  deleteInterestByUserId
 }

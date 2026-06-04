@@ -2,18 +2,21 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
-  profileView,
-  getUserInterests,
+  profileView
 } from "../features/profile/profileThunk";
+import {getUserInterests} from "../features/interest/interestThunk"
 import heroProfileView from "../assests/hero_profileview.png";
 import defultAvatar from "../assests/default_avatar.png";
 import { clearPublicProfile } from "../features/profile/profileSlice";
+import { clearUserInterest} from "../features/interest/interestSlice"
 
 export default function ProfileView() {
   const { id } = useParams();
-  const { status, error, publicProfile, userInterests } = useSelector(
+  const { status, error, publicProfile } = useSelector(
     (state) => state.profile,
   );
+
+  const {userInterest} = useSelector((state)=> state.interest)
   const dispatch = useDispatch();
   const [opneImage, setOpenImage] = useState(false);
 
@@ -22,6 +25,7 @@ export default function ProfileView() {
     dispatch(getUserInterests(id));
     return () => {
       dispatch(clearPublicProfile());
+      dispatch(clearUserInterest())
     };
   }, [dispatch, id]);
 
@@ -134,10 +138,10 @@ export default function ProfileView() {
             <h3 className="text-2xl font-bold text-orange-400 mb-2">
               Interests
             </h3>
-            {userInterests && userInterests.length > 0 ? (
+            {userInterest && userInterest.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {userInterests.map((interest) => (
-                  <span key={interest.id} className=" text-primary">
+                {userInterest.map((interest) => (
+                  <span key={interest.id} className=" text-primary badge rounded-full border border-orange-400 px4 py-4">
                     {interest.name} 
                   </span>
                 ))}{" "}

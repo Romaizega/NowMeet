@@ -1,10 +1,9 @@
 import { AUTH_STATUS } from "../auth/authConstants";
-import { profileView, getUserInterests } from "./profileThunk";
+import { profileView } from "./profileThunk";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState ={
   publicProfile: null,
-  userInterests: [],
   status: AUTH_STATUS.IDLE,
   error: null,
 }
@@ -38,18 +37,6 @@ const profileSlice = createSlice({
       state.publicProfile = action.payload.profile
     })
     .addCase(profileView.rejected, (state, action) => {
-      state.status = AUTH_STATUS.FAILED
-      state.error = action.payload
-    })
-    .addCase(getUserInterests.pending, (state)=> {
-      state.status = AUTH_STATUS.LOADING
-      state.error = null
-    })
-    .addCase(getUserInterests.fulfilled, (state, action)=> {
-      state.status = AUTH_STATUS.SUCCEEDED
-      state.userInterests = action.payload.interestsUser
-    })
-    .addCase(getUserInterests.rejected, (state, action) => {
       state.status = AUTH_STATUS.FAILED
       state.error = action.payload
     })

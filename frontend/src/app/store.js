@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import eventReducer from "../features/events/eventSlice";
 import profileReducer from "../features/profile/profileSlice"
+import interestReducer from "../features/interest/interestSlice"
 import {persistStore, persistReducer} from "redux-persist"
 
 
@@ -20,7 +21,8 @@ const store = configureStore({
   reducer: {
     auth: persistReducer(authPersistConfg, authReducer),
     event: eventReducer,
-    profile: profileReducer
+    profile: profileReducer,
+    interest:interestReducer
   },
   middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware({serializableCheck: false})
