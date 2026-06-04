@@ -60,9 +60,27 @@ const getUserInterests = async (req, res) => {
   }
 }
 
+const deleteInterestByUserId = async (req, res) => {
+  try {
+    const user_id = req.user.user_id
+    const {interest_id} = req.body
+    if(!interest_id){
+    return res.status(400).json({message: "Interest not selected"})
+  }
+    const delInterest = await interestsModel.deleteInterestByUserId(user_id, interest_id)
+    if(delInterest === 0) {
+      return res.status(404).json({message: "Interest not found"})
+    }
+    return res.status(200).json({message : "Interest was deleted"})
+  } catch (error) {
+    return res.status(500).json({message: "Server error", error: error.message})
+  }
+}
+
 module.exports = {
   getAllInterests,
   addInterestUser,
   addInterestEvent,
-  getUserInterests
+  getUserInterests,
+  deleteInterestByUserId
 }

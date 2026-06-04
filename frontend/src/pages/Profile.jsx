@@ -15,10 +15,23 @@ import {
 } from "lucide-react";
 import api from "../services/axios";
 import AccountSettings from "../pages/AccountSettings";
+import {
+  addUserInterest,
+  deleteUserInterest,
+  getAllInterests,
+  getUserInterests,
+} from "../features/interest/interestThunk";
+import groupByCategory from "../utils/groupByCategory";
 
 export default function Profile() {
   const dispatch = useDispatch();
   const { status, error, user } = useSelector((state) => state.auth);
+  const {
+    status: interestStatus,
+    error: interestError,
+    allInterests,
+    userInterest,
+  } = useSelector((state) => state.interest);
   const [localError, setLocalError] = useState();
   const [edit, setEdit] = useState(false);
   const [form, setForm] = useState({
@@ -30,6 +43,7 @@ export default function Profile() {
   });
   const [photo, setPhoto] = useState(null);
   const [activeTab, setActiveTab] = useState("profile");
+  const grouped = groupByCategory(allInterests);
 
   useEffect(() => {
     dispatch(getMe());
@@ -44,8 +58,10 @@ export default function Profile() {
         about: user.about || "",
         photo: user.photo || "",
       });
+      dispatch(getAllInterests());
+      dispatch(getUserInterests(user.id));
     }
-  }, [user]);
+  }, [user, dispatch]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -85,6 +101,15 @@ export default function Profile() {
   const handleFileChange = (e) => {
     setPhoto(e.target.files[0]);
   };
+
+  const handleInterest = async (interestId) => {
+  if (userInterest.some(ui => ui.id === interestId)) {
+    await dispatch(deleteUserInterest({ interest_id: interestId }))
+  } else {
+    await dispatch(addUserInterest({ interest_id: interestId }))
+  }
+  dispatch(getUserInterests(user.id))
+}
 
   return (
     <>
@@ -301,6 +326,40 @@ export default function Profile() {
                   </span>
                 </div>
               </div>
+              <div className="form-control mt-4">
+                <label className="label">
+                  <span className="label-text text-primary"> Interests</span>
+                </label>
+
+                {edit ? (
+                  Object.entries(grouped).map(([categoryName, interests]) => (
+                    <div  key={categoryName} className="mt-3">
+                      <h4 className="text text-primary">{categoryName}</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {interests.map((interest) => (
+                          <span
+                          onClick={()=> handleInterest(interest.id) }
+                           key={interest.id}
+                           className={userInterest.some(ui => ui.id === interest.id)
+                             ? "cursor-pointer rounded-full bg-orange-400 px-3 py-1 text-black "
+                             : "cursor-pointer rounded-full border border-orange-400/30 px-3 py-1 text-orange-300"}
+                           >{interest.name}</span>
+                        ))}
+                      </div>
+                    </div>
+                  ))
+                ) : userInterest && userInterest.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {userInterest.map((interest) => (
+                      <span key={interest.id} className="text-primary badge rounded-full border border-orange-400 px4 py-4">
+                        {interest.name}
+                      </span>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-primary opacity-50">No interests yet</p>
+                )}
+              </div>
 
               {edit && (
                 <button onClick={handleSave} className="btn btn-primary mt-4">
@@ -310,7 +369,7 @@ export default function Profile() {
             </div>
           </>
         )}
-        {activeTab === "account" && <AccountSettings edit={edit}/>}
+        {activeTab === "account" && <AccountSettings edit={edit} />}
 
         {activeTab === "notification" && (
           <div>
@@ -322,7 +381,6 @@ export default function Profile() {
             <h3 className="text-xl font-bold text-primary">Privacy</h3>
           </div>
         )}
-
       </div>
     </>
   );
