@@ -15,25 +15,32 @@ import {
   Handshake,
   MessageCircleMore,
   UserStar,
-  PartyPopper  
+  PartyPopper,
 } from "lucide-react";
 import heroEventDetail from "../assests/hero_eventDetail.png";
 import defultAvatar from "../assests/default_avatar.png";
+import { getEventInterests } from "../features/interest/interestThunk";
+import { clearUserInterest } from "../features/interest/interestSlice";
 
 export default function EventDetails() {
   const { id } = useParams();
   const { status, error, currentEvent, participants } = useSelector(
     (state) => state.event,
   );
+  const { eventInterest } = useSelector((state) => state.interest);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const isJoined = participants?.some(
     (participant) => participant.id === user.id,
   );
 
   useEffect(() => {
     dispatch(getEventById(id));
+    dispatch(getEventInterests(id));
+    return () => {
+      dispatch(clearUserInterest());
+    };
   }, [dispatch, id]);
 
   if (status === "loading")
@@ -112,15 +119,15 @@ export default function EventDetails() {
               </span>
             </div>
           </div>
-            <button
-              className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-2 py-2 mr-500 "
-              type="button"
-              onClick={isJoined ? handleCancel : handleJoin}
-            >
-              <span className="text-xl">
-                {isJoined ? "Cancel" : "Join Meetup"}
-              </span>
-            </button>
+          <button
+            className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-2 py-2 mr-500 "
+            type="button"
+            onClick={isJoined ? handleCancel : handleJoin}
+          >
+            <span className="text-xl">
+              {isJoined ? "Cancel" : "Join Meetup"}
+            </span>
+          </button>
         </div>
       </div>
 
@@ -133,6 +140,30 @@ export default function EventDetails() {
               About this meetup
             </h3>
             <p className="text-primary text-xl">{currentEvent.description}</p>
+          </div>
+          <div className="flex flex-col gap-6">
+            {/* Right column — Interests, etc */}
+            <div className="bg-base-200 rounded-xl p-6">
+              <h3 className="text-2xl font-bold text-orange-400 mb-2">
+                Interests
+              </h3>
+              {eventInterest && eventInterest.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {eventInterest.map((interest) => (
+                    <span
+                      key={interest.id}
+                      className=" text-primary badge rounded-full border border-orange-400 px4 py-4"
+                    >
+                      {interest.name}
+                    </span>
+                  ))}{" "}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-3 py-6">
+                  <p className="text-primary">No interests yet</p>
+                </div>
+              )}{" "}
+            </div>
           </div>
 
           {/* Hosted by */}
@@ -158,8 +189,12 @@ export default function EventDetails() {
                 <p className="text-primary text-xl opacity-50">
                   {currentEvent.creator_about}
                 </p>
-                <button className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
-                onClick={() => navigate(`/profile/${currentEvent.creator_user_id}`)}>
+                <button
+                  className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
+                  onClick={() =>
+                    navigate(`/profile/${currentEvent.creator_user_id}`)
+                  }
+                >
                   View profile
                 </button>
               </div>
@@ -278,7 +313,7 @@ export default function EventDetails() {
               </span>
             </span>
             <span className="flex items-center gap-2 mt-4">
-              <UserStar  className="w-12 h-12 text-primary" />
+              <UserStar className="w-12 h-12 text-primary" />
               <span className="text-primary text-xl">
                 New Experiences
                 <p className="opacity-50 ">
@@ -287,7 +322,7 @@ export default function EventDetails() {
               </span>
             </span>
             <span className="flex items-center gap-2 mt-4">
-              <PartyPopper   className="w-12 h-12 text-primary" />
+              <PartyPopper className="w-12 h-12 text-primary" />
               <span className="text-primary text-xl">
                 Relaxed Atmosphere
                 <p className="opacity-50 ">

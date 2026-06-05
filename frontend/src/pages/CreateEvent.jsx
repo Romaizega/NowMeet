@@ -3,11 +3,33 @@ import { useState, useEffect } from "react";
 import { createEvent } from "../features/events/eventThunk";
 import { useNavigate } from "react-router-dom";
 import heroCreateImage from "../assests/hero_createEvent.png";
-import { SquarePen } from "lucide-react";
+import {
+  SquarePen,
+  MapPinCheck,
+  ContactRound,
+  HeartHandshake,
+  CalendarPlus2,
+  NotebookPen,
+  BookOpenText,
+  CalendarClock,
+  MapPinned,
+  Clock,
+  Users,
+  ScanSearch 
+} from "lucide-react";
+
+import {
+  addEventInterest,
+  deleteEventInterest,
+  getAllInterests,
+  getEventInterests,
+} from "../features/interest/interestThunk";
+import groupByCategory from "../utils/groupByCategory";
 
 export default function CreateEvent() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [selectedInterestes, setSelectedInterestes] = useState([]);
   const { status, error, events } = useSelector((state) => state.event);
   const [localError, setLocalError] = useState();
   const [form, setForm] = useState({
@@ -20,6 +42,15 @@ export default function CreateEvent() {
     latitude: "",
     longitude: "",
   });
+
+  const {
+    status: interestStatus,
+    error: interestError,
+    allInterests,
+    eventInterest,
+  } = useSelector((state) => state.interest);
+
+  const grouped = groupByCategory(allInterests);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,6 +86,9 @@ export default function CreateEvent() {
 
     try {
       const result = await dispatch(createEvent(form)).unwrap();
+      for (const interest_id of selectedInterestes) {
+        await dispatch(addEventInterest({ id: result.event.id, interest_id }));
+      }
       navigate(`/event/${result.event.id}`);
       setLocalError("");
     } catch (error) {
@@ -76,6 +110,30 @@ export default function CreateEvent() {
       return () => clearTimeout(timer);
     }
   }, [localError]);
+
+  useEffect(() => {
+    dispatch(getAllInterests());
+  }, [dispatch]);
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  };
+
+  const handleInterest = (interestId) => {
+    setSelectedInterestes((prev) =>
+      prev.includes(interestId)
+        ? prev.filter((id) => id !== interestId)
+        : [...prev, interestId],
+    );
+  };
+
   return (
     <>
       <div
@@ -252,23 +310,167 @@ export default function CreateEvent() {
               Or search for a place on the map to get coordinates
             </p>
           </div>
+          <div className="form-control mt-4">
+            <label className="label">
+              <span className="label-text text-primary">Interests</span>
+            </label>
+
+            {grouped &&
+              Object.entries(grouped).map(([categoryName, interests]) => (
+                <div
+                  key={categoryName}
+                  className="collapse collapse-arrow mb-2 border border-orange-400/20 bg-black/30"
+                >
+                  <input type="checkbox" />
+
+                  <div className="collapse-title text-primary font-medium">
+                    {categoryName}
+                  </div>
+
+                  <div className="collapse-content">
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      {interests.map((interest) => (
+                        <span
+                          onClick={() => handleInterest(interest.id)}
+                          key={interest.id}
+                          className={
+                            selectedInterestes.includes(interest.id)
+                              ? "cursor-pointer rounded-full bg-orange-400 px-3 py-1 text-black font-medium transition-all"
+                              : "cursor-pointer rounded-full border border-orange-400/30 px-3 py-1 text-orange-300 hover:bg-orange-400/10 transition-all"
+                          }
+                        >
+                          {interest.name}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+
           <button type="submit" className="btn btn-primary mt-4">
             Create Event
           </button>
         </form>
-        <div className="bg-base-200 rounded-xl p-8">
-          <div className="text-2xl">
-            <h1 className="text">Tips for a great event</h1>
-          </div>
-          <div className="flex items-start gap-3">
-            <SquarePen className="w-5 h-5 text-primary mt-1" />
-            <div>
-              <p className="font-bold"> Be clear and specific</p>
-              <p className="text-sm opacity-50">
-                {" "}
-                A good title and description help the right people join
-              </p>
+        <div className="flex flex-col gap-6">
+          <div className="bg-base-200 rounded-xl p-8">
+            <div className="text-2xl">
+              <h1 className="text">Tips for a great event</h1>
             </div>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-start gap-3 mt-4">
+                <SquarePen className="w-8 h-8 text-primary mt-1" />
+                <div className="text text-primary">
+                  <p className="font-bold">Be clear and specific</p>
+                  <p className="text-sm opacity-50">
+                    A good title and description help the right people join
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 mt-4">
+                <MapPinCheck className="w-8 h-8 text-primary mt-1" />
+                <div className="text text-primary">
+                  <p className="font-bold">Choose the right location</p>
+                  <p className="text-sm opacity-50">
+                    Pick a place that's easy to find and accessible
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 mt-4">
+                <ContactRound className="w-8 h-8 text-primary mt-1" />
+                <div className="text text-primary">
+                  <p className="font-bold">Set expectations</p>
+                  <p className="text-sm opacity-50">
+                    Add duration, max people, and any important details
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 mt-4">
+                <HeartHandshake className="w-8 h-8 text-primary mt-1" />
+                <div className="text text-primary">
+                  <p className="font-bold">Make it inviting</p>
+                  <p className="text-sm opacity-50">
+                    A warm description creates excitement and connection
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-base-200 rounded-xl p-8">
+            <div className="text-2xl">
+              <h1 className="text">Preview</h1>
+            </div>
+            {form.title ? (
+              <div className="text text-primary">
+                <div className="flex items-center gap-2 mt-4">
+                  <NotebookPen className="w-5 h-5" />
+                  <h3>{form.title}</h3>
+                </div>
+                {form.description && (
+                  <div className="flex items-center gap-2 mt-4">
+                    <BookOpenText className="w-5 h-5" />
+                    <h3>{form.description}</h3>
+                  </div>
+                )}
+                {form.event_start && (
+                  <div className="flex items-center gap-2 mt-4">
+                    <CalendarClock className=" w-5 h-5" />
+                    {form.event_start && <p>{formatDate(form.event_start)}</p>}
+                  </div>
+                )}
+                {form.place_name && (
+                  <div className=" flex items-center gap-2 mt-4">
+                    <MapPinned />
+                    {form.place_name && <p>{form.place_name}</p>}
+                  </div>
+                )}
+                {form.duration && (
+                  <div className="flex items-center gap-2 mt-4">
+                    <Clock />
+                    {form.duration && <p>{form.duration} min</p>}
+                  </div>
+                )}
+                {form.max_participants && (
+                  <div className="flex items-center gap-2 mt-4">
+                    <Users />
+                    {form.max_participants && (
+                      <p>Up to {form.max_participants} people</p>
+                    )}
+                  </div>
+                )}
+                {selectedInterestes.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    <ScanSearch />
+                    {selectedInterestes.map((id) => {
+                      const interest = allInterests.find((i) => i.id === id);
+                      return interest ? (
+                        <span
+                          key={id}
+                          className="rounded-full bg-orange-400 px-3 py-1 text-black text-sm"
+                        >
+                          {interest.name}
+                        </span>
+                      ) : null;
+                    })}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="bg-base-300 rounded-xl p-8 ">
+                <div className="flex flex-col items-center justify-center text-center">
+                  <CalendarPlus2 className="text-primary w-10 h-10 mb-3" />
+                  <p className="text-xl text-primary">Your event preview</p>
+                  <p className="text-xl text-primary">will appear here</p>
+                  <p className="text-sm text-primary opacity-50 mt-2">
+                    Fill the details to see how
+                  </p>
+                  <p className="text-sm text-primary opacity-50">
+                    your event will look
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
