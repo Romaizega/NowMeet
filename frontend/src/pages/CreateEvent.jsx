@@ -1,8 +1,9 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { createEvent } from "../features/events/eventThunk";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import heroCreateImage from "../assests/hero_createEvent.png";
+import { getEventById, updateEvent } from "../features/events/eventThunk";
 import {
   SquarePen,
   MapPinCheck,
@@ -15,7 +16,7 @@ import {
   MapPinned,
   Clock,
   Users,
-  ScanSearch 
+  ScanSearch,
 } from "lucide-react";
 
 import {
@@ -30,7 +31,9 @@ export default function CreateEvent() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedInterestes, setSelectedInterestes] = useState([]);
-  const { status, error, events } = useSelector((state) => state.event);
+  const { status, error, events, currentEvent } = useSelector(
+    (state) => state.event,
+  );
   const [localError, setLocalError] = useState();
   const [form, setForm] = useState({
     title: "",
@@ -49,8 +52,30 @@ export default function CreateEvent() {
     allInterests,
     eventInterest,
   } = useSelector((state) => state.interest);
-
   const grouped = groupByCategory(allInterests);
+  const { id } = useParams();
+  const isEditMode = !!id;
+
+  useEffect(() => {
+    if (isEditMode && currentEvent) {
+      setForm({
+        title: currentEvent.title,
+        description: currentEvent.description,
+        event_start: currentEvent.event_start,
+        duration: currentEvent.duration,
+        max_participants: currentEvent.max_participants,
+        place_name: currentEvent.place_name,
+        latitude: currentEvent.latitude,
+        longitude: currentEvent.longitude,
+      });
+    }
+  }, [isEditMode, currentEvent]);
+
+  useEffect(() => {
+    if (isEditMode) {
+      dispatch(getEventById(id));
+    }
+  }, [id, dispatch]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -85,18 +110,21 @@ export default function CreateEvent() {
     }
 
     try {
-      const result = await dispatch(createEvent(form)).unwrap();
-      for (const interest_id of selectedInterestes) {
-        await dispatch(addEventInterest({ id: result.event.id, interest_id }));
+      if (isEditMode) {
+        await dispatch(updateEvent({ id, ...form })).unwrap();
+        navigate(`/event/${id}`);
+      } else {
+        const result = await dispatch(createEvent(form)).unwrap();
+        for (const interest_id of selectedInterestes) {
+          await dispatch(
+            addEventInterest({ id: result.event.id, interest_id }),
+          );
+        }
+        navigate(`/event/${result.event.id}`);
       }
-      navigate(`/event/${result.event.id}`);
       setLocalError("");
     } catch (error) {
-      setLocalError(
-        error.response?.data?.message ||
-          error.message ||
-          "Failed to create event",
-      );
+      setLocalError(error.message || "Failed to save event");
     }
   };
 

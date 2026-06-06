@@ -70,7 +70,7 @@ const getEventById = createAsyncThunk(
 
 const joinToEvent = createAsyncThunk(
   "event/joinToEvent",
-  async ( id , { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
       const { data } = await api.post(`/event/${id}/join`);
       return data;
@@ -86,18 +86,65 @@ const joinToEvent = createAsyncThunk(
 
 const cancelEvent = createAsyncThunk(
   "event/cancelEvent",
-  async(id, {rejectWithValue}) => {
+  async (id, { rejectWithValue }) => {
     try {
-      const {data} = await api.delete(`/event/${id}/cancel`)
-      return data
+      const { data } = await api.delete(`/event/${id}/cancel`);
+      return data;
     } catch (error) {
-      const message = 
-      error.response?.data.message || 
-      error.message ||
-      "Failed to cancel event"
-      return rejectWithValue(message)
+      const message =
+        error.response?.data.message ||
+        error.message ||
+        "Failed to cancel event";
+      return rejectWithValue(message);
     }
-  }
-)
+  },
+);
 
-export { createEvent, getAllEvents, getEventById, joinToEvent, cancelEvent };
+const updateEvent = createAsyncThunk(
+  "event/update",
+  async (
+    {
+      id,
+      title,
+      description,
+      event_start,
+      duration,
+      max_participants,
+      place_name,
+      latitude,
+      longitude,
+      status
+    },
+    { rejectWithValue },
+  ) => {
+    try {
+      const { data } = await api.put(`/event/${id}/edit`, {
+        title,
+        description,
+        event_start,
+        duration,
+        max_participants,
+        place_name,
+        latitude,
+        longitude,
+        status
+      });
+      return data;
+    } catch (error) {
+      const message =
+        error.response?.data.message ||
+        error.message ||
+        "Failed to update event";
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export {
+  createEvent,
+  getAllEvents,
+  getEventById,
+  joinToEvent,
+  cancelEvent,
+  updateEvent,
+};
