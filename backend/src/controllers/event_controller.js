@@ -118,7 +118,7 @@ const updateEventContr = async (req, res) => {
       return res.status(400).json({message: "Latitude must be a number between -90 and 90"})
     if(longitude !== undefined && (isNaN(Number(longitude)) || Number(longitude) <-180 || Number(longitude) > 180))
       return res.status(400).json({message: "Longitude must be a number between -180 and 180"})
-    if (status !== undefined && status !== 'open' && status !== 'closed')
+   if (status !== undefined && !['open', 'closed', 'cancelled'].includes(status))
       return res.status(400).json({message: "Status must be open or closed"})
 
     const editEvent = await eventModel.updateEvent(
