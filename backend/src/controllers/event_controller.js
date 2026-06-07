@@ -19,6 +19,28 @@ const createEvent = async (req, res) => {
     return res.status(400).json({message: "Title, event_start, and place_name are required to fill out"})
   }
   try {
+    const minDurationInmin = 15
+    const minMaxParicipant = 1
+    if(title !== undefined && title.length < 3){
+      return res.status(400).json({message: "Event title must contain at least 3 characters"})
+    }
+    if(description !== undefined && description.length < 25){
+      return res.status(400).json({message: "Description must contain at least 25 characters"})
+    }
+    if (new Date(event_start) < new Date()) {
+      return res.status(400).json({message: "Event start date cannot be in the past"})
+    }
+    if (duration !== undefined && (isNaN(Number(duration)) || Number(duration) < minDurationInmin))
+      return res.status(400).json({message: "Duration must be at least 15 minutes"})
+    if(max_participants !== undefined && (isNaN(Number(max_participants)) || Number(max_participants) < minMaxParicipant))
+      return res.status(400).json({message: "Maximum participants must be a positive number"})
+    if(place_name !== undefined && place_name.length < 3)
+      return res.status(400).json({message: "Place name must be at least 3 characters"})
+    if(latitude !== undefined && (isNaN(Number(latitude)) || Number(latitude) < -90 || Number(latitude) > 90))
+      return res.status(400).json({message: "Latitude must be a number between -90 and 90"})
+    if(longitude !== undefined && (isNaN(Number(longitude)) || Number(longitude) <-180 || Number(longitude) > 180))
+      return res.status(400).json({message: "Longitude must be a number between -180 and 180"})
+
     const event = await eventModel.createEvent(
       creator_id,
       title,
@@ -108,6 +130,9 @@ const updateEventContr = async (req, res) => {
     if(description !== undefined && description.length < 25){
       return res.status(400).json({message: "Description must contain at least 25 characters"})
     }
+    if (event_start !== undefined && new Date(event_start) < new Date()) {
+      return res.status(400).json({message: "Event start date cannot be in the past"})
+    }
     if (duration !== undefined && (isNaN(Number(duration)) || Number(duration) < minDurationInmin))
       return res.status(400).json({message: "Duration must be at least 15 minutes"})
     if(max_participants !== undefined && (isNaN(Number(max_participants)) || Number(max_participants) < minMaxParicipant))
@@ -118,8 +143,8 @@ const updateEventContr = async (req, res) => {
       return res.status(400).json({message: "Latitude must be a number between -90 and 90"})
     if(longitude !== undefined && (isNaN(Number(longitude)) || Number(longitude) <-180 || Number(longitude) > 180))
       return res.status(400).json({message: "Longitude must be a number between -180 and 180"})
-   if (status !== undefined && !['open', 'closed', 'cancelled'].includes(status))
-      return res.status(400).json({message: "Status must be open or closed"})
+   if (status !== undefined && !['open', 'closed', 'cancelled', 'expired'].includes(status))
+      return res.status(400).json({message: "Invalid status value"})
 
     const editEvent = await eventModel.updateEvent(
       id,      
