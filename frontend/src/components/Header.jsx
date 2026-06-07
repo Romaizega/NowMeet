@@ -23,21 +23,21 @@ export default function Header() {
       <div className="navbar bg-base-100 shadow-sm px-8">
         <div className="navbar-start">
           <Link to="/" className="btn btn-ghost text-xl">
-            <b>NowMeet</b>
+            <b className=" text">NowMeet</b>
           </Link>
         </div>
         <div className="navbar-center hidden md:flex">
           <ul className="menu menu-horizontal gap-2 text-base">
-            <li>
+            <li className="text-xl">
               <Link to="/explore">Explore</Link>
             </li>
-            <li>
+            <li className="text-xl">
               <Link to="/meetups">Meetups</Link>
             </li>
-            <li>
+            <li className="text text-xl">
               <Link to="/how-works">How It Works</Link>
             </li>
-            <li>
+            <li className="text text-xl">
               <Link to="/about">About Us</Link>
             </li>
           </ul>
@@ -46,6 +46,7 @@ export default function Header() {
         <div className="navbar-end">
           {/* <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" /> */}
           {user ? (
+            
             <div className="relative">
               <div
                 className="btn btn-ghost btn-circle avatar"
@@ -60,6 +61,7 @@ export default function Header() {
                     }
                   />
                 </div>
+                
               </div>
               {menuOpen && (
                 <ul className="menu bg-base-100 rounded-box absolute right-0 mt-3 w-52 p-2 shadow z-50">

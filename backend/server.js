@@ -10,6 +10,8 @@ const http = require('http')
 const cors = require('cors')
 const socketAuth = require('../backend/src/socket/socketAuth')
 const socketHandlers = require('../backend/src/socket/socketHandlers')
+const { checkDate } = require('./cron/eventScheduler')
+
 
 const app = express()
 const server = http.createServer(app)
@@ -49,4 +51,5 @@ app.get('/db-test', async (req, res) =>{
 
 server.listen(PORT, () =>{
   console.log(`Server running on port ${PORT}`)
+  checkDate()
 })
