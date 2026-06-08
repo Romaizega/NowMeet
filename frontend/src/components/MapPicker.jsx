@@ -1,4 +1,3 @@
-import { useState, useCallback } from "react";
 import {GoogleMap, useLoadScript, Marker} from "@react-google-maps/api"
 
 const containerStyle = {

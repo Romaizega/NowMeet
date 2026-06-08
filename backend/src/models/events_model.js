@@ -39,7 +39,7 @@ const createEvent = async(
 
   const getAllEvents = () => {
     return db('events')
-    .where('status', 'open')
+    // .where('status', 'open')
     .select('*')
     .orderBy('created_at','desc')
   }

@@ -1,5 +1,5 @@
 import { AUTH_STATUS } from "../auth/authConstants";
-import { createEvent, getAllEvents, getEventById, joinToEvent, cancelEvent, updateEvent } from "./eventThunk";
+import { createEvent, getAllEvents, getEventById, joinToEvent, cancelEvent, updateEvent, deleteEventById } from "./eventThunk";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -97,6 +97,18 @@ const eventSlice = createSlice({
         state.status = AUTH_STATUS.FAILED
         state.error = action.payload
       })
+      .addCase(deleteEventById.pending, (state) => {
+        state.status = AUTH_STATUS.LOADING
+      })
+      .addCase(deleteEventById.fulfilled, (state, action)=> {
+        state.status = AUTH_STATUS.SUCCEEDED
+        state.currentEvent = null
+      })
+      .addCase(deleteEventById.rejected, (state, action)=> {
+        state.status = AUTH_STATUS.FAILED
+        state.error = action.payload
+      })
+
   },
 });
 
