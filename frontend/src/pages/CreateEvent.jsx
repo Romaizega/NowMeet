@@ -26,6 +26,7 @@ import {
   getEventInterests,
 } from "../features/interest/interestThunk";
 import groupByCategory from "../utils/groupByCategory";
+import EventMap from "../components/MapPicker";
 
 export default function CreateEvent() {
   const dispatch = useDispatch();
@@ -132,6 +133,21 @@ export default function CreateEvent() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  const handleLocationSelect = ({ lat, lng }) => {
+    setForm({ ...form, latitude: lat, longitude: lng });
+  };
+
+  useEffect(() => {
+    if (!isEditMode) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setForm((prev) => ({
+          ...prev,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        }));
+      });
+    }
+  }, []);
   useEffect(() => {
     if (localError) {
       const timer = setTimeout(() => setLocalError(""), 10000);
@@ -334,6 +350,11 @@ export default function CreateEvent() {
                 />
               </div>
             </div>
+            <EventMap
+              lat={parseFloat(form.latitude)}
+              lng={parseFloat(form.longitude)}
+              onLocationSelect={handleLocationSelect}
+            ></EventMap>
             <p className="text text-primary opacity-50">
               Or search for a place on the map to get coordinates
             </p>
