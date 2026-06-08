@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -6,6 +6,7 @@ import {
   joinToEvent,
   cancelEvent,
   updateEvent,
+  deleteEventById,
 } from "../features/events/eventThunk";
 import {
   Calendar,
@@ -32,6 +33,8 @@ export default function EventDetails() {
   );
   const { eventInterest } = useSelector((state) => state.interest);
   const { user } = useSelector((state) => state.auth);
+  const [showToast, setShowToast] = useState(false);
+  const [localError, setLocalError] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const isJoined = participants?.some(
@@ -49,6 +52,14 @@ export default function EventDetails() {
   if (status === "loading")
     return <span className="loading loading-spinner"> Loading events...</span>;
   if (status === "failed") return <p className="text-red-500">{error}</p>;
+  if (showToast)
+    return (
+      <div className="toast toast-top toast-center">
+        <div className="alert alert-success">
+          <span>Event deleted successfully!</span>
+        </div>
+      </div>
+    );
   if (!currentEvent) return null;
 
   const isCreator = currentEvent.creator_id === user.id;
@@ -66,6 +77,16 @@ export default function EventDetails() {
 
   const handleReopenEvent = () => {
     dispatch(updateEvent({ id, status: "open" }));
+  };
+
+  const handleDeleteEvent = async () => {
+    try {
+      await dispatch(deleteEventById(id)).unwrap();
+      setShowToast(true);
+      setTimeout(() => navigate("/explore"), 2000);
+    } catch (error) {
+      setLocalError("Failed to delete event", error);
+    }
   };
 
   const formatDate = (dateString) => {
@@ -169,6 +190,7 @@ export default function EventDetails() {
               <button
                 className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
                 type="button"
+                onClick={handleDeleteEvent}
               >
                 Delete Event
               </button>
@@ -403,6 +425,13 @@ export default function EventDetails() {
           </div>
         </div>
       </div>
+      {showToast && (
+        <div className="toast toast-top toast-center">
+          <div className="alert alert-success">
+            <span>Event deleted successfully!</span>
+          </div>
+        </div>
+      )}
     </>
   );
 }

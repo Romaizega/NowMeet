@@ -79,6 +79,7 @@ export default function Events() {
                 onChange={handleStatusCange}
                 className="select select-bordered w-70 select-primary text-primary text-2xl"
               >
+                <option value="open">all</option>
                 <option value="open">open</option>
                 <option value="cancelled">cancelled</option>
                 <option value="closed">closed</option>
