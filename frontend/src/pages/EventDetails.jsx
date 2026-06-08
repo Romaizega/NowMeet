@@ -5,7 +5,7 @@ import {
   getEventById,
   joinToEvent,
   cancelEvent,
-  updateEvent
+  updateEvent,
 } from "../features/events/eventThunk";
 import {
   Calendar,
@@ -17,11 +17,13 @@ import {
   MessageCircleMore,
   UserStar,
   PartyPopper,
+  ExternalLink,
 } from "lucide-react";
 import heroEventDetail from "../assests/hero_eventDetail.png";
 import defultAvatar from "../assests/default_avatar.png";
 import { getEventInterests } from "../features/interest/interestThunk";
 import { clearUserInterest } from "../features/interest/interestSlice";
+import EventMap from "../components/MapPicker";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -35,7 +37,7 @@ export default function EventDetails() {
   const isJoined = participants?.some(
     (participant) => participant.id === user.id,
   );
-  
+
   useEffect(() => {
     dispatch(getEventById(id));
     dispatch(getEventInterests(id));
@@ -44,13 +46,12 @@ export default function EventDetails() {
     };
   }, [dispatch, id]);
 
-  
   if (status === "loading")
     return <span className="loading loading-spinner"> Loading events...</span>;
   if (status === "failed") return <p className="text-red-500">{error}</p>;
   if (!currentEvent) return null;
-  
-  const isCreator = currentEvent.creator_id === user.id
+
+  const isCreator = currentEvent.creator_id === user.id;
   const handleJoin = () => {
     dispatch(joinToEvent(id));
   };
@@ -60,12 +61,12 @@ export default function EventDetails() {
   };
 
   const handleCancelEvent = () => {
-    dispatch(updateEvent({id, status: 'cancelled'}))
-  }
+    dispatch(updateEvent({ id, status: "cancelled" }));
+  };
 
   const handleReopenEvent = () => {
-    dispatch(updateEvent({id, status: "open"}))
-  }
+    dispatch(updateEvent({ id, status: "open" }));
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -77,9 +78,6 @@ export default function EventDetails() {
       minute: "2-digit",
     });
   };
-
-
-
 
   return (
     <>
@@ -94,10 +92,13 @@ export default function EventDetails() {
       >
         <div className="relative z-10 flex flex-col justify-between h-full px-10 pb-6 pt-10">
           <div>
-            <button className="btn btn-ghost text-xl"
-            onClick={() => navigate('/explore')}
-            >Back to Events</button>
-            </div>
+            <button
+              className="btn btn-ghost text-xl"
+              onClick={() => navigate("/explore")}
+            >
+              Back to Events
+            </button>
+          </div>
           <div className="max-w-2xl mt-2">
             <span className="badge border-orange-400 bg-black/50 text-orange-300 uppercase">
               {currentEvent.status}
@@ -140,39 +141,48 @@ export default function EventDetails() {
           </div>
           {isCreator ? (
             <div className="flex gap-3">
-            <button className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
-            type="button"
-            onClick={() => navigate(`/event/${id}/edit`)}> Edit Event
-            </button>
-            {currentEvent.status === "cancelled" ? (
-              <button className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
-              type="button"
-              onClick={handleReopenEvent}>
-                Reopen Event
+              <button
+                className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
+                type="button"
+                onClick={() => navigate(`/event/${id}/edit`)}
+              >
+                {" "}
+                Edit Event
               </button>
-            ) :(
-            <button className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
-            type="button"
-            onClick={handleCancelEvent}>
-              Cancel Event
-            </button>
-
-            )}
-            <button className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
-            type="button">
-              Delete Event
-            </button>
+              {currentEvent.status === "cancelled" ? (
+                <button
+                  className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
+                  type="button"
+                  onClick={handleReopenEvent}
+                >
+                  Reopen Event
+                </button>
+              ) : (
+                <button
+                  className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
+                  type="button"
+                  onClick={handleCancelEvent}
+                >
+                  Cancel Event
+                </button>
+              )}
+              <button
+                className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
+                type="button"
+              >
+                Delete Event
+              </button>
             </div>
           ) : (
-          <button
-            className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-2 py-2 mr-500 "
-            type="button"
-            onClick={isJoined ? handleLeaveEvent : handleJoin}
-          >
-            <span className="text-xl">
-              {isJoined ? "Leave MeetUp" : "Join Meetup"}
-            </span>
-          </button>
+            <button
+              className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-2 py-2 mr-500 "
+              type="button"
+              onClick={isJoined ? handleLeaveEvent : handleJoin}
+            >
+              <span className="text-xl">
+                {isJoined ? "Leave MeetUp" : "Join Meetup"}
+              </span>
+            </button>
           )}
         </div>
       </div>
@@ -336,6 +346,20 @@ export default function EventDetails() {
           <div className="bg-base-200 rounded-xl p-6">
             <h3 className="text text-xl font-bold text-orange-400">Location</h3>
             <p className="text-primary mt-6">{currentEvent.place_name}</p>
+            <EventMap
+              lat={currentEvent.latitude}
+              lng={currentEvent.longitude}
+              readonly={true}
+            ></EventMap>
+            <a
+              href={`https://www.google.com/maps?q=${currentEvent.latitude},${currentEvent.longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-outline border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-black w-full flex items-center justify-center gap-2 mt-4"
+            >
+              <ExternalLink className="w-5 h-5" />
+              Open in Google Maps
+            </a>
           </div>
           <div className="bg-base-200 rounded-xl p-6">
             <h3 className="text text-xl font-bold text-orange-400">
