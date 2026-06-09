@@ -4,7 +4,8 @@ const {
   getEventById,
   getAllEvents,
   deleteEvent,
-  updateEventContr
+  updateEventContr,
+  getMyEvents
   
 } = require('../controllers/event_controller')
 const {joinEvent, cancelEvent} = require('../controllers/event_participant_controller')
@@ -16,6 +17,7 @@ const router = express.Router()
 
 router.post('/create', authenticateJWT, createEvent)
 router.get('/events', getAllEvents)
+router.get('/my', authenticateJWT, getMyEvents)
 router.get('/:id', getEventById)
 router.delete('/:id', authenticateJWT, deleteEvent)
 router.post('/:id/join', authenticateJWT, joinEvent)

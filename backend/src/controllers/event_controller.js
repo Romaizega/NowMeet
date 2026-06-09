@@ -72,6 +72,19 @@ const getEventById = async (req, res) => {
   }
 }
 
+const getMyEvents =async (req, res) => {
+  try {
+    const creator_id = req.user.user_id
+    const myEvents = await eventModel.getMyEvents(creator_id)
+    if(!myEvents || myEvents.length === 0) {
+      return res.status(404).json({message: "You haven't created any events yet"})
+    }
+    return res.status(200).json({message:"Your all events details:", myEvents})
+  } catch (error) {
+    return res.status(500).json({message: "Server error", error:error.message})
+  }
+}
+
 const getAllEvents = async (req, res) => {
   try {
     const events = await eventModel.getAllEvents()
@@ -163,11 +176,13 @@ const updateEventContr = async (req, res) => {
     return res.status(500).json({message: "Server error", error: error.message})    
   }
 }
-
+ 
+ 
 module.exports = {
   createEvent,
   getEventById,
   getAllEvents,
   deleteEvent,
-  updateEventContr
+  updateEventContr,
+  getMyEvents
 }

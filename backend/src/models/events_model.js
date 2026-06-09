@@ -90,10 +90,19 @@ const createEvent = async(
     return newUpdateEvent  
   }
 
+
+  const getMyEvents = (creator_id) => {
+    return db('events')
+    .where('creator_id', creator_id)
+    .select('*')
+    .orderBy('event_start','asc')
+  }
+
   module.exports = {
     createEvent,
     getEventById,
     getAllEvents,
     deleteEvent,
-    updateEvent
+    updateEvent,
+    getMyEvents
   }

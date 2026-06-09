@@ -7,7 +7,7 @@ import {
   MapPinned,
   CalendarDays,
   Search,
-  PencilRuler,
+  PencilLine ,
 } from "lucide-react";
 import EventsImgExplore from "../assests/defaultImgEvents.png";
 
@@ -87,10 +87,10 @@ export default function Events() {
               </select>
             </div>
             <button
-              className="flex items-center gap-2 rounded-xl border border-white bg-black/40 px-4 text-primary text-xl transition-all hover:bg-white-400 hover:text-white"
+              className="flex items-center gap-4 rounded-xl border border-white bg-black/40 px-14 text-primary text-xl transition-all hover:bg-white-400 hover:text-white"
             onClick={() => navigate('/event/create')}
             >
-              <PencilRuler className="w-8 h-8 text-primary"  />
+              <PencilLine  className="w-7 h-7 text-primary"  />
               Create Event
             </button>
           </div>

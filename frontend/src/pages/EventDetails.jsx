@@ -19,6 +19,10 @@ import {
   UserStar,
   PartyPopper,
   ExternalLink,
+  PencilLine,
+  Trash2,
+  CircleX,
+  CalendarSync 
 } from "lucide-react";
 import heroEventDetail from "../assests/hero_eventDetail.png";
 import defultAvatar from "../assests/default_avatar.png";
@@ -74,6 +78,9 @@ export default function EventDetails() {
   const handleCancelEvent = () => {
     dispatch(updateEvent({ id, status: "cancelled" }));
   };
+  const handleCloseEvent = () => {
+    dispatch(updateEvent({ id, status: "closed" }));
+  };
 
   const handleReopenEvent = () => {
     dispatch(updateEvent({ id, status: "open" }));
@@ -107,8 +114,9 @@ export default function EventDetails() {
         className="relative rounded-xl overflow-hidden mb-2 h-[320px]"
         style={{
           backgroundImage: `url(${heroEventDetail})`,
-          backgroundSize: "cover",
+          backgroundSize: "contain",
           backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <div className="relative z-10 flex flex-col justify-between h-full px-10 pb-6 pt-10">
@@ -121,7 +129,7 @@ export default function EventDetails() {
             </button>
           </div>
           <div className="max-w-2xl mt-2">
-            <span className="badge border-orange-400 bg-black/50 text-orange-300 uppercase">
+            <span className="badge border-green-400 bg-black/50 text-green-300 text-xl uppercase">
               {currentEvent.status}
             </span>
             <h2 className="text text-4xl text-primary font-bold mt-">
@@ -163,35 +171,60 @@ export default function EventDetails() {
           {isCreator ? (
             <div className="flex gap-3">
               <button
-                className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
+                className="btn btn-outline border-orange-351 px-10 py-6 text-orange-350 gap-6 text-xl hover:bg-orange-400 hover:text-black"
                 type="button"
                 onClick={() => navigate(`/event/${id}/edit`)}
               >
                 {" "}
+                <PencilLine className="w-6 h-6"/>
                 Edit Event
               </button>
-              {currentEvent.status === "cancelled" ? (
+
+              {currentEvent.status === "open" && (
+                <>
+                  <button
+                    className="btn btn-outline border-orange-351 px-10 py-6 text-orange-350 gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                    type="button"
+                    onClick={handleCloseEvent}
+                  >
+                    <CalendarSync className=" w-7 h-7" />
+                    Close Event
+                  </button>
+                  <button
+                    className="btn btn-outline border-error px-10 py-6 text-error gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                    type="button"
+                    onClick={handleCancelEvent}
+                  >
+                    <CircleX className="w-7 h-7"/>
+                    Cancel Event
+                  </button>
+                </>
+              )}
+              {currentEvent.status === "cancelled" && (
                 <button
-                  className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
+                  className="btn btn-outline border-orange-351 px-10 py-6 text-orange-350 gap-6 text-xl hover:bg-orange-400 hover:text-black"
                   type="button"
                   onClick={handleReopenEvent}
                 >
                   Reopen Event
                 </button>
-              ) : (
+              )}
+              {currentEvent.status === "closed" && (
                 <button
-                  className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
+                  className="btn btn-outline border-orange-351 px-10 py-6 text-orange-350 gap-6 text-xl hover:bg-orange-400 hover:text-black"
                   type="button"
-                  onClick={handleCancelEvent}
+                  onClick={handleReopenEvent}
                 >
-                  Cancel Event
+                  Reopen Registration
                 </button>
               )}
+
               <button
-                className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-6 py-6"
+                className="btn btn-outline border-error px-10 py-6 text-error gap-6 text-xl hover:bg-orange-400 hover:text-black"
                 type="button"
                 onClick={handleDeleteEvent}
               >
+                <Trash2/>
                 Delete Event
               </button>
             </div>
