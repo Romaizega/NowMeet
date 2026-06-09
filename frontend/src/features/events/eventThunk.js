@@ -156,6 +156,22 @@ const deleteEventById = createAsyncThunk(
   }
 )
 
+const getMyEvents = createAsyncThunk(
+  "event/getMyEvents",
+  async(_, {rejectWithValue}) => {
+    try {
+      const {data} = await api.get('/event/my')
+      return data
+    } catch (error) {
+        const message =
+        error.response?.data.message ||
+        error.message ||
+        "Failed to get mly event";
+      return rejectWithValue(message);
+    }
+  }
+)
+
 export {
   createEvent,
   getAllEvents,
@@ -163,5 +179,6 @@ export {
   joinToEvent,
   cancelEvent,
   updateEvent,
-  deleteEventById
+  deleteEventById,
+  getMyEvents
 };
