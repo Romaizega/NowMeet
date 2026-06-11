@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getMyEvents, updateEvent } from "../features/events/eventThunk";
 import EventsImgExplore from "../assests/defaultImgEvents.png";
-import { Users, MapPinned, CalendarDays, PencilLine, Ban } from "lucide-react";
+import { Users, MapPinned, CalendarDays, PencilLine, Ban, SquarePlus  } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function MyEvents() {
@@ -14,8 +14,8 @@ export default function MyEvents() {
     dispatrch(getMyEvents());
   }, [dispatrch]);
 
-  const handleEditEvent = (id) => {
-    navigate(`/event/${id}/edit`);
+  const handleViewEvent = (id) => {
+    navigate(`/event/${id}`);
   };
 
   if (status === "loading")
@@ -36,12 +36,23 @@ export default function MyEvents() {
     <>
       <div className="relative z-10 flex w-full min-h-screen items-start pl-14 pt-20">
         <div className="w-full lg:w-3/4 text left">
-          <h1 className="text lg:text-5xl font-bold leadig-tight text-primary">
-            My Events
-          </h1>
-          <p className="text tracking-widest text-primary text-xl opacity-50 mt-3">
-            Events you created and are managing
-          </p>
+          <div className="flex justify-between items-center mt-3">
+            <div>
+              <h1 className="text lg:text-5xl font-bold text-primary">
+                My Events
+              </h1>
+              <p className="text-primary text-xl opacity-50">
+                Events you created and are managing
+              </p>
+            </div>
+            <button
+              className="btn btn-outline border-orange-351 text-orange-350 py-6 px-9 text-xl gap-4"
+              onClick={() => navigate("/event/create")}
+            >
+              <SquarePlus  className="w-5 h-5 " />
+              Create an Event
+            </button>
+          </div>
           <div className="flex flex-col gap-4 mt-4">
             {myEvents.map((event) => (
               <div
@@ -82,12 +93,12 @@ export default function MyEvents() {
                   <button
                     className="btn btn-outline border-orange-351 text-orange-350 gap-6 text-xl hover:bg-orange-400 hover:text-black py-6"
                     type="button"
-                    onClick={() => handleEditEvent(event.id)}
+                    onClick={() => handleViewEvent(event.id)}
                   >
                     <PencilLine className="w-6 h-6" />
-                    Edit Event
+                    View Event
                   </button>
-                  <button
+                  {/* <button
                     className="btn btn-outline border-error text-error gap-4 text-xl hover:bg-orange-400 hover:text-black mt-3 py-6"
                     type="button"
                     onClick={async () => {
@@ -99,7 +110,7 @@ export default function MyEvents() {
                   >
                     <Ban className="w-6 h-6 text-error" />
                     Cancel Event
-                  </button>
+                  </button> */}
                 </div>
               </div>
             ))}
