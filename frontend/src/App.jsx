@@ -17,6 +17,7 @@ import Meetups from './pages/Meetups'
 import CreateEvent from "./pages/CreateEvent"
 import ProfileView from "./pages/ProfileView"
 import MyEvents from "./pages/MyEvents"
+import EventChat from "./pages/EventChat"
 
 function App() {
 
@@ -34,6 +35,8 @@ function App() {
       <Route path="/event/create" element= {<ProtectedRoute><CreateEvent /></ProtectedRoute>} />
       <Route path="/event/:id/edit" element= {<ProtectedRoute><CreateEvent /></ProtectedRoute>} />
       <Route path="/event/my" element= {<ProtectedRoute><MyEvents /></ProtectedRoute>} />
+      <Route path="/event/:id/common-chat" element= {<ProtectedRoute><EventChat /></ProtectedRoute>} />
+
 
       <Route path="/about" element={<AboutUs/>} />
       <Route path="/explore" element={<Explore/>} />

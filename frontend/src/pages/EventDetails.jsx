@@ -22,7 +22,8 @@ import {
   PencilLine,
   Trash2,
   CircleX,
-  CalendarSync 
+  CalendarSync,
+  MessageSquareMore,
 } from "lucide-react";
 import heroEventDetail from "../assests/hero_eventDetail.png";
 import defultAvatar from "../assests/default_avatar.png";
@@ -166,6 +167,13 @@ export default function EventDetails() {
                   <p className="opacity-50">Going</p>
                 </span>
               </span>
+              <button
+                className="btn btn-outline border-orange-351 px-10 py-6 text-primary gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                onClick={() => navigate(`/event/${id}/common-chat`)}
+              >
+                <MessageCircleMore/>
+                Chat
+              </button>
             </div>
           </div>
           {isCreator ? (
@@ -176,7 +184,7 @@ export default function EventDetails() {
                 onClick={() => navigate(`/event/${id}/edit`)}
               >
                 {" "}
-                <PencilLine className="w-6 h-6"/>
+                <PencilLine className="w-6 h-6" />
                 Edit Event
               </button>
 
@@ -195,7 +203,7 @@ export default function EventDetails() {
                     type="button"
                     onClick={handleCancelEvent}
                   >
-                    <CircleX className="w-7 h-7"/>
+                    <CircleX className="w-7 h-7" />
                     Cancel Event
                   </button>
                 </>
@@ -224,9 +232,10 @@ export default function EventDetails() {
                 type="button"
                 onClick={handleDeleteEvent}
               >
-                <Trash2/>
+                <Trash2 />
                 Delete Event
               </button>
+
             </div>
           ) : (
             <button
