@@ -1,4 +1,3 @@
-import { act } from "react";
 import { AUTH_STATUS } from "../auth/authConstants";
 import { createEvent, getAllEvents, getEventById, joinToEvent, cancelEvent, updateEvent, deleteEventById, getMyEvents } from "./eventThunk";
 import { createSlice } from "@reduxjs/toolkit";
