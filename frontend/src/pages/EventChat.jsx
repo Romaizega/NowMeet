@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useCallback, useEffect, useState, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import socket from "../utils/socket";
 import api from "../services/axios";
@@ -11,6 +11,7 @@ import {
   MapPin,
   Users,
   MessageCircleMore,
+  ArrowLeft 
 } from "lucide-react";
 
 export default function EventChat() {
@@ -23,6 +24,8 @@ export default function EventChat() {
   const [text, setText] = useState("");
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const bottomRef = useRef(null);
 
   useEffect(() => {
     socket.connect();
@@ -58,6 +61,10 @@ export default function EventChat() {
     dispatch(getEventById(id));
   }, [id]);
 
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -69,12 +76,20 @@ export default function EventChat() {
     });
   };
 
-  if (!currentEvent) return <span className="loading loading-spinner"></span>
+  if (!currentEvent) return <span className="loading loading-spinner"></span>;
 
   return (
     <>
-      <div className="grid grid-cols-3 gap-6 min-h-screen px-10 pt-20">
-
+      <div className="flex gap-6">
+        <button
+          className="btn btn-ghost text-xl"
+          onClick={() => navigate("/explore")}
+        >
+          <ArrowLeft/>
+          Back to Events
+        </button>
+      </div>
+      <div className="grid grid-cols-5 gap-6 min-h-screen px-10 pt-20">
         <div className="col-span-1 bg-base-200 rounded-xl p-6 flex flex-col gap-4">
           <span className="badge border-green-400 text-green-300 uppercase">
             {currentEvent.status}
@@ -98,19 +113,56 @@ export default function EventChat() {
             <Users className="w-5 h-5" />
             {participants?.length}/{currentEvent.max_participants} going
           </span>
+          <button
+            className="btn btn-primary"
+            type="button"
+            onClick={() => navigate(`/event/${id}`)}
+          >
+            Details
+          </button>
+          <div className="bg-base-200 rounded-xl p-6">
+            <h3 className="text-2xl font-bold text-primary text-left">
+              Going ({participants?.length})
+            </h3>
+            {participants?.length > 0 ? (
+              <div className="flex gap-2 mt-3">
+                {participants.map((participant) => (
+                  <img
+                    key={participant.id}
+                    src={
+                      participant.photo
+                        ? `${import.meta.env.VITE_SERVER_URL}/uploads/${participant.photo}`
+                        : defultAvatar
+                    }
+                    alt={participant.username}
+                    className="w-17 h-17 rounded-full border-2 border-white object-cover cursor-pointer transition-transform duration-300 hover:scale-210"
+                    title={participant.username}
+                    onClick={() => navigate(`/profile/${participant.id}`)}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center gap-3 py-6">
+                <Users className="w-12 h-12 opacity-50" />
+                <p className="text-primary font-bold">No participants yet.</p>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* right */}
-        <div className="col-span-2 flex flex-col"
-        style={{height: 'calc(100vh - 120px)'}}>
+        <div
+          className="col-span-2 flex flex-col"
+          style={{ height: "calc(100vh - 120px)" }}
+        >
           <div className="mb-4 border-b border-orange-400/10 pb-4">
-            <h1 className="text-3xl font-bold text-primary">Event Chat</h1>
+            <h1 className="text-4xl font-bold text-primary">Event Chat</h1>
             <p className="text-primary opacity-50">
               Chat with other participants
             </p>
           </div>
 
-          {/* Сообщения */}
+          {/* messages */}
           <div className="flex-1 overflow-y-auto">
             {messages.map((message) => (
               <div
@@ -152,6 +204,7 @@ export default function EventChat() {
                 </div>
               </div>
             ))}
+            <div ref={bottomRef} />
           </div>
 
           {/* Input */}
