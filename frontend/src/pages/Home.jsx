@@ -1,5 +1,5 @@
+import { useNavigate } from "react-router-dom";
 import heroImg from "../assests/hero.png";
-import { Link } from "react-router-dom";
 import {
   Users,
   UserPlus,
@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 
 export default function Home() {
+  const navigate = useNavigate()
   return (
     <>
       <div
@@ -46,14 +47,16 @@ export default function Home() {
               </b>
             </p>
             <div className="flex gap-5">
-              <Link to="/events" className="btn btn-outline btn-primary px-18">
+              <button to="/events" className="btn btn-outline btn-primary px-18"
+              onClick={() => navigate('/explore')}>
                 <Search className="w-5 h-5" />
                 Find a Meetup
-              </Link>
-              <Link to="/create" className="btn btn-outline btn-primary px-18">
+              </button>
+              <button to="/create" className="btn btn-outline btn-primary px-18"
+              onClick={() => navigate('/event/create')}>
                 <CirclePlus className="w-5 h-5" />
                 Create a Meetup
-              </Link>
+              </button>
             </div>
             <div className="flex gap-14 mt-10">
               <div className="flex items-center gap-2">
