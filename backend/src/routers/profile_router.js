@@ -11,13 +11,15 @@ const {
   
 } = require('../controllers/user_controller')
 
+const { getPrivateMessage} = require('../controllers/message_controller')
+
 const router = express.Router()
 
 router.put('/profile', authenticateJWT, upload.single("photo"), updateProfileUser)
 router.put('/username', authenticateJWT, updateUsername)
 router.put('/email', authenticateJWT, updateEmail)
 router.put('/password', authenticateJWT, updatePassword)
+router.get('/:id/private-chat', authenticateJWT, getPrivateMessage)
 router.get('/:id', viewProfile)
-
 
 module.exports = router

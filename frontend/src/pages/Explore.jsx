@@ -10,6 +10,7 @@ import {
   PencilLine ,
 } from "lucide-react";
 import EventsImgExplore from "../assests/defaultImgEvents.png";
+import getStatusColor from "../utils/getStatusColor";
 
 export default function Events() {
   const dispatch = useDispatch();
@@ -98,7 +99,7 @@ export default function Events() {
             {filteredEvents.map((event) => (
               <div key={event.id}>
                 <div className="card bg-base-200 shadow-xl">
-                  <span className="badge border-white bg-black/50 text-green-400 uppercase text-xl absolute ">
+                  <span className={getStatusColor(event.status)}>
                     {event.status}
                   </span>
                   <img src={EventsImgExplore} alt="" className="w-170 h-120" />

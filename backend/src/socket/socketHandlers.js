@@ -24,8 +24,8 @@ const socketHandlers = (io) => {
       const {recipientId, text} = data
       const roomId = [socket.user.user_id, recipientId].sort().join('_')
       try {
-        const privateMessage = await PrivateMessage.sendPrivateMessage(socket.user.user_id, recipientId, text)
-        io.to(`private_${roomId}`).emit('private_message',privateMessage)
+        const joinPrivate = await PrivateMessage.sendPrivateMessage(socket.user.user_id, recipientId, text)
+        io.to(`private_${roomId}`).emit('private_message', joinPrivate)
       } catch (error) {
         console.error('Message send failed', error.message)
       }
