@@ -1,6 +1,8 @@
 const eventModel = require('../models/events_model')
 const messageModel = require('../models/messages_model')
 const eventParticipantModel = require('../models/event_participants_model')
+const userModel = require('../models/users_model')
+const privateMessageModel = require('../models/private_message_model')
 
 const sendMessage = async (req, res) => {
   const {text} = req.body 
@@ -44,8 +46,27 @@ const getMessage =  async (req, res) => {
   }
 }
 
+const getPrivateMessage = async(req, res) => {
+  try {
+    const {id} = req.params
+    const user_id = req.user.user_id
+    if (!user_id) {
+      return res.status(403).json({ message: "User is unauthorized" });
+    }
+    const recepientId = await userModel.getUserById(id)
+    if(!recepientId) {
+      return res.status(404).json({message: "Not found an user"})
+    }
+    const messagesUser = await privateMessageModel.getAllMessages(user_id, id)
+    return res.status(200).json({message: "You got a message", messagesUser})
+  } catch (error) {
+    return res.status(500).json({message: "Server error", error: error.message})
+  }
+}
+
 
 module.exports = {
   sendMessage,
-  getMessage
+  getMessage,
+  getPrivateMessage
 }

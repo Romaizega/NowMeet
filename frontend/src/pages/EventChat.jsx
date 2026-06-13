@@ -11,8 +11,9 @@ import {
   MapPin,
   Users,
   MessageCircleMore,
-  ArrowLeft 
+  ArrowLeft,
 } from "lucide-react";
+import getStatusColor from "../utils/getStatusColor";
 
 export default function EventChat() {
   const { status, error, currentEvent, participants } = useSelector(
@@ -85,13 +86,13 @@ export default function EventChat() {
           className="btn btn-ghost text-xl"
           onClick={() => navigate("/explore")}
         >
-          <ArrowLeft/>
+          <ArrowLeft />
           Back to Events
         </button>
       </div>
       <div className="grid grid-cols-5 gap-6 min-h-screen px-10 pt-20">
         <div className="col-span-1 bg-base-200 rounded-xl p-6 flex flex-col gap-4">
-          <span className="badge border-green-400 text-green-300 uppercase">
+          <span className={getStatusColor(currentEvent.status)}>
             {currentEvent.status}
           </span>
           <h2 className="text-2xl text-primary font-bold">

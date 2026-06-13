@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   profileView
 } from "../features/profile/profileThunk";
@@ -9,6 +9,7 @@ import heroProfileView from "../assests/hero_profileview.png";
 import defultAvatar from "../assests/default_avatar.png";
 import { clearPublicProfile } from "../features/profile/profileSlice";
 import { clearUserInterest} from "../features/interest/interestSlice"
+import {MessageCircleMore} from "lucide-react";
 
 export default function ProfileView() {
   const { id } = useParams();
@@ -18,6 +19,7 @@ export default function ProfileView() {
 
   const {userInterest} = useSelector((state)=> state.interest)
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const [opneImage, setOpenImage] = useState(false);
 
   useEffect(() => {
@@ -103,6 +105,13 @@ export default function ProfileView() {
               <span className="badge bg-orange-500 text-white border-none">
                 Member
               </span>
+               <button
+                className="btn btn-outline border-orange-351 px-10 py-6 text-primary gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                onClick={() => navigate(`/profile/${id}/private-chat`)}
+              >
+                <MessageCircleMore/>
+                Chat
+              </button>
             </div>
             <p className="text-primary opacity-50 text-sm mt-10">
               Member since {formatDate(publicProfile.created_at)}

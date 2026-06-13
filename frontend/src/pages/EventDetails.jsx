@@ -24,12 +24,14 @@ import {
   CircleX,
   CalendarSync,
   MessageSquareMore,
+  ArrowLeft
 } from "lucide-react";
 import heroEventDetail from "../assests/hero_eventDetail.png";
 import defultAvatar from "../assests/default_avatar.png";
 import { getEventInterests } from "../features/interest/interestThunk";
 import { clearUserInterest } from "../features/interest/interestSlice";
 import EventMap from "../components/MapPicker";
+import getStatusColor from "../utils/getStatusColor";
 
 export default function EventDetails() {
   const { id } = useParams();
@@ -126,11 +128,12 @@ export default function EventDetails() {
               className="btn btn-ghost text-xl"
               onClick={() => navigate("/explore")}
             >
+              <ArrowLeft/>
               Back to Events
             </button>
           </div>
           <div className="max-w-2xl mt-2">
-            <span className="badge border-green-400 bg-black/50 text-green-300 text-xl uppercase">
+            <span className={getStatusColor(currentEvent.status)}>
               {currentEvent.status}
             </span>
             <h2 className="text text-4xl text-primary font-bold mt-">
