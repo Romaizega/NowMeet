@@ -3,6 +3,7 @@ import authReducer from "../features/auth/authSlice";
 import eventReducer from "../features/events/eventSlice";
 import profileReducer from "../features/profile/profileSlice"
 import interestReducer from "../features/interest/interestSlice"
+import notificationReducer from "../features/notifications/notificationsSlice"
 import {persistStore, persistReducer} from "redux-persist"
 
 
@@ -22,7 +23,8 @@ const store = configureStore({
     auth: persistReducer(authPersistConfg, authReducer),
     event: eventReducer,
     profile: profileReducer,
-    interest:interestReducer
+    interest:interestReducer,
+    notification: notificationReducer
   },
   middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware({serializableCheck: false})
