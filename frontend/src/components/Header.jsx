@@ -6,7 +6,7 @@ import { persistor } from "../app/store";
 import { useNavigate } from "react-router-dom";
 import socket from "../utils/socket";
 import { setAddNotification, setClearNotification } from "../features/notifications/notificationsSlice";
-import { Bell } from 'lucide-react';
+import { Bell, Mail } from 'lucide-react';
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -14,6 +14,7 @@ export default function Header() {
   const { user, status } = useSelector((state) => state.auth);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openNotific, setOpenNotific] = useState(false)
+  const [openMessages, setOPenMessages] = useState(false)
   const { notifications } = useSelector((state) => state.notification);
 
   const handleLogout = () => {
@@ -27,7 +28,6 @@ export default function Header() {
     if (user) {
       socket.connect();
       socket.on("new_event", (event) => {
-        console.log("Received new_event", event)
         dispatch(
           setAddNotification({
             id: event.id,
@@ -36,8 +36,19 @@ export default function Header() {
           }),
         );
       });
+      socket.on("private_message", (message) => {
+        dispatch(
+          setAddNotification({
+            id: message.id,
+            type: "message",
+            text: `New message from ${message.username}`,
+            senderId: message.sender_user_id,
+          })
+        )
+      } )
       return () => {
         socket.off("new_event");
+        socket.off("private_message")
       };
     } else {
       socket.disconnect();
@@ -83,10 +94,10 @@ export default function Header() {
               <button className="btn btn-ghost btn-circle"
               >
                 <div className="indicator">
-                  <Bell
+                  <Bell type="event"
                   />
                   <span className="badge badge-xs badge-primary indicator-item">
-                    {notifications.length}
+                    {notifications.filter(n => n.type === 'event').length}
                   </span>
                 </div>
               </button>
@@ -94,7 +105,8 @@ export default function Header() {
               {openNotific && (
                 <ul className="menu bg-base-100 rounded-box absolute right-0 mt-3 w-52 p-2 shadow z-50">
                   <li>
-                  {notifications.map((notification) => (
+                  {notifications.filter((notification)=> notification.type === "event") 
+                  .map((notification) => (
                     <div className="text font-bold"
                     key={notification.id}
                     onClick={() => {navigate('/explore');
@@ -108,12 +120,52 @@ export default function Header() {
                   </li>
                   <li>
                     <a onClick={() => clearNotification()}>
-                      Clear all
+                      Clear notifications
                     </a>
                   </li>
                 </ul>
                 
               )}
+            <div className="btn btn-ghost "
+              onClick={() => setOPenMessages(!openMessages)}
+              >
+              <button className="btn btn-ghost btn-circle"
+              >
+                <div className="indicator">
+                  <Mail type="message"
+                  />
+                  <span className="badge badge-xs badge-primary indicator-item">
+                    {notifications.filter(n => n.type === 'message').length}
+                  </span>
+                </div>
+              </button>
+              </div>
+                {openMessages && (
+                <ul className="menu bg-base-100 rounded-box absolute right-0 mt-3 w-52 p-2 shadow z-50">
+                  <li>
+                  {notifications.filter((notification)=> notification.type === "message")
+                  .map((notification) => (
+                    <div className="text "
+                    key={notification.id}
+                    onClick={() => {navigate(`/profile/${notification.senderId}/private-chat`);
+                      clearNotification()}
+                    }>
+                      <Link className="text text-primary">
+                      {notification.text}
+                      </Link>
+                    </div>
+                  ))}
+                  </li>
+                  <li>
+                    <a onClick={() => clearNotification()}>
+                      Clear messages
+                    </a>
+                  </li>
+                </ul>
+                
+              )}
+              
+
               <div
                 className="btn btn-ghost btn-circle avatar"
                 onClick={() => setMenuOpen(!menuOpen)}
