@@ -52,6 +52,10 @@ const createEvent = async (req, res) => {
       latitude,
       longitude,
     )
+    const io = req.app.get('io')
+    console.log('Emitting new_event', event)
+
+    io.emit('new_event', event)
     return res.status(201).json({message: "Event created", event})
   } catch (error) {
     return res.status(500).json({message: "Server error", error: error.message})
