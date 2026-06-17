@@ -4,6 +4,7 @@ import eventReducer from "../features/events/eventSlice";
 import profileReducer from "../features/profile/profileSlice"
 import interestReducer from "../features/interest/interestSlice"
 import notificationReducer from "../features/notifications/notificationsSlice"
+import aiReducer from "../features/ai/aiSlice"
 import {persistStore, persistReducer} from "redux-persist"
 
 
@@ -24,7 +25,8 @@ const store = configureStore({
     event: eventReducer,
     profile: profileReducer,
     interest:interestReducer,
-    notification: notificationReducer
+    notification: notificationReducer,
+    ai: aiReducer
   },
   middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware({serializableCheck: false})

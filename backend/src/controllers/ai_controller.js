@@ -42,12 +42,13 @@ const getAiMatch = async (req, res) => {
       await aiModel.getActiveEventsWithInterests();
     const groupByInterestEVents = getActiveEventsWithInterests.reduce(
       (accum, curentInt) => {
-        const newInt = curentInt.id;
+        const newInt = curentInt.event_id;
         if (!accum[newInt]) {
           accum[newInt] = {
-            id: curentInt.id,
+            id: curentInt.event_id,
             title: curentInt.title,
             place_name: curentInt.place_name,
+            event_start: curentInt.event_start,
             interests: [],
           };
         }
@@ -81,7 +82,26 @@ const getAiMatch = async (req, res) => {
                 - Prefer users with multiple overlapping interests.
                 - Prefer events that match multiple interests.
                 - Do not recommend the current user.
-                - Return only JSON.`, 
+                - Return only JSON.
+                - Also display title of event and event start
+                - Each event must appear only once by eventId.
+                - If the same event matches multiple interests, put all matched interests into matchedInterests array.
+                - recommendedEvents must be grouped by eventId.
+                - Always return both recommendedUsers and recommendedEvents arrays, even if empty.
+
+                Return exactly:
+                {
+                  "recommendedEvents": [
+                    {
+                      "eventId": 17,
+                      "title": "Tech talk and coffee",
+                      "matchScore": 90,
+                      "matchedInterests": ["Programming", "AI Tools", "Web Development"],
+                      "reason": "This event matches several of your tech interests..."
+                    }
+                  ]
+                }
+                `,
         },
         {
           role: "user",
@@ -102,6 +122,8 @@ const getAiMatch = async (req, res) => {
               {
                 "userId": number,
                 "matchScore": number,
+                "username": string,
+                "photo": string
                 "sharedInterests": [],
                 "reason": ""
               }
@@ -111,6 +133,9 @@ const getAiMatch = async (req, res) => {
                 "eventId": number,
                 "matchScore": number,
                 "matchedInterests": [],
+                "title": string,
+                "event_start": string,
+                "place_name": string
                 "reason": ""
               }
             ]
@@ -121,11 +146,11 @@ const getAiMatch = async (req, res) => {
       response_format: { type: "json_object" },
     });
 
-    const result = JSON.parse(response.choices[0].message.content)
+    const result = JSON.parse(response.choices[0].message.content);
 
     return res.status(201).json({
       message: "Match ok",
-      result
+      result,
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
