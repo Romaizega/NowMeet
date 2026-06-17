@@ -22,7 +22,7 @@ const getActiveEventsWithInterests = async () => {
   .join('event_interests', 'events.id', '=', 'event_interests.event_id')
   .join('interests', 'event_interests.interest_id', '=', 'interests.id')
   .where('status', 'open')
-  .select('events.*','interests.id', 'interests.name')
+  .select('events.id as event_id','interests.id', 'interests.name', 'events.title', 'events.event_start', 'events.place_name')
   .orderBy('name', 'desc')
 }
 

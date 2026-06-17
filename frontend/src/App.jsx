@@ -19,6 +19,7 @@ import ProfileView from "./pages/ProfileView"
 import MyEvents from "./pages/MyEvents"
 import EventChat from "./pages/EventChat"
 import PrivaeChat from "./pages/PrivateChat"
+import AiMatch from "./pages/AiMatch"
 
 function App() {
 
@@ -39,6 +40,7 @@ function App() {
       <Route path="/event/:id/edit" element= {<ProtectedRoute><CreateEvent /></ProtectedRoute>} />
       <Route path="/event/my" element= {<ProtectedRoute><MyEvents /></ProtectedRoute>} />
       <Route path="/event/:id/common-chat" element= {<ProtectedRoute><EventChat /></ProtectedRoute>} />
+      <Route path="/ai-match/" element= {<ProtectedRoute><AiMatch /></ProtectedRoute>} />
 
       <Route path="/about" element={<AboutUs/>} />
       <Route path="/explore" element={<Explore/>} />

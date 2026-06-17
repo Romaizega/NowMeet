@@ -75,6 +75,9 @@ export default function Header() {
             <li className="text-xl">
               <Link to="/meetups">Meetups</Link>
             </li>
+            <li className="text-xl">
+              <Link to="/ai-match">AI Match</Link>
+            </li>
             <li className="text text-xl">
               <Link to="/how-works">How It Works</Link>
             </li>
