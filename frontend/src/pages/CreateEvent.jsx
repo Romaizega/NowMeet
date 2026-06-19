@@ -17,6 +17,9 @@ import {
   Clock,
   Users,
   ScanSearch,
+  Star,
+  ThumbsUp,
+  Pin,
 } from "lucide-react";
 
 import {
@@ -27,11 +30,15 @@ import {
 } from "../features/interest/interestThunk";
 import groupByCategory from "../utils/groupByCategory";
 import EventMap from "../components/MapPicker";
+import api from "../services/axios";
 
 export default function CreateEvent() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [selectedInterestes, setSelectedInterestes] = useState([]);
+  const [aiPrompt, setAiPrompt] = useState([]);
+  const [aiSuggestion, setAiSugestion] = useState([]);
+  const [aiLoading, setAiLoading] = useState(false);
   const { status, error, events, currentEvent } = useSelector(
     (state) => state.event,
   );
@@ -178,6 +185,23 @@ export default function CreateEvent() {
     );
   };
 
+  const handleSuggestAI = async () => {
+    setAiLoading(true);
+    try {
+      const { data } = await api.post("/ai/suggest-location", {
+        ...form,
+        aiPrompt,
+      });
+      setAiSugestion(data.suggestions);
+    } catch (error) {
+      setLocalError(
+        error.response?.data?.message || "Failed to get AI response",
+      );
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
   return (
     <>
       <div
@@ -318,6 +342,159 @@ export default function CreateEvent() {
             <p className="text text-primary opacity-50">
               Where will event take place?
             </p>
+            <label className="label grid">
+              <span className="label-text text-primary mt-6">
+                AI Suggestions
+              </span>
+              <textarea
+                value={aiPrompt}
+                onChange={(e) => setAiPrompt(e.target.value)}
+                className="text-primary opacity-50 bordered"
+                placeholder="Write where you want spend your time"
+              ></textarea>
+            </label>
+            <div className="mt-4 pl-20">
+              <button
+                type="button"
+                className="btn border-none bg-primary text-primary-content text-2xl font-bold py-6 px-7 rounded-xl shadow-xl shadow-primary/30 hover:shadow-primary/60 hover:scale-105 transition-all duration-300"
+                onClick={handleSuggestAI}
+              >
+                {aiLoading ? (
+                  <span className="loading loading-spinner" />
+                ) : (
+                  "✨ AI Suggest Location"
+                )}
+              </button>
+              {aiSuggestion?.map((suggestion) => {
+                const lat = suggestion.googlePlace?.latitude;
+                const lng = suggestion.googlePlace?.longitude;
+                const mapUrl = suggestion.googlePlace?.place_id
+                  ? `https://www.google.com/maps/place/?q=place_id:${suggestion.googlePlace.place_id}`
+                  : lat && lng
+                  ? `https://www.google.com/maps?q=${lat},${lng}`
+                  : null
+
+                return (
+                  <div
+                    key={suggestion.searchQuery}
+                    className="card bg-base-200 mb-4 cursor-pointer border border-transparent hover:border-orange-400/40 transition-all"
+                  >
+                    <div className="card-body mt-2">
+                      <div className="flex justify-between items-start gap-8">
+                        <div className="flex-1">
+                          <a
+                            href={mapUrl || "#"}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-2xl font-bold text-primary hover:text-orange-400 transition-colors"
+                          >
+                            {suggestion.googlePlace?.name || suggestion.name}
+                          </a>
+
+                          <p className="text-primary/60 mt-1">
+                            {suggestion.googlePlace?.formatted_address}
+                          </p>
+                        </div>
+
+                        <div className="shrink-0 text-right">
+                          <div className="flex items-center gap-2 text-orange-400">
+                            <Star className="w-7 h-7" />
+                            <span className="text-4xl font-bold">
+                              {suggestion.googlePlace?.rating || "N/A"}
+                            </span>
+                          </div>
+
+                          <p className="text-sm text-primary/50 mt-2">
+                            AI Recommended
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="mt-5">
+                        <div className="flex items-center gap-2 mb-2">
+                          <ThumbsUp className="text-primary w-6 h-6" />
+                          <span className="font-semibold text-primary">
+                            Why this place fits
+                          </span>
+                        </div>
+
+                        <p className="text-primary/70 leading-relaxed max-w-4xl">
+                          {suggestion.whyFits}
+                        </p>
+                      </div>
+
+                      <div className="mt-5">
+                        <p className="text-lg font-semibold text-primary mb-2">
+                          Highlights
+                        </p>
+
+                        <div className="flex flex-wrap gap-2">
+                          {suggestion.pros?.map((pro) => (
+                            <span
+                              key={pro}
+                              className="badge bg-primary/10 text-primary border-none"
+                            >
+                              {pro}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="mt-4 flex gap-2 flex-wrap text-primary">
+                        <span className="badge badge-outline text-lg">
+                          {suggestion.venueType}
+                        </span>
+
+                        <span className="badge badge-outline text-lg">
+                          {suggestion.area}
+                        </span>
+
+                        <span className="badge badge-outline text-lg">
+                          {suggestion.estimatedAverageCheck}
+                        </span>
+                      </div>
+
+                      <div className="mt-4 flex items-center gap-3 text-sm text-primary/60">
+                        <Pin className="text-primary w-5 h-5" />
+
+                        {mapUrl ? (
+                          <a
+                            href={mapUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-orange-400 transition-colors"
+                          >
+                            View on Google Maps
+                          </a>
+                        ) : (
+                          <span>Location unavailable</span>
+                        )}
+                      </div>
+
+                      <div className="card-actions justify-end mt-4">
+                        <button
+                        type="button"
+                          className="btn bg-gradient-to-r from-primary to-primary/80 text-primary-content border-none rounded-xl hover:scale-105 transition-all"
+                          onClick={() => {
+                            if (suggestion.googlePlace) {
+                              setForm({
+                                ...form,
+                                place_name: suggestion.googlePlace.name,
+                                latitude: suggestion.googlePlace.latitude,
+                                longitude: suggestion.googlePlace.longitude,
+                              });
+                            }
+                          }}
+                        >
+                          Select This Venue
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <label className="label">
