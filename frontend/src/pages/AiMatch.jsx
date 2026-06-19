@@ -154,7 +154,7 @@ export default function AiMatch() {
         {status === "loading" && <span className="loading loading-spinner" />}
         {status === "failed" && <p className="text-red-500">{error}</p>}
         {status === "succeeded" && matches && (
-          <div className="grid grid-cols-2 gap-6 mt-6 pl-6">
+          <div className="grid gr2id-cols-2 gap-6 mt-6 pl-6">
             <div className="">
               <h2 className="text-xl font-bold text-primary mb-4 flex gap-2 pl-4">
                 <Users className="w-8 h-8" />
