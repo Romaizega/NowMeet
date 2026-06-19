@@ -73,7 +73,7 @@ export default function Header() {
               <Link to="/explore">Explore</Link>
             </li>
             <li className="text-xl">
-              <Link to="/meetups">Meetups</Link>
+              <Link to="/meetups">My Meetups</Link>
             </li>
             <li className="text-xl">
               <Link to="/ai-match">AI Match</Link>

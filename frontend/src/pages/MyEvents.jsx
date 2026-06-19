@@ -4,6 +4,8 @@ import { getMyEvents, updateEvent } from "../features/events/eventThunk";
 import EventsImgExplore from "../assests/defaultImgEvents.png";
 import { Users, MapPinned, CalendarDays, PencilLine, Ban, SquarePlus  } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import getStatusColor from "../utils/getStatusColor";
+
 
 export default function MyEvents() {
   const { status, error, myEvents } = useSelector((state) => state.event);
@@ -66,7 +68,8 @@ export default function MyEvents() {
                 />
 
                 <div className="flex flex-col flex-1 gap-2">
-                  <span className="badge border-green-400 text-green-300 font-bold uppercase w-fit">
+                  <span className={getStatusColor(event.status)}>
+                    
                     {event.status}
                   </span>
                   <h3 className="text-primary text-xl font-bold">

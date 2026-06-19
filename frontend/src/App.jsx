@@ -41,11 +41,11 @@ function App() {
       <Route path="/event/my" element= {<ProtectedRoute><MyEvents /></ProtectedRoute>} />
       <Route path="/event/:id/common-chat" element= {<ProtectedRoute><EventChat /></ProtectedRoute>} />
       <Route path="/ai-match/" element= {<ProtectedRoute><AiMatch /></ProtectedRoute>} />
+      <Route path="/meetups/" element= {<ProtectedRoute><MyEvents /></ProtectedRoute>} />
 
       <Route path="/about" element={<AboutUs/>} />
       <Route path="/explore" element={<Explore/>} />
       <Route path="/how-works" element={<HowToWorks/>} />
-      <Route path="/meetups" element={<Meetups/>} />
       <Route path="/" element= {<Home/>}/>
       <Route path="/profile/:id" element={<ProfileView/>}/>
     </Routes>

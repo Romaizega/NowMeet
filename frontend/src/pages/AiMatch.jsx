@@ -8,8 +8,10 @@ import {
   Sparkles,
   Users,
   MapPinned,
-  ChevronRight,
   CalendarRange,
+  Brain,
+  Calendar,
+  Heart,
 } from "lucide-react";
 import defultAvatar from "../assests/default_avatar.png";
 
@@ -64,11 +66,11 @@ export default function AiMatch() {
                   <Sparkles className="w-8 h-8 text-orange-400 shrink-0" />
 
                   <div>
-                    <h3 className="text-lg font-semibold text-orange-400">
+                    <h3 className="text-2xl font-semibold text-orange-400">
                       Personalized just for you
                     </h3>
 
-                    <p className="text-sm opacity-70">
+                    <p className="text-lg opacity-70">
                       Based on your interests and activity
                     </p>
                   </div>
@@ -78,21 +80,83 @@ export default function AiMatch() {
           </div>
         </div>
       </div>
-      <div className="">
+      <section className="mt-5 pl-6">
+        <h2 className="text-4xl font-bold text-center text-primary mb-5">
+          How <span className="text-orange-400">AI</span> Match Works
+        </h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="card bg-base-200 border border-orange-400/10">
+            <div className="card-body items-center text-center">
+              <Brain className="w-16 h-16 text-orange-400 mt-1" />
+
+              <h3 className="text-xl font-bold text-primary mt-4">
+                Analyze Interests
+              </h3>
+
+              <p className="text-primary opacity-70">
+                We learn what you enjoy and what matters to you.
+              </p>
+            </div>
+          </div>
+
+          <div className="card bg-base-200 border border-orange-400/10">
+            <div className="card-body items-center text-center">
+              <Users className="w-16 h-16 text-green-400 mt-1" />
+
+              <h3 className="text-xl font-bold text-primary mt-4">
+                Find Compatible People
+              </h3>
+
+              <p className="text-primary opacity-70">
+                We match you with people who share similar interests.
+              </p>
+            </div>
+          </div>
+
+          <div className="card bg-base-200 border border-orange-400/10">
+            <div className="card-body items-center text-center">
+              <Calendar className="w-16 h-16 text-blue-400 mt-1" />
+
+              <h3 className="text-xl font-bold text-primary mt-4">
+                Recommend Events
+              </h3>
+
+              <p className="text-primary opacity-70">
+                We suggest events that fit your lifestyle and preferences.
+              </p>
+            </div>
+          </div>
+
+          <div className="card bg-base-200 border border-orange-400/10">
+            <div className="card-body items-center text-center">
+              <Heart className="w-16 h-16 text-purple-400 mt-1" />
+              <h3 className="text-xl font-bold text-primary mt-4">
+                Explain Why
+              </h3>
+
+              <p className="text-primary opacity-70">
+                Every recommendation comes with a clear explanation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <div className="mt-4 pl-20">
         <button
-          className="btn btn-outline border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-black"
+          className="btn border-none bg-gradient-to-r from-orange-500 via-amber-400 to-red-500 bg-[length:200%_auto] animate-pulse text-black text-2xl font-bold py-6 px-7 rounded-xl shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform duration-300"
           onClick={handleMatch}
         >
-          Find my Match
+          Find my Match with AI
         </button>
       </div>
       <div>
         {status === "loading" && <span className="loading loading-spinner" />}
         {status === "failed" && <p className="text-red-500">{error}</p>}
         {status === "succeeded" && matches && (
-          <div className="grid grid-cols-2 gap-6 mt-6">
-            <div>
-              <h2 className="text-xl font-bold text-primary mb-4 flex gap-2">
+          <div className="grid grid-cols-2 gap-6 mt-6 pl-6">
+            <div className="">
+              <h2 className="text-xl font-bold text-primary mb-4 flex gap-2 pl-4">
                 <Users className="w-8 h-8" />
                 People you might click with
               </h2>
@@ -150,7 +214,7 @@ export default function AiMatch() {
               ))}
             </div>
             <div>
-              <h2 className="text-xl font-bold text-primary mb-4 flex gap-2">
+              <h2 className="text-xl font-bold text-primary mb-4 flex gap-2 pl-4">
                 <CalendarRange className="w-8 h-8" />
                 Events perfect for you
               </h2>
