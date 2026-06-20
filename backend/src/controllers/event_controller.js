@@ -13,14 +13,17 @@ const createEvent = async (req, res) => {
       place_name,
       latitude,
       longitude,
+      city,
+      country,
   } = req.body
 
-  if(!title || !event_start || !place_name){
-    return res.status(400).json({message: "Title, event_start, and place_name are required to fill out"})
+  if(!title || !event_start || !place_name || !city){
+    return res.status(400).json({message: "Title, event_start, place_name, and city are required to fill out"})
   }
   try {
     const minDurationInmin = 15
     const minMaxParicipant = 1
+    const image_cover = req.file ? req.file.filename : undefined
     if(title !== undefined && title.length < 3){
       return res.status(400).json({message: "Event title must contain at least 3 characters"})
     }
@@ -40,6 +43,11 @@ const createEvent = async (req, res) => {
       return res.status(400).json({message: "Latitude must be a number between -90 and 90"})
     if(longitude !== undefined && (isNaN(Number(longitude)) || Number(longitude) <-180 || Number(longitude) > 180))
       return res.status(400).json({message: "Longitude must be a number between -180 and 180"})
+    if(city !== undefined  && city.length < 3) {
+      return res.status(400).json({message: "City must contain at least 3 characters"})}
+    if(country !== undefined && country.length < 3 ){
+      return res.status(400).json({message: "Country must contain at least 3 characters"})}
+    
 
     const event = await eventModel.createEvent(
       creator_id,
@@ -51,6 +59,9 @@ const createEvent = async (req, res) => {
       place_name,
       latitude,
       longitude,
+      city,
+      country,
+      image_cover
     )
     const io = req.app.get('io')
     console.log('Emitting new_event', event)
@@ -136,11 +147,16 @@ const updateEventContr = async (req, res) => {
       place_name,
       latitude,
       longitude,
-      status
+      status,
+      city,
+      country,
+      
     } = req.body || {}
 
     const minDurationInmin = 15
     const minMaxParicipant = 1
+    const image_cover = req.file ? req.file.filename : undefined
+
     if(title !== undefined && title.length < 3){
       return res.status(400).json({message: "Event title must contain at least 3 characters"})
     }
@@ -162,6 +178,10 @@ const updateEventContr = async (req, res) => {
       return res.status(400).json({message: "Longitude must be a number between -180 and 180"})
    if (status !== undefined && !['open', 'closed', 'cancelled', 'expired'].includes(status))
       return res.status(400).json({message: "Invalid status value"})
+    if(city !== undefined  && city.length < 3) {
+      return res.status(400).json({message: "City must contain at least 3 characters"})}
+    if(country !== undefined && country.length < 3 ){
+      return res.status(400).json({message: "Country must contain at least 3 characters"})}
 
     const editEvent = await eventModel.updateEvent(
       id,      
@@ -173,14 +193,64 @@ const updateEventContr = async (req, res) => {
       place_name,
       latitude,
       longitude,
-      status
+      status,
+      city,
+      country,
+      image_cover
     )
     return res.status(200).json({message: "Event was update", editEvent})
   } catch (error) {
     return res.status(500).json({message: "Server error", error: error.message})    
   }
 }
- 
+
+const getGeoLocation = async (req, res) => {
+  try {
+    const {latitude, longitude} = req.body
+    // console.log('lat, lng received:', latitude, longitude)
+    
+    const googleResponse = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_API_KEY_BACKEND}`);
+      // console.log('Google response status:', googleResponse.status)
+    const googleData = await googleResponse.json();
+    // console.log('Google data:', googleData)
+    const googleResult = googleData.results[0]?.address_components
+    const cityGoogle = googleResult.find((item) => {
+      return item.types.includes('locality')
+    })
+    const city = cityGoogle?.long_name || "Unknown city"
+    const countryGoogle = googleResult.find((item) => {
+      return item.types.includes('country')
+    })
+    const country = countryGoogle?.long_name || "Unknown country"
+    return res.status(200).json({message: "Country and city were recieved", city, country})
+
+    } catch (error) {
+    return res.status(500).json({message: "Server error", error: error.message})    
+  }
+}
+
+const getGeoHeader = async (req, res) => {
+  try {
+    const {latitude, longitude} = req.body
+    const googleResponse = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_API_KEY_BACKEND}`);
+    const googleData = await googleResponse.json();
+    const cityGoogle = googleResult.find((item) => {
+      return item.types.includes('locality')
+    })
+    const city = cityGoogle?.long_name || "y"
+    const countryGoogle = googleResult.find((item) => {
+      return item.types.includes('country')
+    })
+    const counrty = countryGoogle?.long_name || ""
+    const navbarLocation = city && country ? `${city}, ${country}` : city || country || "Unknown location"
+    return res.status(200).json({message: "Get location for navbar", navbarLocation})
+  
+  } catch (error) {
+    return res.status(500).json({message: "Server error", error: error.message})    
+  }
+}
  
 module.exports = {
   createEvent,
@@ -188,5 +258,8 @@ module.exports = {
   getAllEvents,
   deleteEvent,
   updateEventContr,
-  getMyEvents
+  getMyEvents,
+  getGeoLocation,
+  getGeoHeader
+
 }

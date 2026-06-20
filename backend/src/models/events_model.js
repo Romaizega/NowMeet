@@ -10,7 +10,9 @@ const createEvent = async(
   place_name,
   latitude,
   longitude,
-  status
+  city,
+  country,
+  cover_image
 ) => {
     const [event] = await db('events')
     .insert({
@@ -23,7 +25,9 @@ const createEvent = async(
       place_name,
       latitude,
       longitude,
-      status
+      city,
+      country,
+      cover_image
     })
     .returning('*')
     return event
@@ -60,7 +64,10 @@ const createEvent = async(
     place_name,
     latitude,
     longitude,
-    status
+    status,
+    city,
+    country,
+    cover_image
   ) => {
     const updateEvent = {}
     if(title !== undefined)
@@ -81,6 +88,12 @@ const createEvent = async(
       updateEvent.longitude = longitude
     if(status !== undefined)
       updateEvent.status = status
+    if(city !== undefined)
+      updateEvent.city = city
+    if(country !== undefined)
+      updateEvent.country = country
+    if(cover_image !== undefined)
+      updateEvent.cover_image = cover_image
     updateEvent.updated_at = db.fn.now()
     
     const [newUpdateEvent] = await db('events')

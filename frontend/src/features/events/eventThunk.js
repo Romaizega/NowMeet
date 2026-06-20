@@ -4,29 +4,10 @@ import api from "../../services/axios";
 const createEvent = createAsyncThunk(
   "events/createEvent",
   async (
-    {
-      title,
-      description,
-      event_start,
-      duration,
-      max_participants,
-      place_name,
-      latitude,
-      longitude,
-    },
-    { rejectWithValue },
+     formData, { rejectWithValue },
   ) => {
     try {
-      const { data } = await api.post("/event/create", {
-        title,
-        description,
-        event_start,
-        duration,
-        max_participants,
-        place_name,
-        latitude,
-        longitude,
-      });
+      const { data } = await api.post("/event/create", formData);
       return data;
     } catch (error) {
       const message =
