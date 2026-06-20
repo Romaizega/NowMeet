@@ -20,6 +20,7 @@ import {
   Star,
   ThumbsUp,
   Pin,
+  Image,
 } from "lucide-react";
 
 import {
@@ -52,7 +53,12 @@ export default function CreateEvent() {
     place_name: "",
     latitude: "",
     longitude: "",
+    city: "",
+    country: "",
+    cover_image: "",
   });
+  const [coverImage, setCoverImage] = useState(null);
+  const [coverShow, setCoverShow] = useState(null);
 
   const {
     status: interestStatus,
@@ -75,6 +81,9 @@ export default function CreateEvent() {
         place_name: currentEvent.place_name,
         latitude: currentEvent.latitude,
         longitude: currentEvent.longitude,
+        city: currentEvent.city,
+        country: currentEvent.country,
+        cover_image: currentEvent.cover_image,
       });
     }
   }, [isEditMode, currentEvent]);
@@ -116,13 +125,35 @@ export default function CreateEvent() {
     if (!form.place_name) {
       return setLocalError("You must fill in location name");
     }
+    if (!form.city) {
+      return setLocalError("You must fill city field");
+    }
+    if (!form.country) {
+      return setLocalError("You must fill the country field");
+    }
+    if (!coverImage) {
+      return setLocalError("You should upload an image of event");
+    }
 
     try {
       if (isEditMode) {
         await dispatch(updateEvent({ id, ...form })).unwrap();
         navigate(`/event/${id}`);
       } else {
-        const result = await dispatch(createEvent(form)).unwrap();
+        const formData = new FormData();
+        formData.append("title", form.title);
+        formData.append("description", form.description);
+        formData.append("event_start", form.event_start);
+        formData.append("duration", form.duration);
+        formData.append("max_participants", form.max_participants);
+        formData.append("place_name", form.place_name);
+        formData.append("latitude", form.latitude);
+        formData.append("longitude", form.longitude);
+        formData.append("city", form.city);
+        formData.append("country", form.country);
+        formData.append("cover_image", coverImage);
+        const result = await dispatch(createEvent(formData)).unwrap();
+
         for (const interest_id of selectedInterestes) {
           await dispatch(
             addEventInterest({ id: result.event.id, interest_id }),
@@ -142,19 +173,24 @@ export default function CreateEvent() {
 
   const handleLocationSelect = ({ lat, lng }) => {
     setForm({ ...form, latitude: lat, longitude: lng });
+    fetchGeoData(lat, lng);
   };
 
   useEffect(() => {
     if (!isEditMode) {
       navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
         setForm((prev) => ({
           ...prev,
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
+          latitude: lat,
+          longitude: lng,
         }));
+        fetchGeoData(lat, lng);
       });
     }
   }, []);
+
   useEffect(() => {
     if (localError) {
       const timer = setTimeout(() => setLocalError(""), 10000);
@@ -202,6 +238,18 @@ export default function CreateEvent() {
     }
   };
 
+  const fetchGeoData = async (latitude, longitude) => {
+    try {
+      const { data } = await api.post("/event/geocode", {
+        latitude,
+        longitude,
+      });
+      setForm((prev) => ({ ...prev, city: data.city, country: data.country }));
+    } catch (error) {
+      setLocalError(error.response?.data?.message || "Failed to get geo data");
+    }
+  };
+
   return (
     <>
       <div
@@ -236,35 +284,83 @@ export default function CreateEvent() {
           )}
           <div className="text">
             <h2 className="text-2xl">Event Details</h2>
-            <label className="label">
-              <span className="label-text text-primary">Title</span>
-            </label>
-            <input
-              type="text"
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              placeholder="Enter event title"
-              className="input input-bordered w-full text-primary"
-            />
-            <p className="text text-primary opacity-50">
-              A clear and catchy title helps people notice your event
-            </p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text text-primary font-semibold">
+                      Event Image (Optional)
+                    </span>
+                  </label>
 
-            <label className="label">
-              <span className="label-text text-primary mt-6">Description </span>
-            </label>
-            <textarea
-              value={form.description}
-              name="description"
-              onChange={handleChange}
-              placeholder="Describe your event, what people can expect, and who it's fro"
-              className="textarea textarea-bordered w-full text-primary"
-            />
-            <p className="text text-primary opacity-50">
-              Share more details about your event. What's the vibe? What will
-              peole do?
-            </p>
+                  <label className="border-2 border-dashed border-primary/30 rounded-xl h-56 cursor-pointer hover:border-primary transition-all flex flex-col items-center justify-center gap-3 bg-base-300">
+                    <Image className="w-12 h-12 text-primary" />
+
+                    <p className="text-xl font-semibold text-primary">
+                      Upload event image
+                    </p>
+
+                    <p className="text-sm text-primary/60">
+                      PNG, JPG or WEBP (max. 5MB)
+                    </p>
+
+                    <p className="text-xs text-primary/40">
+                      This image will be shown on your event page and preview sectiion with a title
+                    </p>
+
+                    <div className="btn btn-outline btn-primary mt-2">
+                      Choose File
+                    </div>
+
+                    <input
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        setCoverImage(file);
+                        if (file) {
+                          setCoverShow(URL.createObjectURL(file));
+                        }
+                      }}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label className="label">
+                  <span className="label-text text-primary">Title</span>
+                </label>
+                <input
+                  type="text"
+                  name="title"
+                  value={form.title}
+                  onChange={handleChange}
+                  placeholder="Enter event title"
+                  className="input input-bordered w-full text-primary"
+                />
+                <p className="text text-primary opacity-50">
+                  A clear and catchy title helps people notice your event
+                </p>
+
+                <label className="label">
+                  <span className="label-text text-primary mt-6">
+                    Description{" "}
+                  </span>
+                </label>
+                <textarea
+                  value={form.description}
+                  name="description"
+                  onChange={handleChange}
+                  placeholder="Describe your event, what people can expect, and who it's fro"
+                  className="textarea textarea-bordered w-full text-primary"
+                />
+                <p className="text text-primary opacity-50">
+                  Share more details about your event. What's the vibe? What
+                  will peole do?
+                </p>
+              </div>
+            </div>
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <label className="label">
@@ -342,6 +438,34 @@ export default function CreateEvent() {
             <p className="text text-primary opacity-50">
               Where will event take place?
             </p>
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <label className="label">
+                  <span className="label-text text-primary mt-6">Country</span>
+                </label>
+                <input
+                  type="text"
+                  name="country"
+                  value={form.country}
+                  onChange={handleChange}
+                  placeholder="e.g. Israel"
+                  className="input input-bordered w-full text-primary"
+                />
+              </div>
+              <div>
+                <label className="label">
+                  <span className="label-text text-primary mt-6">City</span>
+                </label>
+                <input
+                  type="text"
+                  name="city"
+                  value={form.city}
+                  onChange={handleChange}
+                  placeholder="e.g. Tel Aviv"
+                  className="input input-bordered w-full text-primary"
+                />
+              </div>
+            </div>
             <label className="label grid">
               <span className="label-text text-primary mt-6">
                 AI Suggestions
@@ -349,9 +473,13 @@ export default function CreateEvent() {
               <textarea
                 value={aiPrompt}
                 onChange={(e) => setAiPrompt(e.target.value)}
-                className="text-primary opacity-50 bordered"
-                placeholder="Write where you want spend your time"
+                className="textarea textarea-bordered w-full text-primary"
+                placeholder="e.g. cozy cafe in Haifa with a good enviroment"
               ></textarea>
+              <p className="text text-primary opacity-50">
+                {" "}
+                Write where you want spend your time
+              </p>
             </label>
             <div className="mt-4 pl-20">
               <button
@@ -371,8 +499,8 @@ export default function CreateEvent() {
                 const mapUrl = suggestion.googlePlace?.place_id
                   ? `https://www.google.com/maps/place/?q=place_id:${suggestion.googlePlace.place_id}`
                   : lat && lng
-                  ? `https://www.google.com/maps?q=${lat},${lng}`
-                  : null
+                    ? `https://www.google.com/maps?q=${lat},${lng}`
+                    : null;
 
                 return (
                   <div
@@ -473,7 +601,7 @@ export default function CreateEvent() {
 
                       <div className="card-actions justify-end mt-4">
                         <button
-                        type="button"
+                          type="button"
                           className="btn bg-gradient-to-r from-primary to-primary/80 text-primary-content border-none rounded-xl hover:scale-105 transition-all"
                           onClick={() => {
                             if (suggestion.googlePlace) {
@@ -580,44 +708,88 @@ export default function CreateEvent() {
         </form>
         <div className="flex flex-col gap-6">
           <div className="bg-base-200 rounded-xl p-8">
-            <div className="text-2xl">
-              <h1 className="text">Tips for a great event</h1>
-            </div>
-            <div className="flex flex-col gap-3">
-              <div className="flex items-start gap-3 mt-4">
-                <SquarePen className="w-8 h-8 text-primary mt-1" />
-                <div className="text text-primary">
-                  <p className="font-bold">Be clear and specific</p>
-                  <p className="text-sm opacity-50">
-                    A good title and description help the right people join
-                  </p>
+            <div className="grid grid-cols-2 gap-8">
+              {/* LEFT */}
+              <div className="border border-primary/20 rounded-xl p-6 bg-base-300">
+                <div className="text-2xl font-bold">
+                  <h1 className="text">Tips for a great event</h1>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <div className="flex items-start gap-3 mt-4">
+                    <SquarePen className="w-8 h-8 text-primary mt-1" />
+                    <div className="text text-primary">
+                      <p className="font-bold">Be clear and specific</p>
+                      <p className="text-sm opacity-50">
+                        A good title and description help the right people join
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 mt-4">
+                    <MapPinCheck className="w-8 h-8 text-primary mt-1" />
+                    <div className="text text-primary">
+                      <p className="font-bold">Choose the right location</p>
+                      <p className="text-sm opacity-50">
+                        Pick a place that's easy to find and accessible
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 mt-4">
+                    <ContactRound className="w-8 h-8 text-primary mt-1" />
+                    <div className="text text-primary">
+                      <p className="font-bold">Set expectations</p>
+                      <p className="text-sm opacity-50">
+                        Add duration, max people, and any important details
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3 mt-4">
+                    <HeartHandshake className="w-8 h-8 text-primary mt-1" />
+                    <div className="text text-primary">
+                      <p className="font-bold">Make it inviting</p>
+                      <p className="text-sm opacity-50">
+                        A warm description creates excitement and connection
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-start gap-3 mt-4">
-                <MapPinCheck className="w-8 h-8 text-primary mt-1" />
-                <div className="text text-primary">
-                  <p className="font-bold">Choose the right location</p>
-                  <p className="text-sm opacity-50">
-                    Pick a place that's easy to find and accessible
-                  </p>
+
+              {/* RIGHT */}
+              <div className="border border-primary/20 rounded-xl p-6 bg-base-300">
+                <div className="flex items-center gap-3 mb-4">
+                  {/* <Brain className="w-8 h-8 text-primary" /> */}
+                  <h2 className="text-2xl font-bold ">AI Venue Assistant</h2>
                 </div>
-              </div>
-              <div className="flex items-start gap-3 mt-4">
-                <ContactRound className="w-8 h-8 text-primary mt-1" />
-                <div className="text text-primary">
-                  <p className="font-bold">Set expectations</p>
-                  <p className="text-sm opacity-50">
-                    Add duration, max people, and any important details
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 mt-4">
-                <HeartHandshake className="w-8 h-8 text-primary mt-1" />
-                <div className="text text-primary">
-                  <p className="font-bold">Make it inviting</p>
-                  <p className="text-sm opacity-50">
-                    A warm description creates excitement and connection
-                  </p>
+
+                <p className="text-primary mb-4">
+                  Finding the right place can be difficult
+                </p>
+
+                <p className="text-primary/70">
+                  Our AI analyzes your event and suggests real venues that match
+                  your audience, group size and activity.
+                </p>
+
+                <div className="mt-6 flex flex-col gap-3">
+                  <span className="flex items-center gap-2 text-primary">
+                    ✓ Smart recommendations
+                  </span>
+                  <span className="flex items-center gap-2 text-primary">
+                    ✓ Real places
+                  </span>
+                  <span className="flex items-center gap-2 text-primary">
+                    ✓ Google ratings
+                  </span>
+                  <span className="flex items-center gap-2 text-primary">
+                    ✓ Maps and directions
+                  </span>
+                  <span className="flex items-center gap-2 text-primary">
+                    ✓ One-click selection
+                  </span>
                 </div>
               </div>
             </div>
@@ -627,63 +799,88 @@ export default function CreateEvent() {
             <div className="text-2xl">
               <h1 className="text">Preview</h1>
             </div>
+
             {form.title ? (
-              <div className="text text-primary">
-                <div className="flex items-center gap-2 mt-4">
-                  <NotebookPen className="w-5 h-5" />
-                  <h3>{form.title}</h3>
-                </div>
-                {form.description && (
-                  <div className="flex items-center gap-2 mt-4">
-                    <BookOpenText className="w-5 h-5" />
-                    <h3>{form.description}</h3>
-                  </div>
-                )}
-                {form.event_start && (
-                  <div className="flex items-center gap-2 mt-4">
-                    <CalendarClock className=" w-5 h-5" />
-                    {form.event_start && <p>{formatDate(form.event_start)}</p>}
-                  </div>
-                )}
-                {form.place_name && (
-                  <div className=" flex items-center gap-2 mt-4">
-                    <MapPinned />
-                    {form.place_name && <p>{form.place_name}</p>}
-                  </div>
-                )}
-                {form.duration && (
-                  <div className="flex items-center gap-2 mt-4">
-                    <Clock />
-                    {form.duration && <p>{form.duration} min</p>}
-                  </div>
-                )}
-                {form.max_participants && (
-                  <div className="flex items-center gap-2 mt-4">
-                    <Users />
-                    {form.max_participants && (
-                      <p>Up to {form.max_participants} people</p>
+              <div className="card bg-base-300 mt-4">
+                <div className="card-body">
+                  <div className="flex gap-6">
+                    {coverShow && (
+                      <div className="relative w-70 h-70 shrink-0 overflow-hidden rounded-xl">
+                        <img
+                          src={coverShow}
+                          alt="Event preview"
+                          className="w-full h-full object-cover"
+                        />
+
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                      </div>
                     )}
+
+                    <div className="flex-1 text text-primary">
+                      <div className="flex items-center gap-2">
+                        <NotebookPen className="w-5 h-5" />
+                        <h3 className="text-xl font-bold">{form.title}</h3>
+                      </div>
+
+                      {form.description && (
+                        <div className="flex items-start gap-2 mt-4">
+                          <BookOpenText className="w-5 h-5 mt-1 shrink-0" />
+                          <h3>{form.description}</h3>
+                        </div>
+                      )}
+
+                      {form.event_start && (
+                        <div className="flex items-center gap-2 mt-4">
+                          <CalendarClock className="w-5 h-5" />
+                          <p>{formatDate(form.event_start)}</p>
+                        </div>
+                      )}
+
+                      {form.place_name && (
+                        <div className="flex items-center gap-2 mt-4">
+                          <MapPinned />
+                          <p>{form.place_name}</p>
+                        </div>
+                      )}
+
+                      {form.duration && (
+                        <div className="flex items-center gap-2 mt-4">
+                          <Clock />
+                          <p>{form.duration} min</p>
+                        </div>
+                      )}
+
+                      {form.max_participants && (
+                        <div className="flex items-center gap-2 mt-4">
+                          <Users />
+                          <p>Up to {form.max_participants} people</p>
+                        </div>
+                      )}
+
+                      {selectedInterestes.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mt-4">
+                          <ScanSearch />
+                          {selectedInterestes.map((id) => {
+                            const interest = allInterests.find(
+                              (i) => i.id === id,
+                            );
+                            return interest ? (
+                              <span
+                                key={id}
+                                className="rounded-full bg-orange-400 px-3 py-1 text-black text-sm"
+                              >
+                                {interest.name}
+                              </span>
+                            ) : null;
+                          })}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
-                {selectedInterestes.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    <ScanSearch />
-                    {selectedInterestes.map((id) => {
-                      const interest = allInterests.find((i) => i.id === id);
-                      return interest ? (
-                        <span
-                          key={id}
-                          className="rounded-full bg-orange-400 px-3 py-1 text-black text-sm"
-                        >
-                          {interest.name}
-                        </span>
-                      ) : null;
-                    })}
-                  </div>
-                )}
+                </div>
               </div>
             ) : (
-              <div className="bg-base-300 rounded-xl p-8 ">
+              <div className="bg-base-300 rounded-xl p-8 mt-4">
                 <div className="flex flex-col items-center justify-center text-center">
                   <CalendarPlus2 className="text-primary w-10 h-10 mb-3" />
                   <p className="text-xl text-primary">Your event preview</p>
