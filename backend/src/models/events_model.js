@@ -108,7 +108,7 @@ const createEvent = async(
     return db('events')
     .where('creator_id', creator_id)
     .select('*')
-    .orderBy('event_start','asc')
+    .orderBy('event_start','desc')
   }
 
   module.exports = {

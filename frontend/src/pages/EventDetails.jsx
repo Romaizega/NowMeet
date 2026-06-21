@@ -24,7 +24,7 @@ import {
   CircleX,
   CalendarSync,
   MessageSquareMore,
-  ArrowLeft
+  ArrowLeft,
 } from "lucide-react";
 import heroEventDetail from "../assests/hero_eventDetail.png";
 import defultAvatar from "../assests/default_avatar.png";
@@ -114,12 +114,16 @@ export default function EventDetails() {
     <>
       {/* Hero */}
       <div
-        className="relative rounded-xl overflow-hidden mb-2 h-[320px]"
+        className="relative rounded-xl overflow-hidden mb-6 h-[420px] "
         style={{
-          backgroundImage: `url(${heroEventDetail})`,
+          backgroundImage: `url(${
+            currentEvent.cover_image
+              ? `${import.meta.env.VITE_SERVER_URL}/uploads/${currentEvent.cover_image}`
+              : heroEventDetail
+          })`,
           backgroundSize: "contain",
           backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          backgroundRepeat: "no-repeat"
         }}
       >
         <div className="relative z-10 flex flex-col justify-between h-full px-10 pb-6 pt-10">
@@ -128,7 +132,7 @@ export default function EventDetails() {
               className="btn btn-ghost text-xl"
               onClick={() => navigate("/explore")}
             >
-              <ArrowLeft/>
+              <ArrowLeft />
               Back to Events
             </button>
           </div>
@@ -174,7 +178,7 @@ export default function EventDetails() {
                 className="btn btn-outline border-orange-351 px-10 py-6 text-primary gap-6 text-xl hover:bg-orange-400 hover:text-black"
                 onClick={() => navigate(`/event/${id}/common-chat`)}
               >
-                <MessageCircleMore/>
+                <MessageCircleMore />
                 Chat
               </button>
             </div>
@@ -238,7 +242,6 @@ export default function EventDetails() {
                 <Trash2 />
                 Delete Event
               </button>
-
             </div>
           ) : (
             <button
