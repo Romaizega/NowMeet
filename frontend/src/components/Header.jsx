@@ -6,7 +6,8 @@ import { persistor } from "../app/store";
 import { useNavigate } from "react-router-dom";
 import socket from "../utils/socket";
 import { setAddNotification, setClearNotification } from "../features/notifications/notificationsSlice";
-import { Bell, Mail } from 'lucide-react';
+import { Bell, Mail, MapPin } from 'lucide-react';
+import api from "../services/axios";
 
 export default function Header() {
   const dispatch = useDispatch();
@@ -15,6 +16,8 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openNotific, setOpenNotific] = useState(false)
   const [openMessages, setOPenMessages] = useState(false)
+  const [location, setLocation] = useState('Detecting your location')
+  const [localError, setLocalError] = useState()
   const { notifications } = useSelector((state) => state.notification);
 
   const handleLogout = () => {
@@ -59,6 +62,28 @@ export default function Header() {
     dispatch(setClearNotification())
   }
 
+  const fetchLocation = async (latitude, longitude) => {
+    try {
+      const { data } = await api.post("/event/geodetect", {
+        latitude,
+        longitude,
+      });
+      setLocation(data.navbarLocation);
+    } catch (error) {
+      setLocalError(error.response?.data?.message || "Failed to get geo data");
+    }
+  };
+
+ useEffect(() => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        fetchLocation(lat, lng);
+      });
+  }, []);
+
+
+
   return (
     <>
       <div className="navbar bg-base-100 shadow-sm px-8">
@@ -88,6 +113,11 @@ export default function Header() {
         </div>
 
         <div className="navbar-end">
+          <div>
+            <span className="text-sm text-primary opacity-50 flex gap-2">
+              <MapPin/>
+              {location}</span>
+          </div>
           {/* <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" /> */}
           {user ? (
             <div className="relative">

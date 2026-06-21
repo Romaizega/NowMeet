@@ -6,7 +6,8 @@ const {
   deleteEvent,
   updateEventContr,
   getMyEvents, 
-  getGeoLocation
+  getGeoLocation,
+  getGeoHeader
   
 } = require('../controllers/event_controller')
 const {joinEvent, cancelEvent} = require('../controllers/event_participant_controller')
@@ -18,6 +19,7 @@ const upload = require('../middleware/upload')
 const router = express.Router()
 
 router.post('/geocode', authenticateJWT, getGeoLocation)
+router.post('/geodetect', authenticateJWT, getGeoHeader)
 router.post('/create', authenticateJWT, upload.single("cover_image"), createEvent)
 router.get('/events', getAllEvents)
 router.get('/my', authenticateJWT, getMyEvents)
