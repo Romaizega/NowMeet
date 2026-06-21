@@ -236,14 +236,15 @@ const getGeoHeader = async (req, res) => {
     const googleResponse = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_API_KEY_BACKEND}`);
     const googleData = await googleResponse.json();
+    const googleResult = googleData.results[0]?.address_components
     const cityGoogle = googleResult.find((item) => {
       return item.types.includes('locality')
     })
-    const city = cityGoogle?.long_name || "y"
+    const city = cityGoogle?.long_name || ""
     const countryGoogle = googleResult.find((item) => {
       return item.types.includes('country')
     })
-    const counrty = countryGoogle?.long_name || ""
+    const country = countryGoogle?.long_name || ""
     const navbarLocation = city && country ? `${city}, ${country}` : city || country || "Unknown location"
     return res.status(200).json({message: "Get location for navbar", navbarLocation})
   
