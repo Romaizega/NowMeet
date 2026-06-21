@@ -2,10 +2,16 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getMyEvents, updateEvent } from "../features/events/eventThunk";
 import EventsImgExplore from "../assests/defaultImgEvents.png";
-import { Users, MapPinned, CalendarDays, PencilLine, Ban, SquarePlus  } from "lucide-react";
+import {
+  Users,
+  MapPinned,
+  CalendarDays,
+  PencilLine,
+  Ban,
+  SquarePlus,
+} from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import getStatusColor from "../utils/getStatusColor";
-
 
 export default function MyEvents() {
   const { status, error, myEvents } = useSelector((state) => state.event);
@@ -51,7 +57,7 @@ export default function MyEvents() {
               className="btn btn-outline border-orange-351 text-orange-350 py-6 px-9 text-xl gap-4"
               onClick={() => navigate("/event/create")}
             >
-              <SquarePlus  className="w-5 h-5 " />
+              <SquarePlus className="w-5 h-5 " />
               Create an Event
             </button>
           </div>
@@ -62,20 +68,23 @@ export default function MyEvents() {
                 className="flex gap-4 bg-base-200 rounded-xl p-4"
               >
                 <img
-                  src={EventsImgExplore}
+                  src={
+                    event.cover_image
+                      ? `${import.meta.env.VITE_SERVER_URL}/uploads/${event.cover_image}`
+                      : EventsImgExplore
+                  }
                   alt=""
                   className="w-48 h-36 rounded-xl object-cover flex-shrink-0"
                 />
 
                 <div className="flex flex-col flex-1 gap-2">
                   <span className={getStatusColor(event.status)}>
-                    
                     {event.status}
                   </span>
                   <h3 className="text-primary text-xl font-bold">
                     {event.title}
                   </h3>
-                  <p className="text-primary opacity-50">{event.description}</p>
+                  <p className="text-primary opacity-50 line-clamp-2 ">{event.description}</p>
                   <div className="flex gap-6 mt-2">
                     <span className="flex items-center gap-2 text-primary">
                       <CalendarDays className="w-4 h-4" />
