@@ -73,17 +73,18 @@ export default function CreateEvent() {
   useEffect(() => {
     if (isEditMode && currentEvent) {
       setForm({
-        title: currentEvent.title,
-        description: currentEvent.description,
-        event_start: currentEvent.event_start,
-        duration: currentEvent.duration,
-        max_participants: currentEvent.max_participants,
-        place_name: currentEvent.place_name,
-        latitude: currentEvent.latitude,
-        longitude: currentEvent.longitude,
-        city: currentEvent.city,
-        country: currentEvent.country,
-        cover_image: currentEvent.cover_image,
+        title: currentEvent.title || "",
+        description: currentEvent.description || "",
+        event_start: currentEvent.event_start || "",
+        duration: currentEvent.duration || "",
+        max_participants: currentEvent.max_participants || "",
+        place_name: currentEvent.place_name || "",
+        latitude: currentEvent.latitude || "",
+        longitude: currentEvent.longitude || "",
+        city: currentEvent.city || "",
+        country: currentEvent.country || "",
+        cover_image: currentEvent.cover_image || "",
+        place_id: currentEvent.place_id || "",
       });
     }
   }, [isEditMode, currentEvent]);
@@ -131,13 +132,26 @@ export default function CreateEvent() {
     if (!form.country) {
       return setLocalError("You must fill the country field");
     }
-    if (!coverImage) {
+    if (!coverImage && !isEditMode) {
       return setLocalError("You should upload an image of event");
     }
 
     try {
       if (isEditMode) {
-        await dispatch(updateEvent({ id, ...form })).unwrap();
+        const formDataPut = new FormData()
+        formDataPut.append("title", form.title);
+        formDataPut.append("description", form.description);
+        formDataPut.append("event_start", form.event_start);
+        formDataPut.append("duration", form.duration);
+        formDataPut.append("max_participants", form.max_participants);
+        formDataPut.append("place_name", form.place_name);
+        formDataPut.append("latitude", form.latitude);
+        formDataPut.append("longitude", form.longitude);
+        formDataPut.append("city", form.city);
+        formDataPut.append("country", form.country);
+        formDataPut.append("cover_image", coverImage);
+        formDataPut.append("place_id", form.place_id)
+        await dispatch(updateEvent({id, formData: formDataPut})).unwrap();
         navigate(`/event/${id}`);
       } else {
         const formData = new FormData();
@@ -152,6 +166,7 @@ export default function CreateEvent() {
         formData.append("city", form.city);
         formData.append("country", form.country);
         formData.append("cover_image", coverImage);
+        formData.append("place_id", form.place_id)
         const result = await dispatch(createEvent(formData)).unwrap();
 
         for (const interest_id of selectedInterestes) {
@@ -610,6 +625,7 @@ export default function CreateEvent() {
                                 place_name: suggestion.googlePlace.name,
                                 latitude: suggestion.googlePlace.latitude,
                                 longitude: suggestion.googlePlace.longitude,
+                                place_id: suggestion.googlePlace.place_id
                               });
                             }
                           }}

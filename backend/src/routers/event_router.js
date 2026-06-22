@@ -28,7 +28,7 @@ router.delete('/:id', authenticateJWT, deleteEvent)
 router.post('/:id/join', authenticateJWT, joinEvent)
 router.post('/:id/messages', authenticateJWT, sendMessage)
 router.get('/:id/messages', authenticateJWT, getMessage)
-router.put('/:id/edit', authenticateJWT, updateEventContr)
+router.put('/:id/edit', authenticateJWT, upload.single("cover_image"), updateEventContr)
 router.delete('/:id/cancel', authenticateJWT, cancelEvent)
 
 module.exports = router
