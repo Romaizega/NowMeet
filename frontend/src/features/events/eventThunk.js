@@ -84,32 +84,9 @@ const cancelEvent = createAsyncThunk(
 const updateEvent = createAsyncThunk(
   "event/update",
   async (
-    {
-      id,
-      title,
-      description,
-      event_start,
-      duration,
-      max_participants,
-      place_name,
-      latitude,
-      longitude,
-      status
-    },
-    { rejectWithValue },
-  ) => {
+    {id, formData}, { rejectWithValue }) => {
     try {
-      const { data } = await api.put(`/event/${id}/edit`, {
-        title,
-        description,
-        event_start,
-        duration,
-        max_participants,
-        place_name,
-        latitude,
-        longitude,
-        status
-      });
+      const { data } = await api.put(`/event/${id}/edit`, formData);
       return data;
     } catch (error) {
       const message =
