@@ -15,12 +15,13 @@ import getStatusColor from "../utils/getStatusColor";
 export default function Events() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { status, error, events, participants } = useSelector(
+  const { status, error, events, participants, pagination } = useSelector(
     (state) => state.event,
   );
 
   const [searchEvents, setSearchEvents] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [page, setPage] = useState(1)
   const filteredEvents = events
     .filter((event) =>
       event.title.toLowerCase().includes(searchEvents.toLowerCase()),
@@ -30,8 +31,8 @@ export default function Events() {
     );
 
   useEffect(() => {
-    dispatch(getAllEvents());
-  }, [dispatch]);
+    dispatch(getAllEvents({page}));
+  }, [dispatch, page]);
 
   if (status === "loading")
     return <span className="loading loading-spinner"> Loading events...</span>;
@@ -156,6 +157,23 @@ export default function Events() {
                 </div>
               </div>
             ))}
+          </div>
+          <div className=" join flex justify-center gap-4 mt-5 text-primary w-full">
+            {Array.from({length: pagination.totalPages}, (_, i) => {
+              const pageNumber = i + 1
+              return (
+                <input
+            key={pageNumber}
+            type="radio"
+            name="pagination-options"
+            aria-label={pageNumber.toString()}
+            className="join-item btn btn-square"
+            checked={pagination.page === pageNumber}
+            onChange={() => setPage(pageNumber)}
+          />
+              )
+            })
+            }
           </div>
         </div>
       </div>

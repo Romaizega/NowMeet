@@ -102,8 +102,12 @@ const getMyEvents =async (req, res) => {
 
 const getAllEvents = async (req, res) => {
   try {
-    const events = await eventModel.getAllEvents()
-    return res.status(200).json({message: "Got all events", events}) 
+    const page = parseInt(req.query.page, 10) || 1
+    const limit = parseInt(req.query.limit, 10) || 10
+    const offset = (page-1) * limit
+    const {events, total} = await eventModel.getAllEvents(limit, offset)
+    const totalPages = Math.ceil(total/limit)
+    return res.status(200).json({message: "Got all events", events, total, page, totalPages}) 
   } catch (error) {
     res.status(500).json({message: "Server error", error: error.message})
   }

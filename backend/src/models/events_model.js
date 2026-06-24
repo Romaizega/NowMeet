@@ -41,11 +41,20 @@ const createEvent = async(
       .first()
   }
 
-  const getAllEvents = () => {
-    return db('events')
-    // .where('status', 'open')
-    .select('*')
-    .orderBy('created_at','desc')
+  const getAllEvents = async (limit, offset) => {
+    const [events, countResult] = await Promise.all([
+       db('events')
+      .select('*')
+      // .where('status', 'open')
+      .orderBy('created_at','desc')
+      .limit(limit)
+      .offset(offset),
+      db('events')
+      .count('id as total')
+      .first()
+    ])
+    const total = parseInt(countResult.total, 10)
+    return {events, total}
   }
 
   const deleteEvent = (id) => {
