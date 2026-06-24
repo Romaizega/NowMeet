@@ -9,6 +9,11 @@ const initialState = {
   currentEvent: null,
   status: AUTH_STATUS.IDLE,
   error: null,
+  pagination: {
+    page: 1,
+    total: 0,
+    totalPages: 1
+  }
 };
 
 const eventSlice = createSlice({
@@ -37,6 +42,9 @@ const eventSlice = createSlice({
       .addCase(getAllEvents.fulfilled, (state, action) => {
         state.status = AUTH_STATUS.SUCCEEDED;
         state.events = action.payload.events;
+        state.pagination.page = action.payload.page
+        state.pagination.total = action.payload.total
+        state.pagination.totalPages = action.payload.totalPages
       })
       .addCase(getAllEvents.rejected, (state, action) => {
         state.status = AUTH_STATUS.FAILED;
