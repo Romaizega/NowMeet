@@ -625,8 +625,11 @@ export default function CreateEvent() {
                                 place_name: suggestion.googlePlace.name,
                                 latitude: suggestion.googlePlace.latitude,
                                 longitude: suggestion.googlePlace.longitude,
-                                place_id: suggestion.googlePlace.place_id
+                                place_id: suggestion.googlePlace.place_id,
+                                country: suggestion.googlePlace.country,
+                                city: suggestion.googlePlace.city
                               });
+                              fetchGeoData(suggestion.googlePlace.latitude, suggestion.googlePlace.longitude)
                             }
                           }}
                         >

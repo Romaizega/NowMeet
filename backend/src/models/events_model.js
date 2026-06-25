@@ -41,18 +41,19 @@ const createEvent = async(
       .first()
   }
 
-  const getAllEvents = async (limit, offset) => {
-    const [events, countResult] = await Promise.all([
-       db('events')
-      .select('*')
-      // .where('status', 'open')
-      .orderBy('created_at','desc')
-      .limit(limit)
-      .offset(offset),
-      db('events')
-      .count('id as total')
-      .first()
-    ])
+  const getAllEvents = async (limit, offset, city, country) => {
+    const eventsQuery = db('events').select('*').orderBy('created_at','desc').limit(limit).offset(offset)
+    const countQuery = db('events').count('id as total').first()
+    if(city) {
+      eventsQuery.where('city', city)
+      countQuery.where('city', city)
+    }
+    if(country) {
+      eventsQuery.where('country', country)
+      countQuery.where('country', country)
+    }
+
+    const [events, countResult] = await Promise.all([eventsQuery,countQuery])
     const total = parseInt(countResult.total, 10)
     return {events, total}
   }

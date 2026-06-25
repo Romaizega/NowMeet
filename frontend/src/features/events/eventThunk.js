@@ -21,9 +21,9 @@ const createEvent = createAsyncThunk(
 
 const getAllEvents = createAsyncThunk(
   "events/getAllEvents",
-  async ({page=1 , limit=10} = {}, { rejectWithValue }) => {
+  async ({page=1 , limit=10, city, country} = {}, { rejectWithValue }) => {
     try {
-      const { data } = await api.get("/event/events", {params: {page, limit}});
+      const { data } = await api.get("/event/events", {params: {page, limit, city, country}});
       return data;
     } catch (error) {
       const message =

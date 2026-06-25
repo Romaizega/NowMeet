@@ -8,6 +8,7 @@ import {
   CalendarDays,
   Search,
   PencilLine,
+  Road,
 } from "lucide-react";
 import EventsImgExplore from "../assests/defaultImgEvents.png";
 import getStatusColor from "../utils/getStatusColor";
@@ -20,8 +21,12 @@ export default function Events() {
   );
 
   const [searchEvents, setSearchEvents] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [page, setPage] = useState(1)
+  const [statusFilter, setStatusFilter] = useState("open");
+  const [page, setPage] = useState(1);
+  const [debouncedCity, setDebouncedCity] = useState("")
+  const [debouncedCountry, setDebouncedCountry] = useState("")
+  const [city, setCity] = useState("");
+  const [country, setCounrty] = useState("");
   const filteredEvents = events
     .filter((event) =>
       event.title.toLowerCase().includes(searchEvents.toLowerCase()),
@@ -31,8 +36,16 @@ export default function Events() {
     );
 
   useEffect(() => {
-    dispatch(getAllEvents({page}));
-  }, [dispatch, page]);
+    const timer = setTimeout(() => {
+      setDebouncedCity(city)
+      setDebouncedCountry(country)     
+    }, 5000)
+    return () => clearTimeout(timer)
+  },  [city, country])
+
+  useEffect(() => {
+    dispatch(getAllEvents({ page, city:debouncedCity, country: debouncedCountry }));
+  }, [dispatch, page, debouncedCity, debouncedCountry]);
 
   if (status === "loading")
     return <span className="loading loading-spinner"> Loading events...</span>;
@@ -76,6 +89,30 @@ export default function Events() {
                 placeholder="Search events..."
               />
             </div>
+            <div>
+              <input
+                type="text"
+                placeholder="country..."
+                value={country}
+                onChange={(e) => {
+                  setCounrty(e.target.value);
+                  setPage(1);
+                }}
+                className="input input-bordered input-primary w-full max-w-xl text-xl text-primary pl-10"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder="city..."
+                value={city}
+                onChange={(e) => {
+                  setCity(e.target.value);
+                  setPage(1);
+                }}
+                className="input input-bordered input-primary w-full max-w-xl text-xl text-primary pl-10"
+              />
+            </div>
 
             <div>
               <select
@@ -84,11 +121,11 @@ export default function Events() {
                 onChange={handleStatusCange}
                 className="select select-bordered w-70 select-primary text-primary text-2xl "
               >
-                <option value="open">all</option>
                 <option value="open">open</option>
                 <option value="cancelled">cancelled</option>
                 <option value="closed">closed</option>
                 <option value="expired">expired</option>
+                <option value="open">all</option>
               </select>
             </div>
 
@@ -104,10 +141,13 @@ export default function Events() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 mt-3 w-full mt-2">
             {filteredEvents.map((event) => (
               <div key={event.id}>
-                <div className="card bg-base-200 shadow-xl overflow-hidden h-full mt-2">
-                  <span className={getStatusColor(event.status)}>
+                <div className="card bg-base-200 shadow-xl overflow-hidden relative h-full mt-2">
+                  <span
+                    className={`${getStatusColor(event.status)} absolute top-3 left-3 z-20`}
+                  >
                     {event.status}
                   </span>
+
                   <img
                     src={
                       event.cover_image
@@ -115,7 +155,7 @@ export default function Events() {
                         : EventsImgExplore
                     }
                     alt=""
-                    className="w-full h-96 object-cover mt-2"
+                    className="w-full h-96 object-cover"
                   />
 
                   <div className="card-body">
@@ -123,14 +163,20 @@ export default function Events() {
                       {event.title}
                     </p>
 
-                    <p className="text-primary opacity-50 line-clamp-2">
+                    <p className="text-primary text-lg opacity-50 line-clamp-2">
                       {event.description}
                     </p>
-
-                    <div className="flex gap-2 mt-2">
+                    <div className="flex  gap-2">
                       <MapPinned className="w-8 h-8" />
+                      <p className="text-primary text-xl">
+                        {event.country} {event.city}
+                      </p>
+                    </div>
+                    <div className="flex gap-2 mt-2">
+                      <Road className="w-8 h-8" />
                       <p className="text-primary text-xl">{event.place_name}</p>
-
+                    </div>
+                    <div className="flex gap-2 ">
                       <CalendarDays className="w-8 h-8" />
                       <p className="text-primary text-xl">
                         {formatDate(event.event_start)}
@@ -159,21 +205,20 @@ export default function Events() {
             ))}
           </div>
           <div className=" join flex justify-center gap-4 mt-5 text-primary w-full">
-            {Array.from({length: pagination.totalPages}, (_, i) => {
-              const pageNumber = i + 1
+            {Array.from({ length: pagination.totalPages }, (_, i) => {
+              const pageNumber = i + 1;
               return (
                 <input
-            key={pageNumber}
-            type="radio"
-            name="pagination-options"
-            aria-label={pageNumber.toString()}
-            className="join-item btn btn-square"
-            checked={pagination.page === pageNumber}
-            onChange={() => setPage(pageNumber)}
-          />
-              )
-            })
-            }
+                  key={pageNumber}
+                  type="radio"
+                  name="pagination-options"
+                  aria-label={pageNumber.toString()}
+                  className="join-item btn btn-square"
+                  checked={pagination.page === pageNumber}
+                  onChange={() => setPage(pageNumber)}
+                />
+              );
+            })}
           </div>
         </div>
       </div>
