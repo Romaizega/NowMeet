@@ -1,6 +1,9 @@
 const eventModel = require('../models/events_model')
 const userModer = require('../models/users_model')
 const eventParticipantsModel = require('../models/event_participants_model')
+const sharp = require('sharp')
+const fs = require('fs')
+const path = require('path')
 
 const createEvent = async (req, res) => {
   const creator_id = req.user.user_id
@@ -23,7 +26,6 @@ const createEvent = async (req, res) => {
   try {
     const minDurationInmin = 15
     const minMaxParicipant = 1
-    const image_cover = req.file ? req.file.filename : undefined
     if(title !== undefined && title.length < 3){
       return res.status(400).json({message: "Event title must contain at least 3 characters"})
     }
@@ -48,6 +50,16 @@ const createEvent = async (req, res) => {
     if(country !== undefined && country.length < 3 ){
       return res.status(400).json({message: "Country must contain at least 3 characters"})}
     
+    let image_cover = undefined
+    if (req.file) {
+      const filename = `${Date.now()}-cover.webp`
+      const outputPath = path.join(__dirname, '../../uploads', filename)
+      await sharp(req.file.buffer)
+        .resize(800, 600, { fit: 'inside' })
+        .webp({ quality: 80 })
+        .toFile(outputPath)
+      image_cover = filename
+    }
 
     const event = await eventModel.createEvent(
       creator_id,
@@ -160,7 +172,6 @@ const updateEventContr = async (req, res) => {
 
     const minDurationInmin = 15
     const minMaxParicipant = 1
-    const image_cover = req.file ? req.file.filename : undefined
 
     if(title !== undefined && title.length < 3){
       return res.status(400).json({message: "Event title must contain at least 3 characters"})
@@ -187,6 +198,19 @@ const updateEventContr = async (req, res) => {
       return res.status(400).json({message: "City must contain at least 3 characters"})}
     if(country !== undefined && country.length < 3 ){
       return res.status(400).json({message: "Country must contain at least 3 characters"})}
+
+    let image_cover = undefined
+    if (req.file) {
+      const filename = `${Date.now()}-cover.webp`
+      const outputPath = path.join(__dirname, '../uploads', filename)
+      await sharp(req.file.buffer)
+        .resize(800, 600, { fit: 'inside' })
+        .webp({ quality: 80 })
+        .toFile(outputPath)
+      image_cover = filename
+    }
+
+    
 
     const editEvent = await eventModel.updateEvent(
       id,      
