@@ -64,9 +64,23 @@ const getPrivateMessage = async(req, res) => {
   }
 }
 
+const getInbox = async(req, res) => {
+  try {
+    const user_id = req.user.user_id
+    if(!user_id) {
+      return res.status(403).json({message: "User is unauthorized"})
+    }
+    const resultMessages = await privateMessageModel.getInbox(user_id)
+    return res.status(200).json({message: "All users messages", resultMessages})
+  } catch (error) {
+    return res.status(500).json({message: "Server error", error: error.message})
+  }
+}
+
 
 module.exports = {
   sendMessage,
   getMessage,
-  getPrivateMessage
+  getPrivateMessage,
+  getInbox
 }

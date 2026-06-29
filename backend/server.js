@@ -6,6 +6,7 @@ const eventRouter = require('../backend/src/routers/event_router')
 const interestRouter = require('../backend/src/routers/interests_router')
 const profileRouter = require('../backend/src/routers/profile_router')
 const aiRouter = require('../backend/src/routers/ai_router')
+const messageRouter = require('../backend/src/routers/message_router')
 const {Server} = require('socket.io')
 const http = require('http')
 const cors = require('cors')
@@ -39,6 +40,7 @@ app.use('/api/interests', interestRouter)
 app.use('/api/profiles', profileRouter)
 app.use('/api/ai', aiRouter)
 app.use("/uploads", express.static("uploads"))
+app.use('/api/messages', messageRouter)
 
 
 // Test db connection
