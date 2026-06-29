@@ -113,7 +113,7 @@ export default function Header() {
         </div>
 
         <div className="navbar-end">
-          <div>
+          <div className="">
             <span className="text-sm text-primary opacity-50 flex gap-2">
               <MapPin/>
               {location}</span>
