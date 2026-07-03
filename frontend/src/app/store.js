@@ -5,6 +5,7 @@ import profileReducer from "../features/profile/profileSlice"
 import interestReducer from "../features/interest/interestSlice"
 import notificationReducer from "../features/notifications/notificationsSlice"
 import aiReducer from "../features/ai/aiSlice"
+import messagesReducer from '../features/message/messageSlice'
 import {persistStore, persistReducer} from "redux-persist"
 
 
@@ -26,7 +27,8 @@ const store = configureStore({
     profile: profileReducer,
     interest:interestReducer,
     notification: notificationReducer,
-    ai: aiReducer
+    ai: aiReducer,
+    messages: messagesReducer
   },
   middleware: (getDefaultMiddleware) => 
     getDefaultMiddleware({serializableCheck: false})
