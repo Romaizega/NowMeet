@@ -1,0 +1,46 @@
+services:
+  db:
+    image: postgres:16-alpine
+    mem_limit: 128m
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: nowmeet
+      POSTGRES_PASSWORD: nowmeet
+      POSTGRES_DB: nowmeet
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nowmeet -d nowmeet"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: ./backend
+    mem_limit: 384m
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file: .env
+    expose:
+      - "5000"
+    volumes:
+      - ./backend/uploads:/app/uploads
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    mem_limit: 128m
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+
+volumes:
+  pg_data:
