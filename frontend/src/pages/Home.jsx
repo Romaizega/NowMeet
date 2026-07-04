@@ -17,10 +17,11 @@ import {
   Dices,
   Palette,
   Ellipsis,
+  Sparkles,
 } from "lucide-react";
 
 export default function Home() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <>
       <div
@@ -47,18 +48,31 @@ export default function Home() {
               </b>
             </p>
             <div className="flex gap-5">
-              <button to="/events" className="btn btn-outline btn-primary px-18"
-              onClick={() => navigate('/explore')}>
+              <button
+                to="/events"
+                className="btn btn-outline btn-primary px-18"
+                onClick={() => navigate("/explore")}
+              >
                 <Search className="w-5 h-5" />
                 Find a Meetup
               </button>
-              <button to="/create" className="btn btn-outline btn-primary px-18"
-              onClick={() => navigate('/event/create')}>
+              <button
+                to="/create"
+                className="btn btn-outline btn-primary px-18"
+                onClick={() => navigate("/event/create")}
+              >
                 <CirclePlus className="w-5 h-5" />
                 Create a Meetup
               </button>
             </div>
-            <div className="flex gap-14 mt-10">
+            <div className="mt-8 inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-primary/20 to-orange-500/20 border border-primary/30 px-50 py-3 mt-12">
+              <Sparkles className="w-8 h-8 text-primary animate-pulse" />
+
+              <span className="text-primary font-semibold">
+                AI Smart Search • Coming Soon
+              </span>
+            </div>{" "}
+            <div className="flex gap-14 mt">
               <div className="flex items-center gap-2">
                 <Users className="text-primary w-8 h-8" />
                 <div>
@@ -88,7 +102,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-
             {/* Search bar */}
             <div className="mt-10">
               <div className="flex items-center bg-base-300 rounded-xl p-4">

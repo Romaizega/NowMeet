@@ -23,7 +23,7 @@ import {
   Trash2,
   CircleX,
   CalendarSync,
-  MessageSquareMore,
+  Building2 ,
   ArrowLeft,
 } from "lucide-react";
 import heroEventDetail from "../assests/hero_eventDetail.png";
@@ -122,7 +122,7 @@ export default function EventDetails() {
               : heroEventDetail
           })`,
           backgroundSize: "contain",
-          backgroundPosition: "center",
+          backgroundPosition: "97% center",
           backgroundRepeat: "no-repeat"
         }}
       >
@@ -158,6 +158,13 @@ export default function EventDetails() {
                 <span className="text-primary text-xl">
                   {currentEvent.duration} min
                   <p className="opacity-50">Duration</p>
+                </span>
+              </span>
+              <span className="flex items-center gap-2">
+                <Building2  className="w-12 h-12" />
+                <span className="text-primary text-xl">
+                  {currentEvent.city}
+                  <p className="opacity-50">City</p>
                 </span>
               </span>
               <span className="flex items-center gap-2">

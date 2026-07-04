@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { getInbox } from "../features/message/messageThunk";
 import { MessageCircle, Search } from "lucide-react";
 

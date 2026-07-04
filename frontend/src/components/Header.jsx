@@ -12,7 +12,7 @@ import api from "../services/axios";
 export default function Header() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, status } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openNotific, setOpenNotific] = useState(false)
   const [openMessages, setOPenMessages] = useState(false)

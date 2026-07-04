@@ -25,9 +25,7 @@ import {
 
 import {
   addEventInterest,
-  deleteEventInterest,
   getAllInterests,
-  getEventInterests,
 } from "../features/interest/interestThunk";
 import groupByCategory from "../utils/groupByCategory";
 import EventMap from "../components/MapPicker";
