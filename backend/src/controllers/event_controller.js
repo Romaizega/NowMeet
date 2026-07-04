@@ -202,7 +202,7 @@ const updateEventContr = async (req, res) => {
     let image_cover = undefined
     if (req.file) {
       const filename = `${Date.now()}-cover.webp`
-      const outputPath = path.join(__dirname, '../uploads', filename)
+      const outputPath = path.join(__dirname, '../../uploads', filename)
       await sharp(req.file.buffer)
         .resize(800, 600, { fit: 'inside' })
         .webp({ quality: 80 })
