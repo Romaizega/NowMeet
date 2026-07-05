@@ -68,7 +68,7 @@ export default function Events() {
 
   return (
     <>
-      <div className="relative z-10 w-full min-h-screen px-14 pt-20">
+      <div className="relative z-10 w-full min-h-screen px-4 sm:px-6 lg:px-14 pt-20">
         <div className="w-full text-left">
           <h1 className="text lg:text-5xl font-bold leading-tight text-primary">
             Events
@@ -78,12 +78,12 @@ export default function Events() {
             Discover exciting meetups happening around you
           </p>
 
-          <div className="flex flex-col-2 gap-6">
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-6">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-white z-10" />
               <input
                 type="text"
-                className="input input-bordered input-primary w-full max-w-xl text-xl text-primary pl-10"
+                className="input input-bordered input-primary w-full lg:max-w-xl text-base lg:text-xl text-primary pl-10"
                 value={searchEvents}
                 onChange={(e) => setSearchEvents(e.target.value)}
                 placeholder="Search events..."
@@ -119,7 +119,7 @@ export default function Events() {
                 name="status"
                 value={statusFilter}
                 onChange={handleStatusCange}
-                className="select select-bordered w-70 select-primary text-primary text-2xl "
+                className="select select-bordered w-full lg:w-70 select-primary text-primary text-base lg:text-2xl"
               >
                 <option value="open">open</option>
                 <option value="cancelled">cancelled</option>
@@ -130,7 +130,7 @@ export default function Events() {
             </div>
 
             <button
-              className="flex items-center gap-4 rounded-xl border border-white bg-black/40 px-14 text-primary text-xl transition-all hover:bg-white-400 hover:text-white"
+              className="flex items-center justify-center gap-4 rounded-xl border border-white bg-black/40 px-6 lg:px-14 py-3 text-primary text-base lg:text-xl transition-all hover:bg-white-400 hover:text-white"
               onClick={() => navigate("/event/create")}
             >
               <PencilLine className="w-7 h-7 text-primary" />
@@ -155,38 +155,38 @@ export default function Events() {
                         : EventsImgExplore
                     }
                     alt=""
-                    className="w-full h-96 object-cover"
+                    className="w-full h-64 sm:h-72 lg:h-80 xl:h-96 object-cover"
                   />
 
                   <div className="card-body">
-                    <p className="text text-xl text-primary font-bold">
+                    <p className="text text-lg lg:text-xl text-primary font-bold">
                       {event.title}
                     </p>
 
-                    <p className="text-primary text-lg opacity-50 line-clamp-2">
+                    <p className="text-primary text-sm lg:text-lg opacity-50 line-clamp-2">
                       {event.description}
                     </p>
                     <div className="flex  gap-2">
-                      <MapPinned className="w-8 h-8" />
-                      <p className="text-primary text-xl">
+                      <MapPinned className="w-5 h-5 lg:w-8 lg:h-8" />
+                      <p className="text-primary text-sm lg:text-xl">
                         {event.country} {event.city}
                       </p>
                     </div>
                     <div className="flex gap-2 mt-2">
-                      <Road className="w-8 h-8" />
-                      <p className="text-primary text-xl">{event.place_name}</p>
+                      <Road className="w-5 h-5 lg:w-8 lg:h-8" />
+                      <p className="text-primary text-sm lg:text-xl">{event.place_name}</p>
                     </div>
                     <div className="flex gap-2 ">
-                      <CalendarDays className="w-8 h-8" />
-                      <p className="text-primary text-xl">
+                      <CalendarDays className="w-5 h-5 lg:w-8 lg:h-8" />
+                      <p className="text-primary text-sm lg:text-xl">
                         {formatDate(event.event_start)}
                       </p>
                     </div>
 
-                    <div className="flex justify-between items-center mt-3">
+                    <div className="flex justify-between items-center mt-">
                       <span className="flex items-center gap-4">
-                        <Users className="w-8 h-8" />
-                        <span className="text text-xl text-primary">
+                        <Users className="w-5 h-5 lg:w-8 lg:h-8" />
+                        <span className="text-primary text-sm lg:text-xl">
                           {event.max_participants} spots
                         </span>
                       </span>
@@ -204,7 +204,7 @@ export default function Events() {
               </div>
             ))}
           </div>
-          <div className=" join flex justify-center gap-4 mt-5 text-primary w-full">
+          <div className=" join flex flex-wrap justify-center gap-2 lg:gap-4 mt-5 text-primary w-full">
             {Array.from({ length: pagination.totalPages }, (_, i) => {
               const pageNumber = i + 1;
               return (
