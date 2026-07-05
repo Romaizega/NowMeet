@@ -55,7 +55,7 @@ export default function MessageInbox() {
                     <img
                       src={
                         message.photo
-                          ? `${import.meta.env.VITE_SERVER_URL}/uploads/${message.photo}`
+                          ? `/uploads/${message.photo}`
                           : "/default-avatar.png"
                       }
                       alt={message.username}
