@@ -1,0 +1,33 @@
+name: Deploy NowMeet
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf "%s" "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy on server
+        run: |
+          ssh -o StrictHostKeyChecking=yes \
+              -o ConnectTimeout=15 \
+              -i ~/.ssh/id_rsa \
+              "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" << 'EOF'
+            set -e
+            cd ~/NowMeet
+            git fetch origin main
+            git reset --hard origin/main
+            docker compose down || true
+            docker compose up -d --build
+            docker system prune -f || true
+          EOF
