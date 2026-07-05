@@ -1,5 +1,8 @@
 const bcrypt = require("bcrypt");
 const userModel = require("../models/users_model");
+const sharp = require("sharp");
+const path = require("path");
+const fs = require("fs");
 
 const updateProfileUser = async (req, res) => {
   try {
@@ -9,8 +12,16 @@ const updateProfileUser = async (req, res) => {
     }
     const { first_name, last_name, date_of_birth, about } = req.body || {};
 
-    const photo = req.file ? req.file.filename : undefined;
-
+    let photo = undefined;
+    if (req.file) {
+      const filename = `${Date.now()}-avatar.webp`;
+      const outputPath = path.join(__dirname, "../../uploads", filename);
+      await sharp(req.file.buffer)
+        .resize(200, 200, { fit: "cover" })
+        .webp({ quality: 80 })
+        .toFile(outputPath);
+      photo = filename;
+    }
     const minAge = 18;
 
     if (first_name !== undefined && first_name.trim().length < 2) {
@@ -27,12 +38,10 @@ const updateProfileUser = async (req, res) => {
       (date_of_birth !== undefined && new Date(date_of_birth) > new Date()) ||
       new Date().getFullYear() - new Date(date_of_birth).getFullYear() < minAge
     ) {
-      return res
-        .status(400)
-        .json({
-          message:
-            "Date of birth cannot be in the future and you must be at least 18",
-        });
+      return res.status(400).json({
+        message:
+          "Date of birth cannot be in the future and you must be at least 18",
+      });
     }
     if (about !== undefined && about.length < 25) {
       return res
@@ -146,24 +155,25 @@ const updatePassword = async (req, res) => {
   }
 };
 
-
 const viewProfile = async (req, res) => {
   try {
-    const {id} = req.params
-    const profile = await userModel.viewProfile(id)
-    if(!profile){
-      return res.status(404).json({message: "Profile not found"})
+    const { id } = req.params;
+    const profile = await userModel.viewProfile(id);
+    if (!profile) {
+      return res.status(404).json({ message: "Profile not found" });
     }
-    return res.status(200).json({message: "View profile", profile})
+    return res.status(200).json({ message: "View profile", profile });
   } catch (error) {
-    return res.status(500).json({message: "Server error", error: error.message})
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
   }
-}
+};
 
 module.exports = {
   updateProfileUser,
   updateUsername,
   updateEmail,
   updatePassword,
-  viewProfile
+  viewProfile,
 };
