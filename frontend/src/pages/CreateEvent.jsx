@@ -266,7 +266,7 @@ export default function CreateEvent() {
   return (
     <>
       <div
-        className="relative rounded-xl overflow-hidden mb-10 h-[320px]"
+        className="relative rounded-xl overflow-hidden mb-10 h-[260px] lg:h-[320px]"
         style={{
           backgroundImage: `url(${heroCreateImage})`,
           backgroundSize: "cover",
@@ -274,12 +274,12 @@ export default function CreateEvent() {
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/30 to-transparent">
-          <div className="relative z-10 flex h-full items-center px-10">
+          <div className="relative z-10 flex h-full items-center px-5 lg:px-10">
             <div className="max-w-xl">
-              <h2 className="text-5xl font-bold text-primary mb-10 ">
+              <h2 className="text-3xl lg:text-5xl font-bold text-primary mb-10 ">
                 Create Event
               </h2>
-              <p className="text-2xl opacity-70 text-primary">
+              <p className="text-base lg:text-2xl opacity-70 text-primary">
                 Bring people together. Share your idea
                 <br />
                 and create a meetup that inspires
@@ -288,8 +288,8 @@ export default function CreateEvent() {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-6">
-        <form onSubmit={handleSubmit} className="bg-base-200 rounded-xl p-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        <form onSubmit={handleSubmit} className="bg-base-200 rounded-xl p-4 sm:p-6 lg:p-8">
           {(localError || error) && (
             <div className="text-error text-sm text-center">
               <span>{localError || error}</span>
@@ -306,10 +306,10 @@ export default function CreateEvent() {
                     </span>
                   </label>
 
-                  <label className="border-2 border-dashed border-primary/30 rounded-xl h-56 cursor-pointer hover:border-primary transition-all flex flex-col items-center justify-center gap-3 bg-base-300">
+                  <label className="border-2 border-dashed border-primary/30 rounded-xl h-48 lg:h-56 cursor-pointer hover:border-primary transition-all flex flex-col items-center justify-center gap-3 bg-base-300">
                     <Image className="w-12 h-12 text-primary" />
 
-                    <p className="text-xl font-semibold text-primary">
+                    <p className="text-lg lg:text-xl font-semibold text-primary">
                       Upload event image
                     </p>
 
@@ -374,7 +374,7 @@ export default function CreateEvent() {
                 </p>
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="label">
                   <span className="label-text text-primary mt-6">
@@ -451,7 +451,7 @@ export default function CreateEvent() {
             <p className="text text-primary opacity-50">
               Where will event take place?
             </p>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="label">
                   <span className="label-text text-primary mt-6">Country</span>
@@ -494,10 +494,10 @@ export default function CreateEvent() {
                 Write where you want spend your time
               </p>
             </label>
-            <div className="mt-4 pl-20">
+            <div className="mt-4 flex justify-center lg:justify-start mt-6">
               <button
                 type="button"
-                className="btn border-none bg-primary text-primary-content text-2xl font-bold py-6 px-7 rounded-xl shadow-xl shadow-primary/30 hover:shadow-primary/60 hover:scale-105 transition-all duration-300"
+                className="btn border-none bg-primary text-primary-content text-lg lg:text-2xl font-bold py-6 px-7 rounded-xl shadow-xl shadow-primary/30 hover:shadow-primary/60 hover:scale-105 transition-all duration-300 w-full lg:w-auto"
                 onClick={handleSuggestAI}
               >
                 {aiLoading ? (
@@ -521,7 +521,7 @@ export default function CreateEvent() {
                     className="card bg-base-200 mb-4 cursor-pointer border border-transparent hover:border-orange-400/40 transition-all"
                   >
                     <div className="card-body mt-2">
-                      <div className="flex justify-between items-start gap-8">
+                      <div className="flex flex-col lg:flex-row justify-between gap-6">
                         <div className="flex-1">
                           <a
                             href={mapUrl || "#"}
@@ -537,7 +537,7 @@ export default function CreateEvent() {
                           </p>
                         </div>
 
-                        <div className="shrink-0 text-right">
+                        <div className="shrink-0 text-left lg:text-right">
                           <div className="flex items-center gap-2 text-orange-400">
                             <Star className="w-7 h-7" />
                             <span className="text-4xl font-bold">
@@ -615,7 +615,7 @@ export default function CreateEvent() {
                       <div className="card-actions justify-end mt-4">
                         <button
                           type="button"
-                          className="btn bg-gradient-to-r from-primary to-primary/80 text-primary-content border-none rounded-xl hover:scale-105 transition-all"
+                          className="btn bg-gradient-to-r from-primary to-primary/80 text-primary-content border-none rounded-xl hover:scale-105 transition-all w-full lg:w-auto"
                           onClick={() => {
                             if (suggestion.googlePlace) {
                               setForm({
@@ -640,7 +640,7 @@ export default function CreateEvent() {
               })}
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="label">
                   <span className="label-text text-primary mt-6">Latitude</span>
@@ -719,13 +719,13 @@ export default function CreateEvent() {
               ))}
           </div>
 
-          <button type="submit" className="btn btn-primary mt-4">
+          <button type="submit" className="btn btn-primary mt-4 ">
             Create Event
           </button>
         </form>
         <div className="flex flex-col gap-6">
-          <div className="bg-base-200 rounded-xl p-8">
-            <div className="grid grid-cols-2 gap-8">
+          <div className="bg-base-200 rounded-xl p-4 sm:p-6 lg:p-8">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
               {/* LEFT */}
               <div className="border border-primary/20 rounded-xl p-6 bg-base-300">
                 <div className="text-2xl font-bold">
@@ -820,9 +820,9 @@ export default function CreateEvent() {
             {form.title ? (
               <div className="card bg-base-300 mt-4">
                 <div className="card-body">
-                  <div className="flex gap-6">
+                  <div className="flex flex-col lg:flex-row gap-6">
                     {coverShow && (
-                      <div className="relative w-70 h-70 shrink-0 overflow-hidden rounded-xl">
+                      <div className="relative w-full lg:w-70 h-64 lg:h-70 shrink-0 overflow-hidden rounded-xl">
                         <img
                           src={coverShow}
                           alt="Event preview"
