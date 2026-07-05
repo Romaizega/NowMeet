@@ -132,7 +132,7 @@ export default function EventChat() {
                     key={participant.id}
                     src={
                       participant.photo
-                        ? `${import.meta.env.VITE_SERVER_URL}/uploads/${participant.photo}`
+                        ? `/uploads/${participant.photo}`
                         : defultAvatar
                     }
                     alt={participant.username}
@@ -175,7 +175,7 @@ export default function EventChat() {
                     <img
                       src={
                         message.photo
-                          ? `${import.meta.env.VITE_SERVER_URL}/uploads/${message.photo}`
+                          ? `/uploads/${message.photo}`
                           : defultAvatar
                       }
                       alt={message.username}

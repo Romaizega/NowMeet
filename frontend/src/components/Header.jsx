@@ -210,7 +210,7 @@ export default function Header() {
                   <img
                     src={
                       user.photo
-                        ? `${import.meta.env.VITE_SERVER_URL}/uploads/${user.photo}`
+                        ? `/uploads/${user.photo}`
                         : "/default-avatar.png"
                     }
                   />

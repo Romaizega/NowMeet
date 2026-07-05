@@ -118,7 +118,7 @@ export default function EventDetails() {
         style={{
           backgroundImage: `url(${
             currentEvent.cover_image
-              ? `${import.meta.env.VITE_SERVER_URL}/uploads/${currentEvent.cover_image}`
+              ? `/uploads/${currentEvent.cover_image}`
               : heroEventDetail
           })`,
           backgroundSize: "contain",
@@ -308,7 +308,7 @@ export default function EventDetails() {
               <img
                 src={
                   currentEvent.creator_photo
-                    ? `${import.meta.env.VITE_SERVER_URL}/uploads/${currentEvent.creator_photo}`
+                    ? `/uploads/${currentEvent.creator_photo}`
                     : defultAvatar
                 }
                 alt={currentEvent.creator_username}
@@ -346,7 +346,7 @@ export default function EventDetails() {
                     key={participant.id}
                     src={
                       participant.photo
-                        ? `${import.meta.env.VITE_SERVER_URL}/uploads/${participant.photo}`
+                        ? `/uploads/${participant.photo}`
                         : defultAvatar
                     }
                     alt={participant.username}

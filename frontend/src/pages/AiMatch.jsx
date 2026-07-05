@@ -167,7 +167,7 @@ export default function AiMatch() {
                       <img
                         src={
                           match.photo
-                            ? `${import.meta.env.VITE_SERVER_URL}/uploads/${match.photo}`
+                            ? `/uploads/${match.photo}`
                             : defultAvatar
                         }
                         alt={match.username}

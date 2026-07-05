@@ -129,7 +129,7 @@ export default function PrivaeChat() {
                   <img
                     src={
                       message.photo
-                        ? `${import.meta.env.VITE_SERVER_URL}/uploads/${message.photo}`
+                        ? `/uploads/${message.photo}`
                         : defultAvatar
                     }
                     alt={message.username}

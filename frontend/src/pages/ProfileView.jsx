@@ -65,7 +65,7 @@ export default function ProfileView() {
           <img
             src={
               publicProfile.photo
-                ? `${import.meta.env.VITE_SERVER_URL}/uploads/${publicProfile.photo}`
+                ? `/uploads/${publicProfile.photo}`
                 : defultAvatar
             }
             alt={publicProfile.username}
@@ -87,7 +87,7 @@ export default function ProfileView() {
                 <img
                   src={
                     publicProfile.photo
-                      ? `${import.meta.env.VITE_SERVER_URL}/uploads/${publicProfile.photo}`
+                      ? `/uploads/${publicProfile.photo}`
                       : defultAvatar
                   }
                   alt={publicProfile.username}

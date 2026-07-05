@@ -70,7 +70,7 @@ export default function MyEvents() {
                 <img
                   src={
                     event.cover_image
-                      ? `${import.meta.env.VITE_SERVER_URL}/uploads/${event.cover_image}`
+                      ? `/uploads/${event.cover_image}`
                       : EventsImgExplore
                   }
                   alt=""

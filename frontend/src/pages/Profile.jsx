@@ -129,7 +129,7 @@ export default function Profile() {
                 <img
                   src={
                     user?.photo
-                      ? `${import.meta.env.VITE_SERVER_URL}/uploads/${user.photo}`
+                      ? `/uploads/${user.photo}`
                       : "https://img.daisyui.com/images/profile/demo/gordon@192.webp"
                   }
                 />

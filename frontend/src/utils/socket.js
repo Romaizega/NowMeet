@@ -1,14 +1,13 @@
-import {io} from "socket.io-client"
+import { io } from "socket.io-client";
 
-const raw = JSON.parse(localStorage.getItem('persist:auth'))
-const token = JSON.parse(raw.accessToken) 
+const raw = JSON.parse(localStorage.getItem("persist:auth"));
+const token = JSON.parse(raw.accessToken);
 
-const socket = io(import.meta.env.VITE_SERVER_URL, {
+const socket = io('/', {
   auth: {
-    token
+    token,
   },
-  autoConnect: false
-}) 
+  autoConnect: false,
+});
 
-
-export default socket
+export default socket;
