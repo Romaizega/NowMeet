@@ -316,13 +316,13 @@ export default function Profile() {
                   value={form.about}
                   disabled={!edit}
                   rows={3}
-                  maxLength={150}
+                  maxLength={750}
                   placeholder="Tell others about yourself..."
                 />
                 <div className="label">
                   <span></span>
                   <span className="label-text-alt text-primary">
-                    {form.about?.length || 0} / 150
+                    {form.about?.length || 0} / 750
                   </span>
                 </div>
               </div>
