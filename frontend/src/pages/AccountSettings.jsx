@@ -84,8 +84,8 @@ export default function AccountSettings({ edit }) {
 
   return (
     <>
-      <div className="flex-1 bg-base-200 rounded-xl p-8">
-        <h3 className="text-xl font-bold text-primary">Account Setting</h3>
+      <div className="flex-1 bg-base-200 rounded-xl p-4 sm:p-6 lg:p-8">
+        <h3 className="text-xl lg:text-2xl font-bold text-primary">Account Setting</h3>
         <p className="text-primary opacity-70 mb-6">
           {" "}
           Change your username or password
@@ -94,13 +94,13 @@ export default function AccountSettings({ edit }) {
           <div className="alert alert-success mb-4">{succesMsg}</div>
         )}
         {(localError || error) && (
-          <div className="text-error text-sm text-center">
+          <div className="alert alert-error text-sm mb-4">
             <span>{localError || error}</span>
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-6">
-          <div className="form-control">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className=" form-control space-y-2">
             <label className="label">
               <span className="label-text text-primary">Username</span>
             </label>
@@ -109,8 +109,8 @@ export default function AccountSettings({ edit }) {
                 Current username: {user?.username}
               </p>
             </div>
-            <label className="input input-bordered flex items-center gap-2">
-              <User className=" w-7 h-7" />
+            <label className="input input-bordered flex items-center gap-2 w-full">
+              <User className=" w-5 h-5 lg:w-7 lg:h-7" />
               <input
                 onChange={(e) => setUsername(e.target.value)}
                 value={username}
@@ -121,13 +121,13 @@ export default function AccountSettings({ edit }) {
             {edit && (
               <button
                 onClick={handleUsernameChange}
-                className="btn btn-primary mt-4"
+                className="btn btn-primary mt-4 w-full lg:w-auto"
               >
                 Save Username
               </button>
             )}
           </div>
-          <div className="form-control">
+          <div className="form-control space-y-2">
             <label className="label">
               <span className="label-text text-primary">Password</span>
             </label>
@@ -137,8 +137,8 @@ export default function AccountSettings({ edit }) {
               </p>
             </div>
 
-            <label className="input input-bordered flex items-center gap-2">
-              <RotateCcwKey className=" w-7 h-7" />
+            <label className="input input-bordered flex items-center gap-2 w-full">
+              <RotateCcwKey className="w-5 h-5 lg:w-7 lg:h-7" />
 
               <input
                 type="password"
@@ -151,8 +151,8 @@ export default function AccountSettings({ edit }) {
             <span className="label-text text-primary text-sm mt-2 opacity-70">
               New Password
             </span>
-            <label className="input input-bordered flex items-center gap-2">
-              <RotateCcwKey className=" w-7 h-7" />
+            <label className="input input-bordered flex items-center gap-2 w-full">
+              <RotateCcwKey className=" w-5 h-5 lg:w-7 lg:h-7" />
               <input
                 type="password"
                 onChange={(e) => setNewPassword(e.target.value)}
@@ -165,8 +165,8 @@ export default function AccountSettings({ edit }) {
               Confirm New Password
             </span>
 
-            <label className="input input-bordered flex items-center gap-2">
-              <RotateCcwKey className=" w-7 h-7" />
+            <label className="input input-bordered flex items-center gap-2 w-full">
+              <RotateCcwKey className=" w-5 h-5 lg:w-7 lg:h-7" />
               <input
                 type="password"
                 onChange={(e) => setConfirmPassword(e.target.value)}
@@ -177,7 +177,7 @@ export default function AccountSettings({ edit }) {
             </label>
             {edit && <button
               onClick={handlepasswordChange}
-              className="btn btn-primary mt-4"
+              className="btn btn-primary mt-4 w-full lg:w-auto"
             >
               Save Password
             </button>}
