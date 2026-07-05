@@ -5,8 +5,11 @@ import { clearAuth } from "../features/auth/authSlice";
 import { persistor } from "../app/store";
 import { useNavigate } from "react-router-dom";
 import socket from "../utils/socket";
-import { setAddNotification, setClearNotification } from "../features/notifications/notificationsSlice";
-import { Bell, Mail, MapPin } from 'lucide-react';
+import {
+  setAddNotification,
+  setClearNotification,
+} from "../features/notifications/notificationsSlice";
+import { Bell, Mail, MapPin, Menu, X } from "lucide-react";
 import api from "../services/axios";
 
 export default function Header() {
@@ -14,10 +17,11 @@ export default function Header() {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [openNotific, setOpenNotific] = useState(false)
-  const [openMessages, setOPenMessages] = useState(false)
-  const [location, setLocation] = useState('Detecting your location')
-  const [localError, setLocalError] = useState()
+  const [burgerOpen, setBurgerOpen] = useState(false);
+  const [openNotific, setOpenNotific] = useState(false);
+  const [openMessages, setOPenMessages] = useState(false);
+  const [location, setLocation] = useState("Detecting your location");
+  const [localError, setLocalError] = useState();
   const { notifications } = useSelector((state) => state.notification);
 
   const handleLogout = () => {
@@ -46,12 +50,12 @@ export default function Header() {
             type: "message",
             text: `New message from ${message.username}`,
             senderId: message.sender_user_id,
-          })
-        )
-      } )
+          }),
+        );
+      });
       return () => {
         socket.off("new_event");
-        socket.off("private_message")
+        socket.off("private_message");
       };
     } else {
       socket.disconnect();
@@ -59,8 +63,8 @@ export default function Header() {
   }, [user]);
 
   const clearNotification = () => {
-    dispatch(setClearNotification())
-  }
+    dispatch(setClearNotification());
+  };
 
   const fetchLocation = async (latitude, longitude) => {
     try {
@@ -74,15 +78,13 @@ export default function Header() {
     }
   };
 
- useEffect(() => {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        fetchLocation(lat, lng);
-      });
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      fetchLocation(lat, lng);
+    });
   }, []);
-
-
 
   return (
     <>
@@ -117,42 +119,46 @@ export default function Header() {
 
         <div className="navbar-end">
           <div className="">
-            <span className="text-sm text-primary opacity-50 flex gap-2">
-              <MapPin/>
-              {location}</span>
+            <span className="text-sm text-primary opacity-50 gap-2 hidden md:flex">
+              <MapPin />
+              {location}
+            </span>
           </div>
           {/* <input type="text" placeholder="Search" className="input input-bordered w-24 md:w-auto" /> */}
           {user ? (
-            <div className="relative">
-              <div className="btn btn-ghost "
-              onClick={() => setOpenNotific(!openNotific)}
+            <div className="relative hidden md:flex">
+              <div
+                className="btn btn-ghost "
+                onClick={() => setOpenNotific(!openNotific)}
               >
-              <button className="btn btn-ghost btn-circle"
-              >
-                <div className="indicator">
-                  <Bell type="event"
-                  />
-                  <span className="badge badge-xs badge-primary indicator-item">
-                    {notifications.filter(n => n.type === 'event').length}
-                  </span>
-                </div>
-              </button>
+                <button className="btn btn-ghost btn-circle">
+                  <div className="indicator">
+                    <Bell type="event" />
+                    <span className="badge badge-xs badge-primary indicator-item">
+                      {notifications.filter((n) => n.type === "event").length}
+                    </span>
+                  </div>
+                </button>
               </div>
               {openNotific && (
                 <ul className="menu bg-base-100 rounded-box absolute right-0 mt-3 w-52 p-2 shadow z-50">
                   <li>
-                  {notifications.filter((notification)=> notification.type === "event") 
-                  .map((notification) => (
-                    <div className="text font-bold"
-                    key={notification.id}
-                    onClick={() => {navigate('/explore');
-                      clearNotification()}
-                    }>
-                      <Link className="text text-primary">
-                      {notification.text}
-                      </Link>
-                    </div>
-                  ))}
+                    {notifications
+                      .filter((notification) => notification.type === "event")
+                      .map((notification) => (
+                        <div
+                          className="text font-bold"
+                          key={notification.id}
+                          onClick={() => {
+                            navigate("/explore");
+                            clearNotification();
+                          }}
+                        >
+                          <Link className="text text-primary">
+                            {notification.text}
+                          </Link>
+                        </div>
+                      ))}
                   </li>
                   <li>
                     <a onClick={() => clearNotification()}>
@@ -160,47 +166,47 @@ export default function Header() {
                     </a>
                   </li>
                 </ul>
-                
               )}
-            <div className="btn btn-ghost "
-              onClick={() => setOPenMessages(!openMessages)}
+              <div
+                className="btn btn-ghost "
+                onClick={() => setOPenMessages(!openMessages)}
               >
-              <button className="btn btn-ghost btn-circle"
-              >
-                <div className="indicator">
-                  <Mail type="message"
-                  />
-                  <span className="badge badge-xs badge-primary indicator-item">
-                    {notifications.filter(n => n.type === 'message').length}
-                  </span>
-                </div>
-              </button>
+                <button className="btn btn-ghost btn-circle">
+                  <div className="indicator">
+                    <Mail type="message" />
+                    <span className="badge badge-xs badge-primary indicator-item">
+                      {notifications.filter((n) => n.type === "message").length}
+                    </span>
+                  </div>
+                </button>
               </div>
-                {openMessages && (
+              {openMessages && (
                 <ul className="menu bg-base-100 rounded-box absolute right-0 mt-3 w-52 p-2 shadow z-50">
                   <li>
-                  {notifications.filter((notification)=> notification.type === "message")
-                  .map((notification) => (
-                    <div className="text "
-                    key={notification.id}
-                    onClick={() => {navigate(`/profile/${notification.senderId}/private-chat`);
-                      clearNotification()}
-                    }>
-                      <Link className="text text-primary">
-                      {notification.text}
-                      </Link>
-                    </div>
-                  ))}
+                    {notifications
+                      .filter((notification) => notification.type === "message")
+                      .map((notification) => (
+                        <div
+                          className="text "
+                          key={notification.id}
+                          onClick={() => {
+                            navigate(
+                              `/profile/${notification.senderId}/private-chat`,
+                            );
+                            clearNotification();
+                          }}
+                        >
+                          <Link className="text text-primary">
+                            {notification.text}
+                          </Link>
+                        </div>
+                      ))}
                   </li>
                   <li>
-                    <a onClick={() => clearNotification()}>
-                      Clear messages
-                    </a>
+                    <a onClick={() => clearNotification()}>Clear messages</a>
                   </li>
                 </ul>
-                
               )}
-              
 
               <div
                 className="btn btn-ghost btn-circle avatar"
@@ -249,8 +255,86 @@ export default function Header() {
               </Link>
             </div>
           )}
+          <button
+            className="md:hidden btn btn-ghost btn-circle"
+            onClick={() => setBurgerOpen(!burgerOpen)}
+          >
+            {burgerOpen ? <X className="h-8 w-8"/> : <Menu  className="h-8 w-8"/>}
+          </button>
         </div>
       </div>
+      {burgerOpen && (
+        <div className="md:hidden bg-base-100 shadow px-6 py-4 flex flex-col">
+          <Link
+            to="/explore"
+            onClick={() => setBurgerOpen(false)}
+            className="py-3 border-b"
+          >
+            Explore
+          </Link>
+          <Link
+            to="/meetups"
+            onClick={() => setBurgerOpen(false)}
+            className="py-3 border-b"
+          >
+            My Meetups
+          </Link>
+          <Link
+            to="/ai-match"
+            onClick={() => setBurgerOpen(false)}
+            className="py-3 border-b"
+          >
+            AI Match
+          </Link>
+          <Link
+            to="/inbox"
+            onClick={() => setBurgerOpen(false)}
+            className="py-3 border-b"
+          >
+            Messages
+          </Link>
+          <Link
+            to="/how-works"
+            onClick={() => setBurgerOpen(false)}
+            className="py-3 border-b"
+          >
+            How It Works
+          </Link>
+          <Link
+            to="/about"
+            onClick={() => setBurgerOpen(false)}
+            className="py-3 border-b"
+          >
+            About Us
+          </Link>
+          {user ? (
+            <div className="flex flex-col border-t mt-2">
+              <span className="py-3 font-bold">{user.username}</span>
+              <Link
+                to="/profile"
+                onClick={() => setBurgerOpen(false)}
+                className="py-3 border-b"
+              >
+                Profile
+              </Link>
+              <a
+                onClick={() => {setBurgerOpen(false);
+                  handleLogout();}}>
+                Logout
+              </a>
+            </div>
+          ) : (
+            <div className="flex gap-2 pt-3">
+              {/* <Link to="/login" className="btn btn-primary" onClick={() => setBurgerOpen(false)}>
+                Login
+              </Link>
+              <Link to="/register" className="btn btn-outline" onClick={() => setBurgerOpen(false)}>
+                Register
+              </Link> */}
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 }
