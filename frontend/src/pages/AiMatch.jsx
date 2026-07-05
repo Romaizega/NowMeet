@@ -38,7 +38,7 @@ export default function AiMatch() {
   return (
     <>
       <div
-        className="relatrive rounded-xl overflow-hidden h-[360px] mb-8"
+        className="relative rounded-xl overflow-hidden h-[320px] lg:h-[360px] mb-8"
         style={{
           backgroundImage: `url(${heroImgAI})`,
           backgroundSize: "contain",
@@ -46,21 +46,21 @@ export default function AiMatch() {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <div className=" relative z-10 flex flex-col justify-between h-full px-10 pb-6 pt-10">
+        <div className=" relative z-10 flex flex-col justify-between h-full px-5 lg:px-10 pb-6 pt-8 lg:pt-10">
           <div className="max-w-2xl mt-2">
             <h1 className="text font-bold text-orange-400 flex gap-4">
               <Astroid />
               AI MATCH
             </h1>
-            <h1 className="text text-4xl font-bold text-primary">
+            <h1 className="text text-3xl lg:text-4xl font-bold text-primary">
               Smart connections,
               <p>real expreriences</p>
             </h1>
-            <div className=" text-xl text-primary opacity-50 mt-4">
+            <div className=" text-base lg:text-xl text-primary opacity-50 mt-4">
               <p>Our AI analuzes your interests to recommend</p>
               <p>people and events you'll trully enjoy</p>
             </div>
-            <div className="card bg-base-200 border border-orange-400/10 mt-3 w-fit">
+            <div className="card bg-base-200 border border-orange-400/10 mt-3 w-full lg:w-fit">
               <div className="card-body p-4">
                 <div className="flex items-center gap-3">
                   <Sparkles className="w-8 h-8 text-orange-400 shrink-0" />
@@ -85,7 +85,7 @@ export default function AiMatch() {
           How <span className="text-orange-400">AI</span> Match Works
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
           <div className="card bg-base-200 border border-orange-400/10">
             <div className="card-body items-center text-center">
               <Brain className="w-16 h-16 text-orange-400 mt-1" />
@@ -142,9 +142,9 @@ export default function AiMatch() {
           </div>
         </div>
       </section>
-      <div className="mt-4 pl-20">
+      <div className="mt-8 flex justify-center lg:justify-start px-4 lg:px-20">
         <button
-          className="btn border-none bg-gradient-to-r from-orange-500 via-amber-400 to-red-500 bg-[length:200%_auto] animate-pulse text-black text-2xl font-bold py-6 px-7 rounded-xl shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform duration-300"
+          className="btn border-none bg-gradient-to-r from-orange-500 via-amber-400 to-red-500 bg-[length:200%_auto] animate-pulse text-black text-lg lg:text-2xl py-4 lg:py-6 px-6 lg:px-7 w-full lg:w-auto font-bold rounded-xl shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform duration-300"
           onClick={handleMatch}
         >
           Find my Match with AI
@@ -154,7 +154,7 @@ export default function AiMatch() {
         {status === "loading" && <span className="loading loading-spinner" />}
         {status === "failed" && <p className="text-red-500">{error}</p>}
         {status === "succeeded" && matches && (
-          <div className="grid gr2id-cols-2 gap-6 mt-6 pl-6">
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8 px-4 lg:px-6">
             <div className="">
               <h2 className="text-xl font-bold text-primary mb-4 flex gap-2 pl-4">
                 <Users className="w-8 h-8" />
@@ -163,7 +163,7 @@ export default function AiMatch() {
               {matches.recommendedUsers?.map((match) => (
                 <div key={match.userId} className="card bg-base-200 mb-4">
                   <div className="card-body">
-                    <div className="flex gap-6 items-start">
+                    <div className="flex flex-col sm:flex-row gap-6 items-start">
                       <img
                         src={
                           match.photo
@@ -171,7 +171,7 @@ export default function AiMatch() {
                             : defultAvatar
                         }
                         alt={match.username}
-                        className="w-32 h-40 rounded-xl border border-orange-400/20 object-cover shrink-0"
+                        className="w-full sm:w-32 h-56 sm:h-40 rounded-xl border border-orange-400/20 object-cover shrink-0"
                       />
 
                       <div className="flex-1 min-w-0">
@@ -193,7 +193,7 @@ export default function AiMatch() {
                           {match.reason}
                         </p>
                       </div>
-                      <div className="flex h-full shrink-0 flex-col items-end justify-center gap-4">
+                      <div className="flex flex-row sm:flex-col items-center sm:items-end justify-between gap-4 shrink-0 w-full sm:w-auto">
                         <div className="text-right">
                           <p className="text-5xl font-bold text-green-400">
                             {match.matchScore}%
@@ -222,7 +222,7 @@ export default function AiMatch() {
               {matches.recommendedEvents.map((event) => (
                 <div key={event.eventId} className="card bg-base-200 mb-3">
                   <div className="card-body">
-                    <div className="flex justify-between items-start">
+                    <div className="flex flex-col sm:flex-row justify-between gap-6">
                       <div className="flex-1">
                         <div className="text text-primary font-bold text-xl">
                           {event.title}
@@ -258,7 +258,7 @@ export default function AiMatch() {
                         </div>
 
                         <button
-                          className="btn bg-orange-400 hover:bg-orange-300 text-black border-none rounded-xl px-6"
+                          className="btn bg-orange-400 hover:bg-orange-300 text-black border-none rounded-xl w-full sm:w-auto px-6"
                           onClick={() => navigate(`/event/${event.eventId}`)}
                         >
                           View Event
