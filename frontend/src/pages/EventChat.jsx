@@ -81,7 +81,7 @@ export default function EventChat() {
 
   return (
     <>
-      <div className="flex gap-6">
+      <div className="px-4 lg:px-10 pt-4">
         <button
           className="btn btn-ghost text-xl"
           onClick={() => navigate("/explore")}
@@ -90,8 +90,8 @@ export default function EventChat() {
           Back to Events
         </button>
       </div>
-      <div className="grid grid-cols-5 gap-6 min-h-screen px-10 pt-20">
-        <div className="col-span-1 bg-base-200 rounded-xl p-6 flex flex-col gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 min-h-screen px-4 lg:px-10 pt-6 lg:pt-10">
+        <div className="lg:col-span-2 xl:col-span-1 bg-base-200 rounded-xl p-4 lg:p-6 flex flex-col gap-4">
           <span className={getStatusColor(currentEvent.status)}>
             {currentEvent.status}
           </span>
@@ -126,7 +126,7 @@ export default function EventChat() {
               Going ({participants?.length})
             </h3>
             {participants?.length > 0 ? (
-              <div className="flex gap-2 mt-3">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {participants.map((participant) => (
                   <img
                     key={participant.id}
@@ -153,8 +153,8 @@ export default function EventChat() {
 
         {/* right */}
         <div
-          className="col-span-2 flex flex-col"
-          style={{ height: "calc(100vh - 120px)" }}
+          className="lg:col-span-3 xl:col-span-4 flex flex-col"
+          style={{ height: "calc(100vh - 160px)" }}
         >
           <div className="mb-4 border-b border-orange-400/10 pb-4">
             <h1 className="text-4xl font-bold text-primary">Event Chat</h1>
@@ -209,7 +209,7 @@ export default function EventChat() {
           </div>
 
           {/* Input */}
-          <div className="flex gap-2 border-t border-orange-400/10 py-4">
+          <div className="flex flex-col sm:flex-row gap-2 border-t border-orange-400/10 py-4">
             <input
               type="text"
               value={text}
@@ -219,7 +219,7 @@ export default function EventChat() {
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
             />
             <button
-              className="btn btn-outline border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-black"
+              className="btn btn-outline border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-black w-full sm:w-auto"
               onClick={handleSend}
             >
               Send
