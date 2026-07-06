@@ -42,19 +42,19 @@ export default function MyEvents() {
   };
   return (
     <>
-      <div className="relative z-10 flex w-full min-h-screen items-start pl-14 pt-20">
-        <div className="w-full lg:w-3/4 text left">
-          <div className="flex justify-between items-center mt-3">
+      <div className="relative z-10 flex w-full min-h-screen items-start px-4 sm:px-6 lg:pl-14 lg:pr-6 pt-10 lg:pt-20">
+        <div className="w-full xl:w-3/4 text-left">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mt-3">
             <div>
-              <h1 className="text lg:text-5xl font-bold text-primary">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary">
                 My Events
               </h1>
-              <p className="text-primary text-xl opacity-50">
+              <p className="text-primary text-base lg:text-xl opacity-50">
                 Events you created and are managing
               </p>
             </div>
             <button
-              className="btn btn-outline border-orange-351 text-orange-350 py-6 px-9 text-xl gap-4"
+              className="btn btn-outline border-orange-351 text-orange-350 w-full sm:w-auto py-3 lg:py-6 px-5 lg:px-9 text-base lg:text-xl gap-3 lg:gap-4"
               onClick={() => navigate("/event/create")}
             >
               <SquarePlus className="w-5 h-5 " />
@@ -65,7 +65,7 @@ export default function MyEvents() {
             {myEvents.map((event) => (
               <div
                 key={event.id}
-                className="flex gap-4 bg-base-200 rounded-xl p-4"
+                className="flex flex-col lg:flex-row gap-4 bg-base-200 rounded-xl p-4"
               >
                 <img
                   src={
@@ -74,18 +74,18 @@ export default function MyEvents() {
                       : EventsImgExplore
                   }
                   alt=""
-                  className="w-48 h-36 rounded-xl object-cover flex-shrink-0"
+                  className="w-full lg:w-48 h-48 sm:h-56 lg:h-36 rounded-xl object-cover flex-shrink-0"
                 />
 
                 <div className="flex flex-col flex-1 gap-2">
                   <span className={getStatusColor(event.status)}>
                     {event.status}
                   </span>
-                  <h3 className="text-primary text-xl font-bold">
+                  <h3 className="text-primary text-lg lg:text-xl font-bold">
                     {event.title}
                   </h3>
                   <p className="text-primary opacity-50 line-clamp-2 ">{event.description}</p>
-                  <div className="flex gap-6 mt-2">
+                  <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 lg:gap-6 mt-2">
                     <span className="flex items-center gap-2 text-primary">
                       <CalendarDays className="w-4 h-4" />
                       {formatDate(event.event_start)}
@@ -101,9 +101,9 @@ export default function MyEvents() {
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-2 justify-center">
+                <div className="flex flex-col gap-2 justify-center w-full lg:w-auto">
                   <button
-                    className="btn btn-outline border-orange-351 text-orange-350 gap-6 text-xl hover:bg-orange-400 hover:text-black py-6"
+                    className="btn btn-outline border-orange-351 text-orange-350 w-full lg:w-auto gap-3 lg:gap-6 text-base lg:text-xl hover:bg-orange-400 hover:text-black py-3 lg:py-6"
                     type="button"
                     onClick={() => handleViewEvent(event.id)}
                   >
