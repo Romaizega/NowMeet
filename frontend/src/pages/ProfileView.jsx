@@ -48,7 +48,7 @@ export default function ProfileView() {
     <>
       {/* Hero background */}
       <div
-        className="relative rounded-xl overflow-hidden h-[350px] mb-10"
+        className="relative rounded-xl overflow-hidden h-[260px] sm:h-[300px] lg:h-[350px] mb-8 lg:mb-10"
         style={{
           backgroundImage: `url(${heroProfileView})`,
           backgroundSize: "cover",
@@ -59,8 +59,8 @@ export default function ProfileView() {
       </div>
 
       {/* Profile info */}
-      <div className="relative -mt-50 px-10">
-        <div className="flex items-end gap-15">
+      <div className="relative -mt-24 sm:-mt-32 lg:-mt-50 px-4 sm:px-6 lg:px-10">
+        <div className="flex flex-col sm:flex-row items-center sm:items-end gap-4 sm:gap-8 lg:gap-15">
           {/* Avatar */}
           <img
             src={
@@ -69,7 +69,7 @@ export default function ProfileView() {
                 : defultAvatar
             }
             alt={publicProfile.username}
-            className="w-36 h-36 rounded-full border-4 border-orange-400 object-cover cursor-pointer hover:opacity-90 transition-opacity"
+            className="w-28 h-28 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-full border-4 border-orange-400 object-cover cursor-pointer hover:opacity-90 transition-opacity"
             onClick={() => setOpenImage(true)}
           />
           {opneImage && (
@@ -97,23 +97,23 @@ export default function ProfileView() {
             </div>
           )}
           {/* Name and info */}
-          <div className="pb-2">
-            <div className="flex items-center gap-3">
-              <h2 className="text-3xl text-primary font-bold">
+          <div className="pb-2 text-center sm:text-left w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <h2 className="text-2xl lg:text-3xl text-primary font-bold break-words">
                 {publicProfile.username}
               </h2>
               <span className="badge bg-orange-500 text-white border-none">
                 Member
               </span>
                <button
-                className="btn btn-outline border-orange-351 px-10 py-6 text-primary gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                className="btn btn-outline border-orange-351 w-full sm:w-auto px-6 lg:px-10 py-3 lg:py-6 text-primary gap-3 lg:gap-6 text-base lg:text-xl hover:bg-orange-400 hover:text-black"
                 onClick={() => navigate(`/profile/${id}/private-chat`)}
               >
                 <MessageCircleMore/>
                 Chat
               </button>
             </div>
-            <p className="text-primary opacity-50 text-sm mt-10">
+            <p className="text-primary opacity-50 text-sm mt-4 lg:mt-10">
               Member since {formatDate(publicProfile.created_at)}
             </p>
           </div>
@@ -121,16 +121,16 @@ export default function ProfileView() {
       </div>
 
       {/* Content grid */}
-      <div className="grid grid-cols-3 gap-6 mt-8 px-10">
-        <div className="col-span-2 flex flex-col gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8 px-4 sm:px-6 lg:px-10">
+        <div className="col-span-1 lg:col-span-2 flex flex-col gap-6">
           {/* About Me */}
           <div className="bg-base-200 rounded-xl p-6">
             <h3 className="text-orange-400 text-2xl font-bold mb-3">
               About Me
             </h3>
-            <div className="flex gap-2 items-center">
-              <span className="text-orange-400 text-xl ">Name:</span>
-              <p className="text-primary text-xl">
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 sm:items-center">
+              <span className="text-orange-400 text-base lg:text-xl ">Name:</span>
+              <p className="text-primary text-base lg:text-xl break-words">
                 {publicProfile.first_name || publicProfile.last_name
                   ? `${publicProfile.first_name || ""} ${publicProfile.last_name || ""}`
                   : "Name not provided"}
@@ -150,7 +150,7 @@ export default function ProfileView() {
             {userInterest && userInterest.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {userInterest.map((interest) => (
-                  <span key={interest.id} className=" text-primary badge rounded-full border border-orange-400 px4 py-4">
+                  <span key={interest.id} className=" text-primary badge rounded-full border border-orange-400 px-3 py-3 lg:py-4">
                     {interest.name} 
                   </span>
                 ))}{" "}
