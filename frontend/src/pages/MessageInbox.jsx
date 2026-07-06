@@ -19,17 +19,17 @@ export default function MessageInbox() {
 
   return (
     <>
-      <div className="relative z-10 w-full min-h-screen px-14 pt-20">
+      <div className="relative z-10 w-full min-h-screen px-4 sm:px-6 lg:px-14 pt-10 lg:pt-20">
         <div className="w-full text-left">
-          <h1 className="text lg:text-5xl font-bold leading-tight text-primary">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight text-primary">
             Messages
           </h1>
 
-          <p className="text-primary text-xl mb-6 opacity-50">
+          <p className="text-primary text-base lg:text-xl mb-6 opacity-50">
             Your conversations
           </p>
 
-          <div className="grid grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="col-span-1 bg-base-200 rounded-xl overflow-hidden">
               <div className="p-4 border-b border-orange-400/10">
                 <div className="relative">
@@ -50,7 +50,7 @@ export default function MessageInbox() {
                     onClick={() =>
                       navigate(`/profile/${message.other_user_id}/private-chat`)
                     }
-                    className="flex items-center gap-4 p-4 border-b border-orange-400/10 cursor-pointer hover:bg-black/30"
+                    className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 border-b border-orange-400/10 cursor-pointer hover:bg-black/30"
                   >
                     <img
                       src={
@@ -59,11 +59,11 @@ export default function MessageInbox() {
                           : "/default-avatar.png"
                       }
                       alt={message.username}
-                      className="w-14 h-14 rounded-full object-cover"
+                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover"
                     />
 
                     <div className="flex-1">
-                      <h3 className="text-primary font-bold text-lg">
+                      <h3 className="text-primary font-bold text-base sm:text-lg">
                         {message.username}
                       </h3>
 
@@ -80,20 +80,20 @@ export default function MessageInbox() {
               )}
             </div>
 
-            <div className="col-span-2 bg-base-200 rounded-xl min-h-[600px] flex items-center justify-center">
+            <div className="col-span-1 lg:col-span-2 bg-base-200 rounded-xl min-h-[360px] lg:min-h-[600px] flex items-center justify-center p-6">
               <div className="text-center">
-                <MessageCircle className="w-24 h-24 text-primary mx-auto mb-6" />
+                <MessageCircle className="w-16 h-16 lg:w-24 lg:h-24 text-primary mx-auto mb-4 lg:mb-6" />
 
-                <h2 className="text-4xl font-bold text-primary">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary">
                   Your inbox is empty
                 </h2>
 
-                <p className="text-primary opacity-50 text-xl mt-3">
+                <p className="text-primary opacity-50 text-base lg:text-xl mt-3">
                   When you get new messages, they will appear here.
                 </p>
 
                 <button
-                  className="btn btn-primary mt-6"
+                  className="btn btn-primary mt-6 w-full sm:w-auto"
                   onClick={() => navigate("/explore")}
                 >
                   Explore Events
