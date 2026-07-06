@@ -48,19 +48,19 @@ export default function HowItWorks() {
 
   return (
     <>
-      <div className="relative z-10 w-full min-h-screen px-14 pt-20">
+      <div className="relative z-10 w-full min-h-screen px-4 sm:px-6 lg:px-14 pt-10 lg:pt-20">
         <div className="w-full text-left">
           <div className="text-center mb-12">
-            <h1 className="text lg:text-5xl font-bold leading-tight text-primary">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight text-primary">
               How <span className="text-orange-400">NowMeet</span> Works
             </h1>
 
-            <p className="text-sm tracking-widest text-primary text-xl mt-4 opacity-50">
+            <p className="text-sm sm:text-base lg:text-xl tracking-widest text-primary mt-4 opacity-50">
               Discover events, meet people, and build real connections
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mt-3 w-full mt-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 lg:gap-6 w-full mt-2">
             {steps.map((step) => {
               const Icon = step.icon;
 
@@ -73,16 +73,16 @@ export default function HowItWorks() {
                       </span>
 
                       <div className="flex justify-center mt-8 mb-6">
-                        <div className="w-24 h-24 rounded-full border border-orange-400/30 bg-black/40 flex items-center justify-center">
-                          <Icon className="w-12 h-12 text-primary" />
+                        <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-full border border-orange-400/30 bg-black/40 flex items-center justify-center">
+                          <Icon className="w-10 h-10 lg:w-12 lg:h-12 text-primary" />
                         </div>
                       </div>
 
-                      <p className="text text-xl text-primary font-bold">
+                      <p className="text-lg lg:text-xl text-primary font-bold">
                         {step.title}
                       </p>
 
-                      <p className="text-primary text-lg opacity-50 leading-relaxed">
+                      <p className="text-primary text-sm lg:text-lg opacity-50 leading-relaxed">
                         {step.text}
                       </p>
                     </div>
@@ -94,19 +94,19 @@ export default function HowItWorks() {
 
           <div className="card bg-base-200 shadow-xl overflow-hidden relative h-full mt-10 border border-orange-400/10">
             <div className="card-body">
-              <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
+              <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-10">
                 <img
                   src={communityImg}
                   alt="Community"
-                  className="w-full lg:w-1/3 max-h-80 object-contain rounded-xl"
+                  className="w-full sm:w-2/3 lg:w-1/3 max-h-64 lg:max-h-80 object-contain rounded-xl"
                 />
 
                 <div className="flex-1">
-                  <h2 className="text-4xl font-bold text-primary">
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary">
                     Real people. Real connections. Real life
                   </h2>
 
-                  <p className="text-primary text-xl opacity-50 mt-4 leading-relaxed">
+                  <p className="text-primary text-base lg:text-xl opacity-50 mt-4 leading-relaxed">
                     NowMeet is more than just events. It is a place where people
                     discover shared interests, meet face-to-face, and create new
                     friendships
@@ -114,7 +114,7 @@ export default function HowItWorks() {
                 </div>
 
                 <button
-                  className="flex items-center gap-4 rounded-xl border border-white bg-black/40 px-14 py-4 text-primary text-xl transition-all hover:bg-white-400 hover:text-white"
+                  className="flex items-center justify-center gap-3 lg:gap-4 rounded-xl border border-white bg-black/40 w-full lg:w-auto px-6 lg:px-14 py-3 lg:py-4 text-primary text-base lg:text-xl transition-all hover:bg-white-400 hover:text-white"
                   onClick={() => navigate("/explore")}
                 >
                   Explore Events
