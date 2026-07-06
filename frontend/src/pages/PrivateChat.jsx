@@ -82,50 +82,50 @@ export default function PrivaeChat() {
   return (
     <>
       <div
-        className="relative rounded-xl overflow-hidden h-[350px] mb-10"
+        className="relative rounded-xl overflow-hidden h-[420px] sm:h-[380px] lg:h-[350px] mb-6 lg:mb-10"
         style={{
           backgroundImage: `url(${heroPrivateImg})`,
           backgroundSize: "contain",
           backgroundPosition: "center",
         }}
       >
-        <div className="relative z-10 flex flex-col justify-between h-full px-10 pb-6 pt-10">
+        <div className="relative z-10 flex flex-col justify-between h-full px-4 sm:px-6 lg:px-10 pb-6 pt-6 lg:pt-10">
           <div>
             <button
-            className="btn btn-ghost text-xl"
+            className="btn btn-ghost text-base lg:text-xl px-2 lg:px-4"
             onClick={() => navigate(`/profile/${id}`)}
             >
             <ArrowLeft />
               Back to Profile</button>
           </div>
           <div className="max-w-2xl mt-2">
-            <h1 className="text font-bold text-orange-400">PRIVATE MESSAGES</h1>
-            <h1 className="text text-4xl font-bold text-primary mt-2">
+            <h1 className="text-sm lg:text-base font-bold text-orange-400">PRIVATE MESSAGES</h1>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary mt-2">
               Your conversations,
-              <p className="text text-orange"> your space</p>
+              <p className="text-orange-400"> your space</p>
             </h1>
-            <div className="text-xl text-primary opacity-50 mb-16">
+            <div className="text-base lg:text-xl text-primary opacity-50 mb-8 lg:mb-16">
               <p>Private, secure and just between </p>
               <p>the two of you</p>
             </div>
           </div>
         </div>
       </div>
-      <div className="flex flex-col h-[calc(100vh-350px)] px-10">
+      <div className="flex flex-col h-[calc(100vh-420px)] sm:h-[calc(100vh-380px)] lg:h-[calc(100vh-350px)] px-4 sm:px-6 lg:px-10">
         <div className="text text-primary">
-          <div className="flex gap-2 items-center">
-          <h1 className="text  text-primary font-bold text-2xl">Chat with: </h1>
-          <p  className="text text-2xl  text-orange-400 font-bold">{recipient?.username}</p>
+          <div className="flex flex-wrap gap-2 items-center">
+          <h1 className="text-primary font-bold text-lg lg:text-2xl">Chat with: </h1>
+          <p  className="text-lg lg:text-2xl text-orange-400 font-bold">{recipient?.username}</p>
           </div>
         </div>
-        <div className="flex-1 overflow-y-auto max-w-6xl mx-auto w-full">
+        <div className="flex-1 overflow-y-auto max-w-6xl mx-auto w-full py-3">
           {messages.map((message) => (
             <div
               key={message.id}
               className={`chat mb-3 ${message.sender_user_id === user.id ? "chat-end" : "chat-start"}`}
             >
               <div className="chat-image avatar">
-                <div className="w-14 rounded-full">
+                <div className="w-10 sm:w-12 lg:w-14 rounded-full">
                   <img
                     src={
                       message.photo
@@ -139,7 +139,7 @@ export default function PrivaeChat() {
               </div>
               <div className="chat-header">{message.username}</div>
               <div
-                className={`chat-bubble ${
+                className={`chat-bubble max-w-[85vw] sm:max-w-md lg:max-w-lg break-words ${
                   message.sender_user_id === user.id
                     ? "bg-orange-400 text-black"
                     : "bg-base-200 text-white"
@@ -163,20 +163,20 @@ export default function PrivaeChat() {
         </div>
 
         {/* Input */}
-        <div className="flex gap-2 border-t border-orange-400/10 py-4 ">
+        <div className="flex gap-2 border-t border-orange-400/10 py-3 lg:py-4">
           <input
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Type a message..."
-            className="input input-bordered flex-1 text-primary"
+            className="input input-bordered flex-1 text-primary min-w-0"
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
           />
           <button
             className="btn btn-outline border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-black"
             onClick={handleSend}
           >
-            <SendHorizontal className="w-8 h-7" /> 
+            <SendHorizontal className="w-6 h-6 lg:w-8 lg:h-7" /> 
           </button>
         </div>
       </div>
