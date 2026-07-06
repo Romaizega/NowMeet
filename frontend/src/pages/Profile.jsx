@@ -114,7 +114,7 @@ export default function Profile() {
   return (
     <>
       <div
-        className="relative rounded-xl overflow-hidden mb-8 h-48"
+        className="relative rounded-xl overflow-hidden mb-8 h-auto lg:h-48 py-6 lg:py-0"
         style={{
           backgroundImage: `url(${heroImgProfile})`,
           backgroundSize: "cover",
@@ -122,10 +122,10 @@ export default function Profile() {
         }}
       >
         <div className="absolute inset-0 bg-black/50"></div>
-        <div className="relative z-10 flex items-center justify-between p-8 h-full">
-          <div className="flex items-center gap-6">
+        <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-6 p-4 sm:p-6 lg:p-8 h-full">
+          <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 lg:gap-6 text-center sm:text-left">
             <div className="avatar">
-              <div className="w-40 rounded-full">
+              <div className="w-24 sm:w-32 lg:w-40 rounded-full">
                 <img
                   src={
                     user?.photo
@@ -136,7 +136,7 @@ export default function Profile() {
               </div>
             </div>
             <div>
-              <h2 className="text-3xl font-bold">My Profile</h2>
+              <h2 className="text-2xl lg:text-3xl font-bold">My Profile</h2>
               <p className="text-sm opacity-70 text-primary">
                 Manage your personal information and how
                 <br />
@@ -146,19 +146,19 @@ export default function Profile() {
           </div>
           <button
             onClick={() => setEdit(!edit)}
-            className="btn btn-outline btn-primary self-end"
+            className="btn btn-outline btn-primary w-full sm:w-auto self-auto sm:self-end"
           >
             <Pencil className="w-4 h-16" />
             Edit Profile
           </button>
         </div>
       </div>
-      <div className="flex gap-8">
-        <div className="w-64">
-          <ul className="menu bg-base-100 rounded-xl shadow-xl">
+      <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+        <div className="w-full lg:w-64">
+          <ul className="menu bg-base-100 rounded-xl shadow-xl w-full">
             <li>
               <a
-                className={`text-xl ${activeTab === "profile" ? "active" : ""}`}
+                className={`text-base lg:text-xl ${activeTab === "profile" ? "active" : ""}`}
                 onClick={() => setActiveTab("profile")}
               >
                 <User />
@@ -167,7 +167,7 @@ export default function Profile() {
             </li>
             <li>
               <a
-                className={`text-xl ${activeTab === "account" ? "active" : ""}`}
+                className={`text-base lg:text-xl ${activeTab === "account" ? "active" : ""}`}
                 onClick={() => setActiveTab("account")}
               >
                 <LockKeyhole />
@@ -176,7 +176,7 @@ export default function Profile() {
             </li>
             <li>
               <a
-                className={`text-xl ${activeTab === "notification" ? "active" : ""}`}
+                className={`text-base lg:text-xl ${activeTab === "notification" ? "active" : ""}`}
                 onClick={() => setActiveTab("notification")}
               >
                 <Bell />
@@ -185,7 +185,7 @@ export default function Profile() {
             </li>
             <li>
               <a
-                className={`text-xl ${activeTab === "privacy" ? "active" : ""}`}
+                className={`text-base lg:text-xl ${activeTab === "privacy" ? "active" : ""}`}
                 onClick={() => setActiveTab("privacy")}
               >
                 <HatGlasses />
@@ -196,7 +196,7 @@ export default function Profile() {
         </div>
         {activeTab === "profile" && (
           <>
-            <div className=" flex-1 bg-base-200 rounded-xl p-8">
+            <div className="flex-1 bg-base-200 rounded-xl p-4 sm:p-6 lg:p-8">
               <div>
                 <a className=" text-primary text-xl font-bold">
                   Personal information
@@ -210,13 +210,13 @@ export default function Profile() {
                   <span>{localError || error}</span>
                 </div>
               )}
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text text-primary">Username</span>
                   </label>
                   <label className="input input-bordered flex items-center gap-2">
-                    <User className="w-7 h-7" />
+                    <User className="w-5 h-5 lg:w-7 lg:h-7" />
                     <input
                       type="text"
                       value={user?.username || ""}
@@ -230,7 +230,7 @@ export default function Profile() {
                     <span className="label-text text-primary">Email</span>
                   </label>
                   <label className="input input-bordered flex items-center gap-2">
-                    <Mail className="w-7 h-7" />
+                    <Mail className="w-5 h-5 lg:w-7 lg:h-7" />
                     <input
                       type="text"
                       value={user?.email || ""}
@@ -244,7 +244,7 @@ export default function Profile() {
                     <span className="label-text text-primary">First name</span>
                   </label>
                   <label className="input input-bordered flex items-center gap-2">
-                    <User className="w-7 h-7" />
+                    <User className="w-5 h-5 lg:w-7 lg:h-7" />
                     <input
                       name="first_name"
                       onChange={handleChange}
@@ -260,7 +260,7 @@ export default function Profile() {
                     <span className="label-text text-primary">Last name</span>
                   </label>
                   <label className="input input-bordered flex items-center gap-2">
-                    <User className="w-7 h-7" />
+                    <User className="w-5 h-5 lg:w-7 lg:h-7" />
                     <input
                       onChange={handleChange}
                       name="last_name"
@@ -278,7 +278,7 @@ export default function Profile() {
                     </span>
                   </label>
                   <label className="input input-bordered flex items-center gap-2">
-                    <CalendarDays className="w-7 h-7" />
+                    <CalendarDays className="w-5 h-5 lg:w-7 lg:h-7" />
                     <input
                       onChange={handleChange}
                       name="date_of_birth"
@@ -294,7 +294,7 @@ export default function Profile() {
                     <span className="label-text text-primary">Photo</span>
                   </label>
                   <label className="input input-bordered flex items-center gap-2">
-                    <Image className="w-7 h-7" />
+                    <Image className="w-5 h-5 lg:w-7 lg:h-7" />
                     <input
                       onChange={handleFileChange}
                       type="file"
@@ -310,7 +310,7 @@ export default function Profile() {
                   <span className="label-text text-primary">About</span>
                 </label>
                 <textarea
-                  className="textarea textarea-bordered w-full"
+                  className="textarea textarea-bordered w-full text-sm lg:text-base"
                   onChange={handleChange}
                   name="about"
                   value={form.about}
@@ -334,15 +334,15 @@ export default function Profile() {
                 {edit ? (
                   Object.entries(grouped).map(([categoryName, interests]) => (
                     <div  key={categoryName} className="mt-3">
-                      <h4 className="text text-primary">{categoryName}</h4>
+                      <h4 className="text-base lg:text-lg text-primary">{categoryName}</h4>
                       <div className="flex flex-wrap gap-2">
                         {interests.map((interest) => (
                           <span
                           onClick={()=> handleInterest(interest.id) }
                            key={interest.id}
                            className={userInterest.some(ui => ui.id === interest.id)
-                             ? "cursor-pointer rounded-full bg-orange-400 px-3 py-1 text-black "
-                             : "cursor-pointer rounded-full border border-orange-400/30 px-3 py-1 text-orange-300"}
+                             ? "cursor-pointer rounded-full bg-orange-400 px-2 lg:px-3 py-1 text-sm lg:text-base text-black "
+                             : "cursor-pointer rounded-full border border-orange-400/30 px-2 lg:px-3 py-1 text-sm lg:text-base text-orange-300"}
                            >{interest.name}</span>
                         ))}
                       </div>
@@ -351,7 +351,7 @@ export default function Profile() {
                 ) : userInterest && userInterest.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {userInterest.map((interest) => (
-                      <span key={interest.id} className="text-primary badge rounded-full border border-orange-400 px4 py-4">
+                      <span key={interest.id} className="text-primary badge rounded-full border border-orange-400 px-3 py-3 lg:py-4">
                         {interest.name}
                       </span>
                     ))}
@@ -362,7 +362,7 @@ export default function Profile() {
               </div>
 
               {edit && (
-                <button onClick={handleSave} className="btn btn-primary mt-4">
+                <button onClick={handleSave} className="btn btn-primary mt-4 w-full sm:w-auto">
                   Save Changes
                 </button>
               )}
