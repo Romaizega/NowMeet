@@ -114,7 +114,7 @@ export default function EventDetails() {
     <>
       {/* Hero */}
       <div
-        className="relative rounded-xl overflow-hidden mb-6 h-[420px] "
+        className="relative rounded-xl overflow-hidden mb-6 min-h-[700px] sm:min-h-[620px] lg:min-h-0 lg:h-[420px]"
         style={{
           backgroundImage: `url(${
             currentEvent.cover_image
@@ -126,7 +126,7 @@ export default function EventDetails() {
           backgroundRepeat: "no-repeat"
         }}
       >
-        <div className="relative z-10 flex flex-col justify-between h-full px-10 pb-6 pt-10">
+        <div className="relative z-10 flex flex-col gap-6 lg:justify-between lg:h-full px-4 sm:px-6 lg:px-10 py-5 lg:pt-10">
           <div>
             <button
               className="btn btn-ghost text-xl"
@@ -140,49 +140,49 @@ export default function EventDetails() {
             <span className={getStatusColor(currentEvent.status)}>
               {currentEvent.status}
             </span>
-            <h2 className="text text-4xl text-primary font-bold mt-">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl text-primary font-bold break-words">
               {currentEvent.title}
             </h2>
           </div>
-          <div className="flex justify-between items-center">
-            <div className="flex gap-4 ">
+          <div className="flex flex-col lg:flex-row justify-between gap-6 lg:items-end">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex gap-4 lg:gap-6 w-full">
               <span className="flex items-center gap-2">
-                <Calendar className="w-12 h-12 " />
-                <span className="text-primary text-xl">
+                <Calendar className="w-7 h-7 lg:w-12 lg:h-12 " />
+                <span className="text-primary text-sm lg:text-xl">
                   {formatDate(currentEvent.event_start)}
                   <p className="opacity-50">Start</p>
                 </span>
               </span>
               <span className="flex items-center gap-2">
-                <Clock4 className="w-12 h-12" />
-                <span className="text-primary text-xl">
+                <Clock4 className="w-7 h-7 lg:w-12 lg:h-12" />
+                <span className="text-primary text-sm lg:text-xl">
                   {currentEvent.duration} min
                   <p className="opacity-50">Duration</p>
                 </span>
               </span>
               <span className="flex items-center gap-2">
-                <Building2  className="w-12 h-12" />
-                <span className="text-primary text-xl">
+                <Building2  className="w-7 h-7 lg:w-12 lg:h-12" />
+                <span className="text-primary text-sm lg:text-xl">
                   {currentEvent.city}
                   <p className="opacity-50">City</p>
                 </span>
               </span>
               <span className="flex items-center gap-2">
-                <MapPin className="w-12 h-12" />
-                <span className="text-primary text-xl">
+                <MapPin className="w-7 h-7 lg:w-12 lg:h-12" />
+                <span className="text-primary text-sm lg:text-xl">
                   {currentEvent.place_name}
                   <p className="opacity-50">Place</p>
                 </span>
               </span>
               <span className="flex items-center gap-2">
-                <Users className="w-12 h-12" />
-                <span className="text-primary text-xl">
+                <Users className="w-7 h-7 lg:w-12 lg:h-12" />
+                <span className="text-primary text-sm lg:text-xl">
                   {participants?.length}/{currentEvent.max_participants}
                   <p className="opacity-50">Going</p>
                 </span>
               </span>
               <button
-                className="btn btn-outline border-orange-351 px-10 py-6 text-primary gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                className="btn btn-outline border-orange-351 w-full sm:w-full lg:w-auto px-4 sm:px-6 lg:px-10 py-3 lg:py-6 text-primary gap-2 lg:gap-6 text-sm sm:text-base lg:text-xl hover:bg-orange-400 hover:text-black"
                 onClick={() => navigate(`/event/${id}/common-chat`)}
               >
                 <MessageCircleMore />
@@ -191,9 +191,9 @@ export default function EventDetails() {
             </div>
           </div>
           {isCreator ? (
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
               <button
-                className="btn btn-outline border-orange-351 px-10 py-6 text-orange-350 gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                className="btn btn-outline border-orange-351 w-full sm:w-auto px-5 lg:px-10 py-3 lg:py-6 text-sm lg:text-xl gap-3 lg:gap-6 text-orange-350  text-xl hover:bg-orange-400 hover:text-black"
                 type="button"
                 onClick={() => navigate(`/event/${id}/edit`)}
               >
@@ -205,7 +205,7 @@ export default function EventDetails() {
               {currentEvent.status === "open" && (
                 <>
                   <button
-                    className="btn btn-outline border-orange-351 px-10 py-6 text-orange-350 gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                    className="btn btn-outline border-orange-351 w-full sm:w-auto px-5 lg:px-10 py-3 lg:py-6 text-sm lg:text-xl gap-3 lg:gap-6 text-orange-350 text-xl hover:bg-orange-400 hover:text-black"
                     type="button"
                     onClick={handleCloseEvent}
                   >
@@ -213,7 +213,7 @@ export default function EventDetails() {
                     Close Event
                   </button>
                   <button
-                    className="btn btn-outline border-error px-10 py-6 text-error gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                    className="btn btn-outline border-error w-full sm:w-auto px-5 lg:px-10 py-3 lg:py-6 text-sm lg:text-xl gap-3 lg:gap-6 text-error text-xl hover:bg-orange-400 hover:text-black"
                     type="button"
                     onClick={handleCancelEvent}
                   >
@@ -224,7 +224,7 @@ export default function EventDetails() {
               )}
               {currentEvent.status === "cancelled" && (
                 <button
-                  className="btn btn-outline border-orange-351 px-10 py-6 text-orange-350 gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                  className="btn btn-outline border-orange-351 w-full sm:w-auto px-5 lg:px-10 py-3 lg:py-6 text-sm lg:text-xl gap-3 lg:gap-6 text-orange-350 text-xl hover:bg-orange-400 hover:text-black"
                   type="button"
                   onClick={handleReopenEvent}
                 >
@@ -233,7 +233,7 @@ export default function EventDetails() {
               )}
               {currentEvent.status === "closed" && (
                 <button
-                  className="btn btn-outline border-orange-351 px-10 py-6 text-orange-350 gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                  className="btn btn-outline border-orange-351 w-full sm:w-auto px-5 lg:px-10 py-3 lg:py-6 text-sm lg:text-xl gap-3 lg:gap-6 text-orange-350 text-xl hover:bg-orange-400 hover:text-black"
                   type="button"
                   onClick={handleReopenEvent}
                 >
@@ -242,7 +242,7 @@ export default function EventDetails() {
               )}
 
               <button
-                className="btn btn-outline border-error px-10 py-6 text-error gap-6 text-xl hover:bg-orange-400 hover:text-black"
+                className="btn btn-outline border-error w-full sm:w-auto px-5 lg:px-10 py-3 lg:py-6 text-sm lg:text-xl gap-3 lg:gap-6 text-error text-xl hover:bg-orange-400 hover:text-black"
                 type="button"
                 onClick={handleDeleteEvent}
               >
@@ -252,11 +252,11 @@ export default function EventDetails() {
             </div>
           ) : (
             <button
-              className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-2 py-2 mr-500 "
+              className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl w-full sm:w-full lg:w-auto px-6 lg:px-8 py-3"
               type="button"
               onClick={isJoined ? handleLeaveEvent : handleJoin}
             >
-              <span className="text-xl">
+              <span className="text-base lg:text-xl">
                 {isJoined ? "Leave MeetUp" : "Join Meetup"}
               </span>
             </button>
@@ -264,15 +264,15 @@ export default function EventDetails() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-6 mt-6 px-10">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6 px-4 lg:px-10">
         {/* Left column */}
-        <div className="col-span-2 flex flex-col gap-6">
+        <div className="xl:col-span-2 flex flex-col gap-6">
           {/* About */}
           <div className="bg-base-200 rounded-xl p-6">
             <h3 className="text-orange-400 text-xl font-bold mb-3">
               About this meetup
             </h3>
-            <p className="text-primary text-xl">{currentEvent.description}</p>
+            <p className="text-primary text-base lg:text-xl leading-relaxed">{currentEvent.description}</p>
           </div>
           <div className="flex flex-col gap-6">
             {/* Right column — Interests, etc */}
@@ -304,7 +304,7 @@ export default function EventDetails() {
             <h3 className="text-orange-400 text-xl font-bold mb-3">
               Hosted by
             </h3>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
               <img
                 src={
                   currentEvent.creator_photo
@@ -312,14 +312,14 @@ export default function EventDetails() {
                     : defultAvatar
                 }
                 alt={currentEvent.creator_username}
-                className="w-30 h-30 rounded-full border-2 border-white object-cover cursor-pointer transition-transform duration-300 hover:scale-210"
+                className="w-20 h-20 sm:w-24 sm:h-24 lg:w-30 lg:h-30 rounded-full border-2 border-white object-cover cursor-pointer transition-transform duration-300 hover:scale-210"
                 title={currentEvent.creator_username}
               />
               <div>
-                <p className="text-primary text-xl font-bold">
+                <p className="text-primary text-lg lg:text-xl font-bold">
                   {currentEvent.creator_username}
                 </p>
-                <p className="text-primary text-xl opacity-50">
+                <p className="text-primary text-sm lg:text-xl opacity-50">
                   {currentEvent.creator_about}
                 </p>
                 <button
@@ -340,7 +340,7 @@ export default function EventDetails() {
               Going ({participants?.length})
             </h3>
             {participants?.length > 0 ? (
-              <div className="flex gap-2 mt-3">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {participants.map((participant) => (
                   <img
                     key={participant.id}
@@ -350,7 +350,7 @@ export default function EventDetails() {
                         : defultAvatar
                     }
                     alt={participant.username}
-                    className="w-17 h-17 rounded-full border-2 border-white object-cover cursor-pointer transition-transform duration-300 hover:scale-210"
+                    className="w-14 h-14 sm:w-16 sm:h-16 lg:w-17 lg:h-17 rounded-full border-2 border-white object-cover cursor-pointer transition-transform duration-300 hover:scale-210"
                     title={participant.username}
                     onClick={() => navigate(`/profile/${participant.id}`)}
                   />
@@ -419,10 +419,10 @@ export default function EventDetails() {
         </div>
 
         {/* Right column*/}
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 xl:sticky xl:top-6 h-fit mt-2 xl:mt-0">
           <div className="bg-base-200 rounded-xl p-6">
             <h3 className="text text-xl font-bold text-orange-400">Location</h3>
-            <p className="text-primary mt-6">{currentEvent.place_name}</p>
+            <p className="text-primary mt-4 text-sm lg:text-base">{currentEvent.place_name}</p>
             <EventMap
               lat={currentEvent.latitude}
               lng={currentEvent.longitude}
@@ -444,7 +444,7 @@ export default function EventDetails() {
             </h3>
             <span className="flex items-center gap-2 mt-4">
               <Handshake className="h-10 w-10 text-primary" />
-              <span className="text-primary text-xl">
+              <span className="text-primary text-base lg:text-xl">
                 {" "}
                 Meet New People
                 <p className="opacity-50">Connect and build new friendships</p>
@@ -452,7 +452,7 @@ export default function EventDetails() {
             </span>
             <span className="flex items-center gap-2 mt-4">
               <MessageCircleMore className="w-12 h-12 text-primary" />
-              <span className="text-primary text-xl">
+              <span className="text-primary text-base lg:text-xl">
                 Great Conversations
                 <p className="opacity-50 ">
                   Share ideas and meaningful discussions
@@ -461,7 +461,7 @@ export default function EventDetails() {
             </span>
             <span className="flex items-center gap-2 mt-4">
               <UserStar className="w-12 h-12 text-primary" />
-              <span className="text-primary text-xl">
+              <span className="text-primary text-base lg:text-xl">
                 New Experiences
                 <p className="opacity-50 ">
                   Try something new and explore together
@@ -470,7 +470,7 @@ export default function EventDetails() {
             </span>
             <span className="flex items-center gap-2 mt-4">
               <PartyPopper className="w-12 h-12 text-primary" />
-              <span className="text-primary text-xl">
+              <span className="text-primary text-base lg:text-xl">
                 Relaxed Atmosphere
                 <p className="opacity-50 ">
                   Friendly, welcoming, and pressure-free
