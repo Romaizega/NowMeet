@@ -720,7 +720,7 @@ export default function CreateEvent() {
           </div>
 
           <button type="submit" className="btn btn-primary mt-4 ">
-            Create Event
+            {isEditMode ? "Save Changes":  "Create Event"}
           </button>
         </form>
         <div className="flex flex-col gap-6">
