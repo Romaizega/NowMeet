@@ -29,7 +29,7 @@ export default function Register () {
     }
   
     if(!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/.test(password)) {
-      setLocalError('Password must be at least 8 characters long and include at least one capital letter and one number')
+      setLocalError('Password must be between 8 and 15 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., @, #, $, !)')
       return
     }
     if(password !== confirPassword) {

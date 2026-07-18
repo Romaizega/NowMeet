@@ -29,7 +29,7 @@ const register = async (req, res) => {
   if (!strongPassword.test(password)) {
     return res.status(400).json({
       message:
-        "Password must be at least 8 characters long and include at least one capital letter and one number",
+        "Password must be between 8 and 15 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., @, #, $, !)",
     });
   }
   try {
