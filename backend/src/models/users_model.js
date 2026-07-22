@@ -85,11 +85,26 @@ const clearCode = (user_id) => {
     })
 }
 
+const clearResetToken = (user_id) =>{
+  return db ('users')
+  .where({id:user_id})
+  .update({
+    reset_token: null,
+    reset_token_expires_at: null
+  })
+}
+
 const viewProfile = (id) => {
   return db('users')
   .where({id})
   .select('username', 'first_name', 'last_name', 'date_of_birth', 'photo', 'about', 'created_at')
   .first()
+}
+
+const saveResetToken = (user_id, token, expiresAt) => {
+  return db('users')
+  .where({id: user_id})
+  .update({reset_token: token, reset_token_expires_at: expiresAt})
 }
 
 module.exports = {
@@ -103,5 +118,7 @@ module.exports = {
   getUserById,
   generateCode,
   clearCode,
-  viewProfile
+  viewProfile,
+  saveResetToken,
+  clearResetToken
 }

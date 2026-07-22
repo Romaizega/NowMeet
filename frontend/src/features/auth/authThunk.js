@@ -110,6 +110,38 @@ const updatePassword = createAsyncThunk(
   },
 );
 
+const forgotPassword = createAsyncThunk(
+  "auth/forgot-password",
+  async({email}, {rejectWithValue}) => {
+    try {
+      const {data} = await api.post("auth/forgot-password", {email})
+      return data
+    } catch (error) {
+      const message =
+        error.response?.data.message ||
+        error.message ||
+        "Failed to load information about an old password";
+      return rejectWithValue(message);
+    }
+  }
+)
+
+const resetPassword = createAsyncThunk(
+  "auth/reset-password",
+  async({email, code, newPassword} , {rejectWithValue}) => {
+    try {
+      const {data} = await api.post("auth/reset-password", {email, code, newPassword})
+      return data
+    } catch (error) {
+        const message =
+        error.response?.data.message ||
+        error.message ||
+        "Failed to update an old password";
+      return rejectWithValue(message);
+    }
+  }
+)
+
 export {
   registerUser,
   verifyEmail,
@@ -118,4 +150,6 @@ export {
   getMe,
   updateUsername,
   updatePassword,
+  forgotPassword,
+  resetPassword
 };

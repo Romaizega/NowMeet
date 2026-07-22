@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { login } from "../features/auth/authThunk";
 import { EyeOff, Eye } from "lucide-react";
+import { Link } from "react-router-dom";
+
 
 export default function Login() {
   const dispatch = useDispatch();
@@ -26,6 +28,7 @@ export default function Login() {
     const result = await dispatch(login({ email, password }));
     if (login.fulfilled.match(result)) navigate("/profile");
   };
+  
   useEffect(() => {
     if (localError) {
       const timer = setTimeout(() => setLocalError(""), 10000);
@@ -77,6 +80,9 @@ export default function Login() {
                 Login
               </button>
             </form>
+          <Link to="/forgot-password" className="text-sm text-primary hover:underline opacity-50">
+            Forgot password?
+          </Link>
           </div>
         </div>
       </div>

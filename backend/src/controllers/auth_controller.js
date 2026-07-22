@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const userModel = require("../models/users_model");
 const { sendverificationEmail } = require("../utild/sendEmail");
 const { first } = require("../../db/db");
+const crypto = require("crypto")
 
 const register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -182,7 +183,10 @@ const forgotPassword = async (req, res) => {
     const code = Math.floor(100000 + Math.random() * 900000);
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     const user = await userModel.getUserByEmail(email);
-    await userModel.generateCode(user.id, code, expiresAt);
+    if(!user) {
+      return res.status(404).json({message: "User with this email not found"})
+    }
+    await userModel.saveResetToken(user.id, code, expiresAt);
     await sendverificationEmail(user.email, code);
     return res.status(200).json({ message: "Verification code sent" });
   } catch (error) {
@@ -196,15 +200,18 @@ const resetPassword = async (req, res) => {
   const { email, code, newPassword } = req.body;
   try {
     const user = await userModel.getUserByEmail(email);
+    if(!user) {
+      return res.status(404).json({message: "User with this email not found"})
+    }
     if (!code) {
       return res
         .status(400)
         .json({ message: "You must to enter your verification code" });
     }
-    if (Number(code) != user.verification_code) {
+    if (Number(code) != user.reset_token) {
       return res.status(400).json({ message: "Wrong the verification code" });
     }
-    if (Date.now() > user.code_expires_at) {
+    if (Date.now() > user.reset_token_expires_at) {
       return res
         .status(400)
         .json({ message: "Your verification code expired" });
@@ -219,7 +226,7 @@ const resetPassword = async (req, res) => {
     }
     const hashNewPassword = await bcrypt.hash(newPassword, 10);
     await userModel.updatePassword(user.id, hashNewPassword);
-    await userModel.clearCode(user.id);
+    await userModel.clearResetToken(user.id);
     return res.status(200).json({ message: "Password changed successfully" });
   } catch (error) {
     return res
@@ -227,6 +234,7 @@ const resetPassword = async (req, res) => {
       .json({ message: "Server error", error: error.message });
   }
 };
+
 
 module.exports = {
   register,
