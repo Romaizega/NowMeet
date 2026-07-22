@@ -19,6 +19,8 @@ import EventChat from "./pages/EventChat"
 import PrivaeChat from "./pages/PrivateChat"
 import AiMatch from "./pages/AiMatch"
 import MessageInbox from "./pages/MessageInbox"
+import ForgotPassword from "./pages/ForgotPassword"
+import ResetPassword from "./pages/ResetPassword"
 
 function App() {
 
@@ -30,6 +32,8 @@ function App() {
       <Route path="/register" element= {<GuestRoute><Register/> </GuestRoute>} />
       <Route path="/login" element= {<GuestRoute><Login/> </GuestRoute>}/>
       <Route path="verify-email" element={<GuestRoute><VerifyEmail/> </GuestRoute>} />
+      <Route path="forgot-password" element={<GuestRoute><ForgotPassword/> </GuestRoute>} />
+      <Route path="reset-password" element={<GuestRoute><ResetPassword/> </GuestRoute>} />
       
       <Route path="/profile" element= {<ProtectedRoute><Profile /></ProtectedRoute>} />
 
