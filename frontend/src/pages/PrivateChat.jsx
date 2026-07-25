@@ -1,10 +1,10 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import heroPrivateImg from "../assests/privateMessage.png";
+import heroPrivateImg from "../assests/privateMessage.webp";
 import socket from "../utils/socket";
 import api from "../services/axios";
-import defultAvatar from "../assests/default_avatar.png";
+import defultAvatar from "../assests/default_avatar.webp";
 import {ArrowLeft, SendHorizontal } from "lucide-react"
 
 export default function PrivaeChat() {

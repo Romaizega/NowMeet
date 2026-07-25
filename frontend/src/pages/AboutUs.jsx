@@ -6,7 +6,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 
-import communityImg from "../assests/community.png";
+import communityImg from "../assests/community.webp";
 
 export default function AboutUs() {
   return (

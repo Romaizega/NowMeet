@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { getMe } from "../features/auth/authThunk";
-import heroImgProfile from "../assests/hero_profile.png";
+import heroImgProfile from "../assests/hero_profile.webp";
 import {
   Pencil,
   User,

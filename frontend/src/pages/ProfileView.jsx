@@ -5,8 +5,8 @@ import {
   profileView
 } from "../features/profile/profileThunk";
 import {getUserInterests} from "../features/interest/interestThunk"
-import heroProfileView from "../assests/hero_profileview.png";
-import defultAvatar from "../assests/default_avatar.png";
+import heroProfileView from "../assests/hero_profileview.webp";
+import defultAvatar from "../assests/default_avatar.webp";
 import { clearPublicProfile } from "../features/profile/profileSlice";
 import { clearUserInterest} from "../features/interest/interestSlice"
 import {MessageCircleMore} from "lucide-react";

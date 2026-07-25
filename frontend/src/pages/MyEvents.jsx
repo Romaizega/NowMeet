@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getMyEvents, updateEvent } from "../features/events/eventThunk";
-import EventsImgExplore from "../assests/defaultImgEvents.png";
+import EventsImgExplore from "../assests/defaultImgEvents.webp";
 import {
   Users,
   MapPinned,
