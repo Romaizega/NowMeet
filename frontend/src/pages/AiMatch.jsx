@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAIMatch } from "../features/ai/aiThunk";
-import heroImgAI from "../assests/hero_AI_match.png";
+import heroImgAI from "../assests/hero_AI_match.webp";
 import {
   Astroid,
   Sparkles,
@@ -13,7 +13,7 @@ import {
   Calendar,
   Heart,
 } from "lucide-react";
-import defultAvatar from "../assests/default_avatar.png";
+import defultAvatar from "../assests/default_avatar.webp";
 
 export default function AiMatch() {
   const { status, error, matches } = useSelector((state) => state.ai);

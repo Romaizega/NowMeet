@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import socket from "../utils/socket";
 import api from "../services/axios";
-import defultAvatar from "../assests/default_avatar.png";
+import defultAvatar from "../assests/default_avatar.webp";
 import { getEventById } from "../features/events/eventThunk";
 import {
   Calendar,

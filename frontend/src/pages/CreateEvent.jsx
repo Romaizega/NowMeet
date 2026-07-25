@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
 import { createEvent } from "../features/events/eventThunk";
 import { useNavigate, useParams } from "react-router-dom";
-import heroCreateImage from "../assests/hero_createEvent.png";
+import heroCreateImage from "../assests/hero_createEvent.webp";
 import { getEventById, updateEvent } from "../features/events/eventThunk";
 import {
   SquarePen,

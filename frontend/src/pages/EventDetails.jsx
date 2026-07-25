@@ -26,8 +26,8 @@ import {
   Building2 ,
   ArrowLeft,
 } from "lucide-react";
-import heroEventDetail from "../assests/hero_eventDetail.png";
-import defultAvatar from "../assests/default_avatar.png";
+import heroEventDetail from "../assests/hero_eventDetail.webp";
+import defultAvatar from "../assests/default_avatar.webp";
 import { getEventInterests } from "../features/interest/interestThunk";
 import { clearUserInterest } from "../features/interest/interestSlice";
 import EventMap from "../components/MapPicker";

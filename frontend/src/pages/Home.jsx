@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import heroImg from "../assests/hero.png";
+import heroImg from "../assests/hero.webp";
 import {
   Users,
   UserPlus,

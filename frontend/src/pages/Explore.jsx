@@ -10,7 +10,7 @@ import {
   PencilLine,
   Road,
 } from "lucide-react";
-import EventsImgExplore from "../assests/defaultImgEvents.png";
+import EventsImgExplore from "../assests/defaultImgEvents.webp";
 import getStatusColor from "../utils/getStatusColor";
 
 export default function Events() {

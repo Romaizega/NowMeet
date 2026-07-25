@@ -8,7 +8,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import communityImg from "../assests/community.png";
+import communityImg from "../assests/community.webp";
 
 export default function HowItWorks() {
   const navigate = useNavigate();
