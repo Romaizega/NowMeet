@@ -21,6 +21,7 @@ import AiMatch from "./pages/AiMatch"
 import MessageInbox from "./pages/MessageInbox"
 import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword"
+import ViewAllProfiles from "./pages/ViewAllProfiles"
 
 function App() {
 
@@ -31,10 +32,9 @@ function App() {
     <Routes>
       <Route path="/register" element= {<GuestRoute><Register/> </GuestRoute>} />
       <Route path="/login" element= {<GuestRoute><Login/> </GuestRoute>}/>
-      <Route path="verify-email" element={<GuestRoute><VerifyEmail/> </GuestRoute>} />
-      <Route path="forgot-password" element={<GuestRoute><ForgotPassword/> </GuestRoute>} />
-      <Route path="reset-password" element={<GuestRoute><ResetPassword/> </GuestRoute>} />
-      
+      <Route path="/verify-email" element={<GuestRoute><VerifyEmail/> </GuestRoute>} />
+      <Route path="/forgot-password" element={<GuestRoute><ForgotPassword/> </GuestRoute>} />
+      <Route path="/reset-password" element={<GuestRoute><ResetPassword/> </GuestRoute>} />
       <Route path="/profile" element= {<ProtectedRoute><Profile /></ProtectedRoute>} />
 
       <Route path="/event/:id" element= {<ProtectedRoute><EventDetails /></ProtectedRoute>} />
@@ -46,6 +46,7 @@ function App() {
       <Route path="/ai-match/" element= {<ProtectedRoute><AiMatch /></ProtectedRoute>} />
       <Route path="/meetups/" element= {<ProtectedRoute><MyEvents /></ProtectedRoute>} />
       <Route path="/inbox/" element= {<ProtectedRoute><MessageInbox /></ProtectedRoute>} />
+      <Route path="/all-profiles/" element= {<ProtectedRoute><ViewAllProfiles /></ProtectedRoute>} />
       
 
       <Route path="/about" element={<AboutUs/>} />

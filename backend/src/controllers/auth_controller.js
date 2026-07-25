@@ -117,6 +117,8 @@ const getMe = async (req, res) => {
         date_of_birth: user.date_of_birth,
         photo: user.photo,
         about: user.about,
+        country: user.country,
+        city: user.city
       },
     });
   } catch (error) {

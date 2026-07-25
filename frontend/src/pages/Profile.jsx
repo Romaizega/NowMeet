@@ -12,6 +12,8 @@ import {
   CalendarDays,
   Image,
   NotebookPen,
+  Building2,
+  MapPinHouse 
 } from "lucide-react";
 import api from "../services/axios";
 import AccountSettings from "../pages/AccountSettings";
@@ -22,6 +24,7 @@ import {
   getUserInterests,
 } from "../features/interest/interestThunk";
 import groupByCategory from "../utils/groupByCategory";
+import { use } from "react";
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -40,6 +43,8 @@ export default function Profile() {
     date_of_birth: "",
     about: "",
     photo: "",
+    country: "",
+    city: "",
   });
   const [photo, setPhoto] = useState(null);
   const [activeTab, setActiveTab] = useState("profile");
@@ -57,6 +62,8 @@ export default function Profile() {
         date_of_birth: user.date_of_birth?.slice(0, 10) || "",
         about: user.about || "",
         photo: user.photo || "",
+        country: user.country || "",
+        city: user.city || "",
       });
       dispatch(getAllInterests());
       dispatch(getUserInterests(user.id));
@@ -85,6 +92,8 @@ export default function Profile() {
       formData.append("last_name", form.last_name);
       formData.append("date_of_birth", form.date_of_birth);
       formData.append("about", form.about);
+      formData.append("country", form.country);
+      formData.append("city", form.city);
       if (photo) formData.append("photo", photo);
 
       await api.put("/profiles/profile", formData);
@@ -103,13 +112,13 @@ export default function Profile() {
   };
 
   const handleInterest = async (interestId) => {
-  if (userInterest.some(ui => ui.id === interestId)) {
-    await dispatch(deleteUserInterest({ interest_id: interestId }))
-  } else {
-    await dispatch(addUserInterest({ interest_id: interestId }))
-  }
-  dispatch(getUserInterests(user.id))
-}
+    if (userInterest.some((ui) => ui.id === interestId)) {
+      await dispatch(deleteUserInterest({ interest_id: interestId }));
+    } else {
+      await dispatch(addUserInterest({ interest_id: interestId }));
+    }
+    dispatch(getUserInterests(user.id));
+  };
 
   return (
     <>
@@ -304,6 +313,40 @@ export default function Profile() {
                     />
                   </label>
                 </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text text-primary">Country</span>
+                  </label>
+                  <label className="input input-bordered flex items-center gap-2">
+                    <MapPinHouse  className="w-5 h-5 lg:w-7 lg:h-7" />
+                    <input
+                      onChange={handleChange}
+                      name="country"
+                      type="text"
+                      value={form.country}
+                      disabled={!edit}
+                      className="grow"
+                    />
+                  </label>
+                </div>
+
+                <div className="form-control">
+                  <label className="label">
+                    <span className="label-text text-primary">City</span>
+                  </label>
+                  <label className="input input-bordered flex items-center gap-2">
+                    <Building2  className="w-5 h-5 lg:w-7 lg:h-7" />
+                    <input
+                      onChange={handleChange}
+                      name="city"
+                      type="text"
+                      value={form.city}
+                      disabled={!edit}
+                      className="grow"
+                    />
+                  </label>
+                </div>
               </div>
               <div className="form-control mt-4">
                 <label className="label">
@@ -333,17 +376,23 @@ export default function Profile() {
 
                 {edit ? (
                   Object.entries(grouped).map(([categoryName, interests]) => (
-                    <div  key={categoryName} className="mt-3">
-                      <h4 className="text-base lg:text-lg text-primary">{categoryName}</h4>
+                    <div key={categoryName} className="mt-3">
+                      <h4 className="text-base lg:text-lg text-primary">
+                        {categoryName}
+                      </h4>
                       <div className="flex flex-wrap gap-2">
                         {interests.map((interest) => (
                           <span
-                          onClick={()=> handleInterest(interest.id) }
-                           key={interest.id}
-                           className={userInterest.some(ui => ui.id === interest.id)
-                             ? "cursor-pointer rounded-full bg-orange-400 px-2 lg:px-3 py-1 text-sm lg:text-base text-black "
-                             : "cursor-pointer rounded-full border border-orange-400/30 px-2 lg:px-3 py-1 text-sm lg:text-base text-orange-300"}
-                           >{interest.name}</span>
+                            onClick={() => handleInterest(interest.id)}
+                            key={interest.id}
+                            className={
+                              userInterest.some((ui) => ui.id === interest.id)
+                                ? "cursor-pointer rounded-full bg-orange-400 px-2 lg:px-3 py-1 text-sm lg:text-base text-black "
+                                : "cursor-pointer rounded-full border border-orange-400/30 px-2 lg:px-3 py-1 text-sm lg:text-base text-orange-300"
+                            }
+                          >
+                            {interest.name}
+                          </span>
                         ))}
                       </div>
                     </div>
@@ -351,7 +400,10 @@ export default function Profile() {
                 ) : userInterest && userInterest.length > 0 ? (
                   <div className="flex flex-wrap gap-2">
                     {userInterest.map((interest) => (
-                      <span key={interest.id} className="text-primary badge rounded-full border border-orange-400 px-3 py-3 lg:py-4">
+                      <span
+                        key={interest.id}
+                        className="text-primary badge rounded-full border border-orange-400 px-3 py-3 lg:py-4"
+                      >
                         {interest.name}
                       </span>
                     ))}
@@ -362,7 +414,10 @@ export default function Profile() {
               </div>
 
               {edit && (
-                <button onClick={handleSave} className="btn btn-primary mt-4 w-full sm:w-auto">
+                <button
+                  onClick={handleSave}
+                  className="btn btn-primary mt-4 w-full sm:w-auto"
+                >
                   Save Changes
                 </button>
               )}

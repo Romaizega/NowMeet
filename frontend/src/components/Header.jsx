@@ -108,6 +108,9 @@ export default function Header() {
             <li className="text-xl">
               <Link to="/inbox">Messages</Link>
             </li>
+            <li className="text-xl">
+              <Link to="/all-profiles">People</Link>
+            </li>
             <li className="text text-xl">
               <Link to="/how-works">How It Works</Link>
             </li>

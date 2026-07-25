@@ -10,7 +10,8 @@ const updateProfileUser = async (req, res) => {
     if (!user_id) {
       return res.status(403).json({ message: "User is unauthorized" });
     }
-    const { first_name, last_name, date_of_birth, about } = req.body || {};
+    const { first_name, last_name, date_of_birth, about, country, city } =
+      req.body || {};
 
     let photo = undefined;
     if (req.file) {
@@ -48,6 +49,16 @@ const updateProfileUser = async (req, res) => {
         .status(400)
         .json({ message: "Section about must be at least 25 characters" });
     }
+    if (country !== undefined && country.length < 2) {
+      return res
+        .status(400)
+        .json({ message: "Country must contain at least 2 characters" });
+    }
+    if (city !== undefined && city.length < 2) {
+      return res
+        .status(400)
+        .json({ message: "City must contain at least 2 characters" });
+    }
     const updateProfile = await userModel.updateUserprofile(
       user_id,
       first_name,
@@ -55,6 +66,8 @@ const updateProfileUser = async (req, res) => {
       date_of_birth,
       photo,
       about,
+      country,
+      city,
     );
 
     return res
@@ -170,10 +183,23 @@ const viewProfile = async (req, res) => {
   }
 };
 
+const viewAllProfiles = async (req, res) => {
+  try {
+    const profiles = await userModel.viewAllProfiles();
+  
+    return res.status(200).json({ message: "View profiles", profiles });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
+  }
+};
+
 module.exports = {
   updateProfileUser,
   updateUsername,
   updateEmail,
   updatePassword,
   viewProfile,
+  viewAllProfiles
 };
