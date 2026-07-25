@@ -136,7 +136,15 @@ export default function ProfileView() {
                   : "Name not provided"}
               </p>
             </div>
-            <p className="text-primary mt-3">
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 sm:items-center">
+              <span className="text-orange-400 text-base lg:text-xl ">Country:</span>
+              <p className="text-primary text-base lg:text-xl break-words">{publicProfile.country}</p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 sm:items-center">
+              <span className="text-orange-400 text-base lg:text-xl ">City:</span>
+              <p className="text-primary text-base lg:text-xl break-words">{publicProfile.city}</p>
+            </div>
+            <p className="text-primary lg:text-xl break-words mt-3">
               {publicProfile.about || "This user hasn't written a bio yet"}
             </p>
           </div>

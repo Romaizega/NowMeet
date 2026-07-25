@@ -33,4 +33,19 @@ const getUserInterests = createAsyncThunk(
   },
 );
 
-export { profileView, getUserInterests };
+const getAllProfiles = createAsyncThunk(
+  "profile/all-profiles", async(_, {rejectWithValue}) => {
+    try {
+      const {data} = await api.get('/profiles/all-profiles')
+      return data
+    } catch (error) {
+      const message =
+        error.response?.data.message ||
+        error.message ||
+        "Failed to get all profiles";
+      return rejectWithValue(message);
+    }
+  }
+)
+
+export { profileView, getUserInterests, getAllProfiles };

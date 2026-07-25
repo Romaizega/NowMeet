@@ -25,7 +25,9 @@ const updateUserprofile = async (
   last_name,
   date_of_birth,
   photo,
-  about
+  about,
+  country,
+  city
 ) => {
   const updateProfile = {}
   
@@ -39,6 +41,10 @@ const updateUserprofile = async (
     updateProfile.photo = photo
   if(about !== undefined)
     updateProfile.about = about
+  if(country !== undefined)
+    updateProfile.country = country
+  if(city !== undefined)
+    updateProfile.city = city
   
   updateProfile.updated_at = db.fn.now()
   
@@ -97,8 +103,13 @@ const clearResetToken = (user_id) =>{
 const viewProfile = (id) => {
   return db('users')
   .where({id})
-  .select('username', 'first_name', 'last_name', 'date_of_birth', 'photo', 'about', 'created_at')
+  .select('username', 'first_name', 'last_name', 'date_of_birth', 'photo', 'about', 'created_at', 'country', 'city')
   .first()
+}
+
+const viewAllProfiles = () => {
+  return db('users')
+  .select('id','username', 'first_name', 'last_name', 'photo', 'created_at', 'country', 'city')
 }
 
 const saveResetToken = (user_id, token, expiresAt) => {
@@ -120,5 +131,6 @@ module.exports = {
   clearCode,
   viewProfile,
   saveResetToken,
-  clearResetToken
+  clearResetToken,
+  viewAllProfiles
 }
