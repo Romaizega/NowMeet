@@ -102,14 +102,16 @@ export default function ProfileView() {
           {/* Name and info */}
           <div className="pb-2 text-center sm:text-left w-full sm:w-auto">
             <div className="flex flex-col sm:flex-row items-center gap-3">
-              <h2 className="text-2xl lg:text-3xl text-primary font-bold break-words">
-                {publicProfile.username}
-              </h2>
-              <span className="badge bg-orange-500 text-white border-none">
-                Member
-              </span>
+              <div className="flex flex-col items-center sm:items-start gap-1">
+                <h2 className="text-2xl lg:text-3xl text-primary font-bold break-words">
+                  {publicProfile.username}
+                </h2>
+                <span className="badge bg-orange-500 text-white border-none mt-2">
+                  Member
+                </span>
+              </div>
               <button
-                className="btn btn-outline border-orange-351 w-full sm:w-auto px-6 lg:px-10 py-3 lg:py-6 text-primary gap-3 lg:gap-6 text-base lg:text-xl hover:bg-orange-400 hover:text-black"
+                className="btn btn-outline border-orange-351 w-full sm:w-auto px-6 lg:px-10 py-3 lg:py-6 text-primary gap-5 lg:gap-8 text-base lg:text-xl hover:bg-orange-400 hover:text-black"
                 onClick={() => navigate(`/profile/${id}/private-chat`)}
               >
                 <MessageCircleMore />
@@ -255,43 +257,43 @@ export default function ProfileView() {
               </div>
             )}{" "}
           </div>
-       <div className="bg-base-200 rounded-xl p-6">
-  <h3 className="text-2xl font-bold text-orange-400 mb-4">
-    Social Media
-  </h3>
+          <div className="bg-base-200 rounded-xl p-6">
+            <h3 className="text-2xl font-bold text-orange-400 mb-4">
+              Social Media
+            </h3>
 
-  <div className="grid grid-cols-3 gap-3">
-    <a
-      href="https://instagram.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex flex-col items-center gap-2 rounded-xl bg-base-300 py-5 border border-transparent hover:border-orange-400 hover:bg-base-100 transition-all"
-    >
-      <FaInstagram className="text-3xl text-orange-400" />
-      <span className="text-xs text-primary">Instagram</span>
-    </a>
+            <div className="grid grid-cols-3 gap-3">
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-2 rounded-xl bg-base-300 py-5 border border-transparent hover:border-orange-400 hover:bg-base-100 transition-all"
+              >
+                <FaInstagram className="text-3xl text-orange-400" />
+                <span className="text-xs text-primary">Instagram</span>
+              </a>
 
-    <a
-      href="https://facebook.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex flex-col items-center gap-2 rounded-xl bg-base-300 py-5 border border-transparent hover:border-orange-400 hover:bg-base-100 transition-all"
-    >
-      <FaFacebook className="text-3xl text-orange-400" />
-      <span className="text-xs text-primary">Facebook</span>
-    </a>
+              <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-2 rounded-xl bg-base-300 py-5 border border-transparent hover:border-orange-400 hover:bg-base-100 transition-all"
+              >
+                <FaFacebook className="text-3xl text-orange-400" />
+                <span className="text-xs text-primary">Facebook</span>
+              </a>
 
-    <a
-      href="https://linkedin.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex flex-col items-center gap-2 rounded-xl bg-base-300 py-5 border border-transparent hover:border-orange-400 hover:bg-base-100 transition-all"
-    >
-      <FaLinkedin className="text-3xl text-orange-400" />
-      <span className="text-xs text-primary">LinkedIn</span>
-    </a>
-  </div>
-</div>
+              <a
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-col items-center gap-2 rounded-xl bg-base-300 py-5 border border-transparent hover:border-orange-400 hover:bg-base-100 transition-all"
+              >
+                <FaLinkedin className="text-3xl text-orange-400" />
+                <span className="text-xs text-primary">LinkedIn</span>
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </>
