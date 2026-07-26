@@ -125,7 +125,7 @@ export default function PrivaeChat() {
               className={`chat mb-3 ${message.sender_user_id === user.id ? "chat-end" : "chat-start"}`}
             >
               <div className="chat-image avatar">
-                <div className="w-10 sm:w-12 lg:w-14 rounded-full">
+                <div className="w-10 sm:w-12 lg:w-14 rounded-full cursor-pointer">
                   <img
                     src={
                       message.photo
@@ -134,6 +134,7 @@ export default function PrivaeChat() {
                     }
                     alt={message.username}
                     title={message.username}
+                    onClick={() => navigate(`/profile/${message.sender_user_id}`)}
                   />
                 </div>
               </div>
