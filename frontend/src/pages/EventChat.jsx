@@ -10,7 +10,6 @@ import {
   Clock4,
   MapPin,
   Users,
-  MessageCircleMore,
   ArrowLeft,
 } from "lucide-react";
 import getStatusColor from "../utils/getStatusColor";
@@ -171,7 +170,7 @@ export default function EventChat() {
                 className={`chat mb-3 ${message.user_id === user.id ? "chat-end" : "chat-start"}`}
               >
                 <div className="chat-image avatar">
-                  <div className="w-14 rounded-full">
+                  <div className="w-14 rounded-full cursor-pointer">
                     <img
                       src={
                         message.photo
@@ -180,6 +179,7 @@ export default function EventChat() {
                       }
                       alt={message.username}
                       title={message.username}
+                      onClick={() => navigate(`/profile/${message.user_id}`)}
                     />
                   </div>
                 </div>
