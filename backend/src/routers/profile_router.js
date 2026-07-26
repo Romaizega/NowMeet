@@ -12,6 +12,8 @@ const {
   
 } = require('../controllers/user_controller')
 
+const {getUserEvents} = require('../controllers/event_controller')
+
 const { getPrivateMessage} = require('../controllers/message_controller')
 
 const router = express.Router()
@@ -20,8 +22,10 @@ router.put('/profile', authenticateJWT, upload.single("photo"), updateProfileUse
 router.put('/username', authenticateJWT, updateUsername)
 router.put('/email', authenticateJWT, updateEmail)
 router.put('/password', authenticateJWT, updatePassword)
+router.get('/:id/user-events', authenticateJWT, getUserEvents)
 router.get('/:id/private-chat', authenticateJWT, getPrivateMessage)
 router.get('/all-profiles', viewAllProfiles)
 router.get('/:id', viewProfile)
+
 
 module.exports = router

@@ -112,6 +112,17 @@ const getMyEvents =async (req, res) => {
   }
 }
 
+const getUserEvents = async (req, res) => {
+  try {
+    const creator_id = req.params.id
+    const userEvents = await eventModel.getMyEvents(creator_id)
+    return res.status(200).json({message: "User events", count: userEvents.length,userEvents })
+  } catch (error) {
+    return res.status(500).json({message: "Server error", error:error.message})
+  }
+}
+
+
 const getAllEvents = async (req, res) => {
   try {
     const page = parseInt(req.query.page, 10) || 1
@@ -125,6 +136,7 @@ const getAllEvents = async (req, res) => {
     res.status(500).json({message: "Server error", error: error.message})
   }
 }
+
 
 const deleteEvent = async (req, res) => {
   try {
@@ -290,6 +302,6 @@ module.exports = {
   updateEventContr,
   getMyEvents,
   getGeoLocation,
-  getGeoHeader
-
+  getGeoHeader,
+  getUserEvents
 }
