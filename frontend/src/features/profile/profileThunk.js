@@ -48,4 +48,19 @@ const getAllProfiles = createAsyncThunk(
   }
 )
 
-export { profileView, getUserInterests, getAllProfiles };
+const getUserEvents = createAsyncThunk(
+  "profile/user-events", async(id, {rejectWithValue}) => {
+    try {
+      const {data} = await api.get(`/profiles/${id}/user-events`)
+      return data
+    } catch (error) {
+            const message =
+        error.response?.data.message ||
+        error.message ||
+        "Failed to get user events";
+      return rejectWithValue(message);
+    }
+  }
+)
+
+export { profileView, getUserInterests, getAllProfiles, getUserEvents };

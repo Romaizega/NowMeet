@@ -1,33 +1,36 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  profileView
-} from "../features/profile/profileThunk";
-import {getUserInterests} from "../features/interest/interestThunk"
+import { profileView, getUserEvents } from "../features/profile/profileThunk";
+import { getUserInterests } from "../features/interest/interestThunk";
 import heroProfileView from "../assests/hero_profileview.webp";
 import defultAvatar from "../assests/default_avatar.webp";
 import { clearPublicProfile } from "../features/profile/profileSlice";
-import { clearUserInterest} from "../features/interest/interestSlice"
-import {MessageCircleMore} from "lucide-react";
-
+import { clearUserInterest } from "../features/interest/interestSlice";
+import { MessageCircleMore } from "lucide-react";
+import EventsImgExplore from "../assests/defaultImgEvents.webp";
+import { MapPinned } from "lucide-react";
+import getStatusColor from "../utils/getStatusColor";
+import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
 export default function ProfileView() {
   const { id } = useParams();
-  const { status, error, publicProfile } = useSelector(
+  const { status, error, publicProfile, userEvents } = useSelector(
     (state) => state.profile,
   );
 
-  const {userInterest} = useSelector((state)=> state.interest)
+  const { userInterest } = useSelector((state) => state.interest);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [opneImage, setOpenImage] = useState(false);
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     dispatch(profileView(id));
+    dispatch(getUserEvents(id));
     dispatch(getUserInterests(id));
     return () => {
       dispatch(clearPublicProfile());
-      dispatch(clearUserInterest())
+      dispatch(clearUserInterest());
     };
   }, [dispatch, id]);
 
@@ -105,11 +108,11 @@ export default function ProfileView() {
               <span className="badge bg-orange-500 text-white border-none">
                 Member
               </span>
-               <button
+              <button
                 className="btn btn-outline border-orange-351 w-full sm:w-auto px-6 lg:px-10 py-3 lg:py-6 text-primary gap-3 lg:gap-6 text-base lg:text-xl hover:bg-orange-400 hover:text-black"
                 onClick={() => navigate(`/profile/${id}/private-chat`)}
               >
-                <MessageCircleMore/>
+                <MessageCircleMore />
                 Chat
               </button>
             </div>
@@ -129,7 +132,9 @@ export default function ProfileView() {
               About Me
             </h3>
             <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 sm:items-center">
-              <span className="text-orange-400 text-base lg:text-xl ">Name:</span>
+              <span className="text-orange-400 text-base lg:text-xl ">
+                Name:
+              </span>
               <p className="text-primary text-base lg:text-xl break-words">
                 {publicProfile.first_name || publicProfile.last_name
                   ? `${publicProfile.first_name || ""} ${publicProfile.last_name || ""}`
@@ -137,16 +142,94 @@ export default function ProfileView() {
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 sm:items-center">
-              <span className="text-orange-400 text-base lg:text-xl ">Country:</span>
-              <p className="text-primary text-base lg:text-xl break-words">{publicProfile.country}</p>
+              <span className="text-orange-400 text-base lg:text-xl ">
+                Country:
+              </span>
+              <p className="text-primary text-base lg:text-xl break-words">
+                {publicProfile.country}
+              </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-1 sm:gap-2 sm:items-center">
-              <span className="text-orange-400 text-base lg:text-xl ">City:</span>
-              <p className="text-primary text-base lg:text-xl break-words">{publicProfile.city}</p>
+              <span className="text-orange-400 text-base lg:text-xl ">
+                City:
+              </span>
+              <p className="text-primary text-base lg:text-xl break-words">
+                {publicProfile.city}
+              </p>
             </div>
             <p className="text-primary lg:text-xl break-words mt-3">
               {publicProfile.about || "This user hasn't written a bio yet"}
             </p>
+          </div>
+          <div className="bg-base-200 rounded-xl p-4 sm:p-6">
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <h3 className="text-orange-400 text-xl sm:text-2xl font-bold">
+                Events Created ({userEvents.length})
+              </h3>
+              {userEvents.length > 4 && (
+                <button
+                  type="button"
+                  className="text-orange-400 text-sm sm:text-base font-semibold whitespace-nowrap hover:opacity-70 transition-opacity"
+                  onClick={() => setShowAll(!showAll)}
+                >
+                  {showAll ? "Show less ←" : "View all →"}
+                </button>
+              )}
+            </div>
+
+            {userEvents.length === 0 ? (
+              <p className="text-primary opacity-50">No events yet</p>
+            ) : (
+              <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory lg:grid lg:grid-cols-2 xl:grid-cols-4 lg:overflow-visible">
+                {(showAll ? userEvents : userEvents.slice(0, 4)).map(
+                  (event) => (
+                    <div
+                      key={event.id}
+                      className="min-w-[260px] sm:min-w-[300px] lg:min-w-0 flex flex-col bg-base-300 rounded-xl overflow-hidden cursor-pointer border border-primary/10 hover:border-orange-400 transition-all snap-start"
+                      onClick={() => navigate(`/event/${event.id}`)}
+                    >
+                      <span className={getStatusColor(event.status)}>
+                        {event.status}
+                      </span>
+                      <img
+                        src={
+                          event.cover_image
+                            ? `/uploads/${event.cover_image}`
+                            : EventsImgExplore
+                        }
+                        alt={event.title}
+                        className="w-full h-32 sm:h-36 object-cover"
+                      />
+                      <div className="flex flex-col flex-1 p-4">
+                        <h4 className="text-primary text-base sm:text-lg font-bold line-clamp-2 min-h-12">
+                          {event.title}
+                        </h4>
+                        <div className="flex items-center justify-between gap-3 mt-4">
+                          <div className="flex items-center gap-1 text-primary opacity-60 text-sm truncate">
+                            <MapPinned className="w-4 h-4 shrink-0" />
+                            <span>
+                              {event.city}, {event.country}
+                            </span>
+                          </div>
+                          <p className="text-orange-400 text-sm font-semibold whitespace-nowrap">
+                            {formatDate(event.created_at)}
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        className="btn btn-outline border-orange-400 text-orange-400 hover:bg-orange-400 hover:text-black text-sm mt-auto"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(`/event/${event.id}`);
+                        }}
+                      >
+                        View Event
+                      </button>
+                    </div>
+                  ),
+                )}
+              </div>
+            )}
           </div>
         </div>
         <div className="flex flex-col gap-6">
@@ -158,19 +241,57 @@ export default function ProfileView() {
             {userInterest && userInterest.length > 0 ? (
               <div className="flex flex-wrap gap-2">
                 {userInterest.map((interest) => (
-                  <span key={interest.id} className=" text-primary badge rounded-full border border-orange-400 px-3 py-3 lg:py-4">
-                    {interest.name} 
+                  <span
+                    key={interest.id}
+                    className=" text-primary badge rounded-full border border-orange-400 px-3 py-3 lg:py-4"
+                  >
+                    {interest.name}
                   </span>
                 ))}{" "}
-                
               </div>
             ) : (
               <div className="flex flex-col items-center gap-3 py-6">
                 <p className="text-primary">No interests yet</p>
               </div>
             )}{" "}
-          
           </div>
+       <div className="bg-base-200 rounded-xl p-6">
+  <h3 className="text-2xl font-bold text-orange-400 mb-4">
+    Social Media
+  </h3>
+
+  <div className="grid grid-cols-3 gap-3">
+    <a
+      href="https://instagram.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex flex-col items-center gap-2 rounded-xl bg-base-300 py-5 border border-transparent hover:border-orange-400 hover:bg-base-100 transition-all"
+    >
+      <FaInstagram className="text-3xl text-orange-400" />
+      <span className="text-xs text-primary">Instagram</span>
+    </a>
+
+    <a
+      href="https://facebook.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex flex-col items-center gap-2 rounded-xl bg-base-300 py-5 border border-transparent hover:border-orange-400 hover:bg-base-100 transition-all"
+    >
+      <FaFacebook className="text-3xl text-orange-400" />
+      <span className="text-xs text-primary">Facebook</span>
+    </a>
+
+    <a
+      href="https://linkedin.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="flex flex-col items-center gap-2 rounded-xl bg-base-300 py-5 border border-transparent hover:border-orange-400 hover:bg-base-100 transition-all"
+    >
+      <FaLinkedin className="text-3xl text-orange-400" />
+      <span className="text-xs text-primary">LinkedIn</span>
+    </a>
+  </div>
+</div>
         </div>
       </div>
     </>

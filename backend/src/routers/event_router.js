@@ -7,7 +7,7 @@ const {
   updateEventContr,
   getMyEvents, 
   getGeoLocation,
-  getGeoHeader
+  getGeoHeader,
   
 } = require('../controllers/event_controller')
 const {joinEvent, cancelEvent} = require('../controllers/event_participant_controller')
