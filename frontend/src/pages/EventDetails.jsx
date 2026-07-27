@@ -23,7 +23,7 @@ import {
   Trash2,
   CircleX,
   CalendarSync,
-  Building2 ,
+  Building2,
   ArrowLeft,
 } from "lucide-react";
 import heroEventDetail from "../assests/hero_eventDetail.webp";
@@ -123,7 +123,7 @@ export default function EventDetails() {
           })`,
           backgroundSize: "contain",
           backgroundPosition: "97% center",
-          backgroundRepeat: "no-repeat"
+          backgroundRepeat: "no-repeat",
         }}
       >
         <div className="relative z-10 flex flex-col gap-6 lg:justify-between lg:h-full px-4 sm:px-6 lg:px-10 py-5 lg:pt-10">
@@ -161,7 +161,7 @@ export default function EventDetails() {
                 </span>
               </span>
               <span className="flex items-center gap-2">
-                <Building2  className="w-7 h-7 lg:w-12 lg:h-12" />
+                <Building2 className="w-7 h-7 lg:w-12 lg:h-12" />
                 <span className="text-primary text-sm lg:text-xl">
                   {currentEvent.city}
                   <p className="opacity-50">City</p>
@@ -251,15 +251,17 @@ export default function EventDetails() {
               </button>
             </div>
           ) : (
-            <button
-              className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl w-full sm:w-full lg:w-auto px-6 lg:px-8 py-3"
-              type="button"
-              onClick={isJoined ? handleLeaveEvent : handleJoin}
-            >
-              <span className="text-base lg:text-xl">
-                {isJoined ? "Leave MeetUp" : "Join Meetup"}
-              </span>
-            </button>
+            <div className="flex">
+              <button
+                className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl px-10 py-3"
+                type="button"
+                onClick={isJoined ? handleLeaveEvent : handleJoin}
+              >
+                <span className="text-base lg:text-xl">
+                  {isJoined ? "Leave MeetUp" : "Join Meetup"}
+                </span>
+              </button>
+            </div>
           )}
         </div>
       </div>
@@ -272,7 +274,9 @@ export default function EventDetails() {
             <h3 className="text-orange-400 text-xl font-bold mb-3">
               About this meetup
             </h3>
-            <p className="text-primary text-base lg:text-xl leading-relaxed">{currentEvent.description}</p>
+            <p className="text-primary text-base lg:text-xl leading-relaxed">
+              {currentEvent.description}
+            </p>
           </div>
           <div className="flex flex-col gap-6">
             {/* Right column — Interests, etc */}
@@ -422,7 +426,9 @@ export default function EventDetails() {
         <div className="flex flex-col gap-6 xl:sticky xl:top-6 h-fit mt-2 xl:mt-0">
           <div className="bg-base-200 rounded-xl p-6">
             <h3 className="text text-xl font-bold text-orange-400">Location</h3>
-            <p className="text-primary mt-4 text-sm lg:text-base">{currentEvent.place_name}</p>
+            <p className="text-primary mt-4 text-sm lg:text-base">
+              {currentEvent.place_name}
+            </p>
             <EventMap
               lat={currentEvent.latitude}
               lng={currentEvent.longitude}
