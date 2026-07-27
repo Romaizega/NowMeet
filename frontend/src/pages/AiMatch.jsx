@@ -88,7 +88,7 @@ export default function AiMatch() {
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
           <div className="card bg-base-200 border border-orange-400/10">
             <div className="card-body items-center text-center">
-              <Brain className="w-16 h-16 text-orange-400 mt-1" />
+              <Brain className="w-16 h-16 text-primary mt-1" />
 
               <h3 className="text-xl font-bold text-primary mt-4">
                 Analyze Interests
@@ -102,7 +102,7 @@ export default function AiMatch() {
 
           <div className="card bg-base-200 border border-orange-400/10">
             <div className="card-body items-center text-center">
-              <Users className="w-16 h-16 text-green-400 mt-1" />
+              <Users className="w-16 h-16 text-primary mt-1" />
 
               <h3 className="text-xl font-bold text-primary mt-4">
                 Find Compatible People
@@ -116,7 +116,7 @@ export default function AiMatch() {
 
           <div className="card bg-base-200 border border-orange-400/10">
             <div className="card-body items-center text-center">
-              <Calendar className="w-16 h-16 text-blue-400 mt-1" />
+              <Calendar className="w-16 h-16 text-primary mt-1" />
 
               <h3 className="text-xl font-bold text-primary mt-4">
                 Recommend Events
@@ -130,7 +130,7 @@ export default function AiMatch() {
 
           <div className="card bg-base-200 border border-orange-400/10">
             <div className="card-body items-center text-center">
-              <Heart className="w-16 h-16 text-purple-400 mt-1" />
+              <Heart className="w-16 h-16 text-primary mt-1" />
               <h3 className="text-xl font-bold text-primary mt-4">
                 Explain Why
               </h3>

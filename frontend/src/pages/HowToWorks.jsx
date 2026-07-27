@@ -15,31 +15,26 @@ export default function HowItWorks() {
 
   const steps = [
     {
-      id: 1,
       icon: Search,
       title: "Explore Events",
       text: "Browse meetups around you and find events that match your interests",
     },
     {
-      id: 2,
       icon: Users,
       title: "Join People",
       text: "Join a meetup, see who is going, and connect with people nearby",
     },
     {
-      id: 3,
       icon: MessageCircle,
       title: "Chat Before Meeting",
       text: "Use event chat to talk with participants before the meetup starts",
     },
     {
-      id: 4,
       icon: CalendarCheck,
       title: "Meet in Real Life",
       text: "Come to the event, enjoy the atmosphere, and create real connections",
     },
     {
-      id: 5,
       icon: Star,
       title: "Stay Connected",
       text: "Find more meetups, meet familiar faces, and build your social circle",
@@ -68,10 +63,6 @@ export default function HowItWorks() {
                 <div key={step.id}>
                   <div className="card bg-base-200 shadow-xl overflow-hidden relative h-full mt-2 border border-orange-400/10 hover:border-orange-400/40 transition-all">
                     <div className="card-body">
-                      <span className="absolute top-3 left-3 z-20 rounded-full bg-orange-400 px-3 py-1 text-black font-bold">
-                        {step.id}
-                      </span>
-
                       <div className="flex justify-center mt-8 mb-6">
                         <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-full border border-orange-400/30 bg-black/40 flex items-center justify-center">
                           <Icon className="w-10 h-10 lg:w-12 lg:h-12 text-primary" />
@@ -114,7 +105,7 @@ export default function HowItWorks() {
                 </div>
 
                 <button
-                  className="flex items-center justify-center gap-3 lg:gap-4 rounded-xl border border-white bg-black/40 w-full lg:w-auto px-6 lg:px-14 py-3 lg:py-4 text-primary text-base lg:text-xl transition-all hover:bg-white-400 hover:text-white"
+                  className="flex items-center justify-center gap-3 lg:gap-4 rounded-xl border border-white bg-black/40 w-full lg:w-auto px-6 lg:px-14 py-3 lg:py-4 text-primary text-base lg:text-xl transition-all hover:bg-white-400 hover:text-white cursor-pointer"
                   onClick={() => navigate("/explore")}
                 >
                   Explore Events

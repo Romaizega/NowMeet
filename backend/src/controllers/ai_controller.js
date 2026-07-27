@@ -13,6 +13,9 @@ const getAiMatch = async (req, res) => {
     if (!getUserInterests) {
       return res.status(404).json({ message: "Not found users interests" });
     }
+
+    const city = getUserInterests[0].city;
+
     const getAllUsersWithInterests =
       await aiModel.getAllUsersWithInterests(user_id);
 
@@ -25,6 +28,7 @@ const getAiMatch = async (req, res) => {
             username: curentInt.username,
             photo: curentInt.photo,
             interests: [],
+            city: curentInt.city
           };
         }
         accum[newInt].interests.push(curentInt.name);
@@ -50,6 +54,7 @@ const getAiMatch = async (req, res) => {
             place_name: curentInt.place_name,
             event_start: curentInt.event_start,
             interests: [],
+            city: curentInt.city
           };
         }
         accum[newInt].interests.push(curentInt.name);
@@ -68,6 +73,7 @@ const getAiMatch = async (req, res) => {
         {
           role: "system",
           content: `You are an AI recommendation assistant for a social meetup platform.
+          The current user is from ${city}.
 
                 Your task:
 
@@ -78,6 +84,9 @@ const getAiMatch = async (req, res) => {
                 5. Score compatibility from 0 to 100.
 
                 Rules:
+                - The current user is from ${city}. Prioritize users and events 
+                 from the same city with higher matchScore. If from a different
+                 city, mention it in the reason field.
                 - Prioritize shared interests.
                 - Prefer users with multiple overlapping interests.
                 - Prefer events that match multiple interests.
@@ -269,8 +278,8 @@ const suggestLocation = async (req, res) => {
           `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${query}&key=${process.env.GOOGLE_MAPS_API_KEY_BACKEND}`,
         );
         const googleData = await googleResponse.json();
-        console.log('Google status:', googleData.status)
-        console.log('Google results:', googleData.results?.length)
+        console.log("Google status:", googleData.status);
+        console.log("Google results:", googleData.results?.length);
         const place = googleData.results?.[0];
         return {
           ...suggestion,
