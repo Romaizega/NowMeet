@@ -1,23 +1,23 @@
-const db = require('../../db/db')
+const db = require("../../db/db");
 
 const getUserByUsername = (username) => {
-  return db('users').where({username}).first() 
+  return db("users").where({ username }).first();
 };
 
 const getUserByEmail = (email) => {
-  return db('users').where({email}).first()
+  return db("users").where({ email }).first();
 };
 
 const getUserById = (id) => {
-  return db('users').where({id}).first()
-}
+  return db("users").where({ id }).first();
+};
 
-const createUser = async(username, email, password_hash) => {
-  const [user] = await db('users')
-    .insert({username, email, password_hash})
-    .returning('*')
-  return user
-}
+const createUser = async (username, email, password_hash) => {
+  const [user] = await db("users")
+    .insert({ username, email, password_hash })
+    .returning("*");
+  return user;
+};
 
 const updateUserprofile = async (
   user_id,
@@ -27,97 +27,113 @@ const updateUserprofile = async (
   photo,
   about,
   country,
-  city
+  city,
 ) => {
-  const updateProfile = {}
-  
-  if(first_name !== undefined)
-    updateProfile.first_name = first_name
-  if(last_name !== undefined)
-    updateProfile.last_name =last_name
-  if(date_of_birth !== undefined)
-    updateProfile.date_of_birth = date_of_birth
-  if(photo !== undefined)
-    updateProfile.photo = photo
-  if(about !== undefined)
-    updateProfile.about = about
-  if(country !== undefined)
-    updateProfile.country = country
-  if(city !== undefined)
-    updateProfile.city = city
-  
-  updateProfile.updated_at = db.fn.now()
-  
-  const [newProfile] = await db('users')
-    .where({id: user_id})
-    .update(updateProfile)
-    .returning('*')
-  return newProfile
-}
+  const updateProfile = {};
 
-const updateUsername = async (user_id, newUsername) =>{
-  return db('users')
-    .where({id:user_id})
-    .update({username: newUsername})
-    .returning(['username'])
-}
+  if (first_name !== undefined) updateProfile.first_name = first_name;
+  if (last_name !== undefined) updateProfile.last_name = last_name;
+  if (date_of_birth !== undefined) updateProfile.date_of_birth = date_of_birth;
+  if (photo !== undefined) updateProfile.photo = photo;
+  if (about !== undefined) updateProfile.about = about;
+  if (country !== undefined) updateProfile.country = country;
+  if (city !== undefined) updateProfile.city = city;
+
+  updateProfile.updated_at = db.fn.now();
+
+  const [newProfile] = await db("users")
+    .where({ id: user_id })
+    .update(updateProfile)
+    .returning("*");
+  return newProfile;
+};
+
+const updateUsername = async (user_id, newUsername) => {
+  return db("users")
+    .where({ id: user_id })
+    .update({ username: newUsername })
+    .returning(["username"]);
+};
 
 const updateEmail = async (user_id, newEmail) => {
-  return db('users')
-    .where({id: user_id})
-    .update({email: newEmail})
-    .returning(['email'])
-}
+  return db("users")
+    .where({ id: user_id })
+    .update({ email: newEmail })
+    .returning(["email"]);
+};
 
 const updatePassword = async (user_id, newPassword_hash) => {
-  return db('users')
-    .where({id: user_id})
-    .update({password_hash: newPassword_hash})
-}
+  return db("users")
+    .where({ id: user_id })
+    .update({ password_hash: newPassword_hash });
+};
 
-const generateCode =  (user_id, code, expiresAt) => {
-  return db('users')
-    .where({id: user_id})
-    .update({verification_code: code, code_expires_at: expiresAt})
-}
+const generateCode = (user_id, code, expiresAt) => {
+  return db("users")
+    .where({ id: user_id })
+    .update({ verification_code: code, code_expires_at: expiresAt });
+};
 
 const clearCode = (user_id) => {
-  return db('users')
-    .where({id: user_id})
-    .update({
-      is_verified: true,
-      verification_code: null,
-      code_expires_at: null
-    })
-}
+  return db("users").where({ id: user_id }).update({
+    is_verified: true,
+    verification_code: null,
+    code_expires_at: null,
+  });
+};
 
-const clearResetToken = (user_id) =>{
-  return db ('users')
-  .where({id:user_id})
-  .update({
+const clearResetToken = (user_id) => {
+  return db("users").where({ id: user_id }).update({
     reset_token: null,
-    reset_token_expires_at: null
-  })
-}
+    reset_token_expires_at: null,
+  });
+};
 
 const viewProfile = (id) => {
-  return db('users')
-  .where({id})
-  .select('username', 'first_name', 'last_name', 'date_of_birth', 'photo', 'about', 'created_at', 'country', 'city')
-  .first()
-}
+  return db("users")
+    .where({ id })
+    .select(
+      "username",
+      "first_name",
+      "last_name",
+      "date_of_birth",
+      "photo",
+      "about",
+      "created_at",
+      "country",
+      "city",
+    )
+    .first();
+};
 
-const viewAllProfiles = () => {
-  return db('users')
-  .where('is_verified', true)
-  .select('id','username', 'first_name', 'last_name', 'photo', 'created_at', 'country', 'city')
-}
+const viewAllProfiles = async (limit, offset) => {
+  const profiles = await db("users")
+    .where("is_verified", true)
+    .select(
+      "id",
+      "username",
+      "first_name",
+      "last_name",
+      "photo",
+      "created_at",
+      "country",
+      "city",
+    )
+    .limit(limit)
+    .offset(offset);
+
+  const [{ count }] = await db("users")
+    .where("is_verified", true)
+    .count("id as count");
+
+  return { profiles, total: parseInt(count) };
+};
 
 const saveResetToken = (user_id, token, expiresAt) => {
-  return db('users')
-  .where({id: user_id})
-  .update({reset_token: token, reset_token_expires_at: expiresAt})
-}
+  return db("users")
+    .where({ id: user_id })
+    .update({ reset_token: token, reset_token_expires_at: expiresAt });
+};
 
 module.exports = {
   getUserByUsername,
@@ -133,5 +149,5 @@ module.exports = {
   viewProfile,
   saveResetToken,
   clearResetToken,
-  viewAllProfiles
-}
+  viewAllProfiles,
+};

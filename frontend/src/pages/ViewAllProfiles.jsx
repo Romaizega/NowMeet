@@ -5,13 +5,16 @@ import { useNavigate } from "react-router-dom";
 import defultAvatar from "../assests/default_avatar.webp";
 
 export default function ViewAllProfiles() {
-  const { error, allProfiles, status } = useSelector((state) => state.profile);
+  const { error, allProfiles, status, pagination } = useSelector(
+    (state) => state.profile,
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
-    dispatch(getAllProfiles());
-  }, [dispatch]);
+    dispatch(getAllProfiles({ page, limit: 10 }));
+  }, [dispatch, page]);
 
   const handleViewProfile = (id) => {
     navigate(`/profile/${id}`);
@@ -119,6 +122,22 @@ export default function ViewAllProfiles() {
                 </div>
               </div>
             ))}
+          </div>
+          <div className="join flex flex-wrap justify-center gap-2 mt-5">
+            {Array.from({ length: pagination.totalPages }, (_, i) => {
+              const pageNumber = i + 1;
+              return (
+                <input
+                  key={pageNumber}
+                  type="radio"
+                  name="people-pagination"
+                  aria-label={pageNumber.toString()}
+                  className="join-item btn btn-square"
+                  checked={page === pageNumber}
+                  onChange={() => setPage(pageNumber)}
+                />
+              );
+            })}
           </div>
 
           {allProfiles?.length === 0 && (

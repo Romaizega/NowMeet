@@ -185,9 +185,12 @@ const viewProfile = async (req, res) => {
 
 const viewAllProfiles = async (req, res) => {
   try {
-    const profiles = await userModel.viewAllProfiles();
-  
-    return res.status(200).json({ message: "View profiles", profiles });
+    const page = parseInt(req.query.page, 10) || 1
+    const limit = parseInt(req.query.limit, 10) || 10
+    const offset = (page-1) * limit
+    const {profiles, total} = await userModel.viewAllProfiles(limit, offset);
+    const totalPages = Math.ceil(total/limit)
+    return res.status(200).json({ message: "View profiles", profiles, page, total, totalPages });
   } catch (error) {
     return res
       .status(500)
