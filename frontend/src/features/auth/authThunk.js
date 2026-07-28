@@ -62,7 +62,7 @@ const login = createAsyncThunk(
         error.response?.data.message ||
         error.message ||
         "No any verification codes";
-      return rejectWithValue(message);
+      return rejectWithValue({message, status: error.response?.status});
     }
   },
 );

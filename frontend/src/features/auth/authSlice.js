@@ -16,6 +16,7 @@ const initialState = {
   accessToken: null,
   status: AUTH_STATUS.IDLE,
   error: null,
+  errorStatus: null
 };
 
 const authSlice = createSlice({
@@ -78,7 +79,8 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state, action) => {
         state.status = AUTH_STATUS.FAILED;
-        state.error = action.payload;
+        state.error = action.payload.message;
+        state.errorStatus = action.payload.status
       })
       .addCase(getMe.pending, (state) => {
         state.status = AUTH_STATUS.LOADING;

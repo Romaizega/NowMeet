@@ -5,7 +5,6 @@ import { login } from "../features/auth/authThunk";
 import { EyeOff, Eye } from "lucide-react";
 import { Link } from "react-router-dom";
 
-
 export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,16 +18,20 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLocalError(null);
-
     if (!email || !password) {
       setLocalError("Please fill in all the fields");
       return;
     }
-
     const result = await dispatch(login({ email, password }));
-    if (login.fulfilled.match(result)) navigate("/profile");
+    if (login.fulfilled.match(result)) {
+      navigate("/profile");
+    } else if (login.rejected.match(result)) {
+      if (result.payload?.status === 403) {
+        navigate("/verify-email");
+      }
+    }
   };
-  
+
   useEffect(() => {
     if (localError) {
       const timer = setTimeout(() => setLocalError(""), 10000);
@@ -80,9 +83,12 @@ export default function Login() {
                 Login
               </button>
             </form>
-          <Link to="/forgot-password" className="text-sm text-primary hover:underline opacity-50">
-            Forgot password?
-          </Link>
+            <Link
+              to="/forgot-password"
+              className="text-sm text-primary hover:underline opacity-50"
+            >
+              Forgot password?
+            </Link>
           </div>
         </div>
       </div>
