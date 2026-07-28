@@ -10,8 +10,10 @@ const getAiMatch = async (req, res) => {
     }
     const getUserInterests = await aiModel.getUserInterests(user_id);
 
-    if (!getUserInterests) {
-      return res.status(404).json({ message: "Not found users interests" });
+    if (!getUserInterests || getUserInterests.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Please add interests to your profile first" });
     }
 
     const city = getUserInterests[0].city;
@@ -28,7 +30,7 @@ const getAiMatch = async (req, res) => {
             username: curentInt.username,
             photo: curentInt.photo,
             interests: [],
-            city: curentInt.city
+            city: curentInt.city,
           };
         }
         accum[newInt].interests.push(curentInt.name);
@@ -54,7 +56,7 @@ const getAiMatch = async (req, res) => {
             place_name: curentInt.place_name,
             event_start: curentInt.event_start,
             interests: [],
-            city: curentInt.city
+            city: curentInt.city,
           };
         }
         accum[newInt].interests.push(curentInt.name);
