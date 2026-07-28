@@ -84,6 +84,9 @@ const login = async (req, res) => {
     if (!isCorrectPassword) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
+    if(!user.is_verified) {
+      return res.status(403).json({message: "Please verify your email first"})
+    }
 
     const getToken = jwt.sign(
       {
