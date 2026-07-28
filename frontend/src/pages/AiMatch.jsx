@@ -152,7 +152,17 @@ export default function AiMatch() {
       </div>
       <div>
         {status === "loading" && <span className="loading loading-spinner" />}
-        {status === "failed" && <p className="text-red-500">{error}</p>}
+        {status === "failed" && (
+          <div className="text-center mt-6">
+            <p className="text-red-400 text-xl">{error}</p>
+            <button
+              className="btn bg-orange-400 text-black mt-3 text-2xl px-4 py-6"
+              onClick={() => navigate("/profile")}
+            >
+              Go to Profile
+            </button>
+          </div>
+        )}
         {status === "succeeded" && matches && (
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 mt-8 px-4 lg:px-6">
             <div className="">
@@ -166,9 +176,7 @@ export default function AiMatch() {
                     <div className="flex flex-col sm:flex-row gap-6 items-start">
                       <img
                         src={
-                          match.photo
-                            ? `/uploads/${match.photo}`
-                            : defultAvatar
+                          match.photo ? `/uploads/${match.photo}` : defultAvatar
                         }
                         alt={match.username}
                         className="w-full sm:w-32 h-56 sm:h-40 rounded-xl border border-orange-400/20 object-cover shrink-0"
@@ -212,13 +220,32 @@ export default function AiMatch() {
                   </div>
                 </div>
               ))}
+              {matches.recommendedUsers?.length === 0 && (
+                <div className="card bg-base-200 border border-orange-400/10 py-10">
+                  <div className="card-body items-center text-center">
+                    <Users className="w-14 h-14 text-orange-400/40 mb-3" />
+                    <h3 className="text-2xl font-bold text-primary">
+                      No matches yet
+                    </h3>
+                    <p className="text-primary opacity-50 mt-2 max-w-sm">
+                      Add more interests to help AI find people who share your
+                      passions.
+                    </p>
+                    <button
+                      className="btn bg-orange-400 text-black mt-6 px-8"
+                      onClick={() => navigate("/profile")}
+                    >
+                      Update Interests
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
             <div>
               <h2 className="text-xl font-bold text-primary mb-4 flex gap-2 pl-4">
                 <CalendarRange className="w-8 h-8" />
                 Events perfect for you
               </h2>
-
               {matches.recommendedEvents.map((event) => (
                 <div key={event.eventId} className="card bg-base-200 mb-3">
                   <div className="card-body">
@@ -271,6 +298,26 @@ export default function AiMatch() {
                   </div>
                 </div>
               ))}
+              {matches.recommendedEvents?.length === 0 && (
+                <div className="card bg-base-200 border border-orange-400/10 py-10">
+                  <div className="card-body items-center text-center">
+                    <CalendarRange className="w-14 h-14 text-orange-400/40 mb-3" />
+                    <h3 className="text-2xl font-bold text-primary">
+                      No events found
+                    </h3>
+                    <p className="text-primary opacity-50 mt-2 max-w-sm">
+                      No open events match your interests right now. Check back
+                      soon!
+                    </p>
+                    <button
+                      className="btn btn-outline border-orange-400 text-primary mt-6 px-8"
+                      onClick={() => navigate("/explore")}
+                    >
+                      Explore Events
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         )}
