@@ -109,6 +109,7 @@ const viewProfile = (id) => {
 
 const viewAllProfiles = () => {
   return db('users')
+  .where('is_verified', true)
   .select('id','username', 'first_name', 'last_name', 'photo', 'created_at', 'country', 'city')
 }
 
