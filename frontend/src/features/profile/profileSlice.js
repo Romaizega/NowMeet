@@ -8,6 +8,11 @@ const initialState = {
   userEvents: [],
   status: AUTH_STATUS.IDLE,
   error: null,
+  pagination: {
+    page: 1,
+    total: 0,
+    totalPages: 1,
+  },
 };
 
 const profileSlice = createSlice({
@@ -49,6 +54,9 @@ const profileSlice = createSlice({
       .addCase(getAllProfiles.fulfilled, (state, action) => {
         state.status = AUTH_STATUS.SUCCEEDED;
         state.allProfiles = action.payload.profiles;
+        state.pagination.page = action.payload.page
+        state.pagination.total = action.payload.total
+        state.pagination.totalPages = action.payload.totalPages
       })
       .addCase(getAllProfiles.rejected, (state, action) => {
         state.status = AUTH_STATUS.FAILED;

@@ -34,9 +34,9 @@ const getUserInterests = createAsyncThunk(
 );
 
 const getAllProfiles = createAsyncThunk(
-  "profile/all-profiles", async(_, {rejectWithValue}) => {
+  "profile/all-profiles", async({page=1, limit=10} = {}, {rejectWithValue}) => {
     try {
-      const {data} = await api.get('/profiles/all-profiles')
+      const {data} = await api.get('/profiles/all-profiles', {params:{page, limit}})
       return data
     } catch (error) {
       const message =
