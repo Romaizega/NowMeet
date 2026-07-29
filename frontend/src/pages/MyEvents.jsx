@@ -118,19 +118,10 @@ export default function MyEvents() {
           {myEvents.length === 0 && (
             <div className="flex flex-col items-center justify-center text-center py-16">
               <h2 className="text-3xl font-bold text-primary">No events yet</h2>
-
               <p className="text-primary opacity-60 text-lg mt-3 mb-8 max-w-lg leading-relaxed">
                 Create your first event and start meeting amazing people around
                 you
               </p>
-
-              <button
-                className="btn btn-outline border-orange-351 text-orange-350 w-full sm:w-auto py-3 lg:py-6 px-5 lg:px-9 text-base lg:text-xl gap-3 lg:gap-4"
-                onClick={() => navigate("/event/create")}
-              >
-                <SquarePlus className="w-5 h-5" />
-                Create an Event
-              </button>
             </div>
           )}
         </div>
