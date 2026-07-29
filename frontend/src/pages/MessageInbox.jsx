@@ -14,7 +14,7 @@ export default function MessageInbox() {
   }, [dispatch]);
 
   if (status === "loading")
-    return <span className="loading loading-spinner"> Loading events...</span>;
+    return <span className="loading loading-spinner"> Loading messages...</span>;
   if (status === "failed") return <p className="text-red-500">{error}</p>;
 
   return (
