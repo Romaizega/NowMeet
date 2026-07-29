@@ -22,6 +22,7 @@ import MessageInbox from "./pages/MessageInbox"
 import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword"
 import ViewAllProfiles from "./pages/ViewAllProfiles"
+import NoFound from "./pages/NoFound"
 
 function App() {
 
@@ -37,11 +38,11 @@ function App() {
       <Route path="/reset-password" element={<GuestRoute><ResetPassword/> </GuestRoute>} />
       <Route path="/profile" element= {<ProtectedRoute><Profile /></ProtectedRoute>} />
 
+      <Route path="/event/create" element= {<ProtectedRoute><CreateEvent /></ProtectedRoute>} />
+      <Route path="/event/my" element= {<ProtectedRoute><MyEvents /></ProtectedRoute>} />
       <Route path="/event/:id" element= {<ProtectedRoute><EventDetails /></ProtectedRoute>} />
       <Route path="/profile/:id/private-chat" element= {<ProtectedRoute><PrivaeChat /></ProtectedRoute>} />
-      <Route path="/event/create" element= {<ProtectedRoute><CreateEvent /></ProtectedRoute>} />
       <Route path="/event/:id/edit" element= {<ProtectedRoute><CreateEvent /></ProtectedRoute>} />
-      <Route path="/event/my" element= {<ProtectedRoute><MyEvents /></ProtectedRoute>} />
       <Route path="/event/:id/common-chat" element= {<ProtectedRoute><EventChat /></ProtectedRoute>} />
       <Route path="/ai-match/" element= {<ProtectedRoute><AiMatch /></ProtectedRoute>} />
       <Route path="/meetups/" element= {<ProtectedRoute><MyEvents /></ProtectedRoute>} />
@@ -54,6 +55,8 @@ function App() {
       <Route path="/how-works" element={<HowToWorks/>} />
       <Route path="/" element= {<Home/>}/>
       <Route path="/profile/:id" element={<ProfileView/>}/>
+      <Route path="*" element={<NoFound/>}/>
+
     </Routes>
     <Footer/>
     </div>
