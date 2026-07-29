@@ -104,7 +104,7 @@ const getMyEvents =async (req, res) => {
     const creator_id = req.user.user_id
     const myEvents = await eventModel.getMyEvents(creator_id)
     if(!myEvents || myEvents.length === 0) {
-      return res.status(404).json({message: "You haven't created any events yet"})
+      return res.status(200).json({myEvents: []})
     }
     return res.status(200).json({message:"Your all events details:", myEvents})
   } catch (error) {
