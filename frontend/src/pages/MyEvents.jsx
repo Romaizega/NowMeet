@@ -1,16 +1,15 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getMyEvents, updateEvent } from "../features/events/eventThunk";
+import { getMyEvents } from "../features/events/eventThunk";
 import EventsImgExplore from "../assests/defaultImgEvents.webp";
 import {
   Users,
   MapPinned,
   CalendarDays,
   PencilLine,
-  Ban,
   SquarePlus,
 } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import getStatusColor from "../utils/getStatusColor";
 
 export default function MyEvents() {
@@ -84,7 +83,9 @@ export default function MyEvents() {
                   <h3 className="text-primary text-lg lg:text-xl font-bold">
                     {event.title}
                   </h3>
-                  <p className="text-primary opacity-50 line-clamp-2 ">{event.description}</p>
+                  <p className="text-primary opacity-50 line-clamp-2 ">
+                    {event.description}
+                  </p>
                   <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 lg:gap-6 mt-2">
                     <span className="flex items-center gap-2 text-primary">
                       <CalendarDays className="w-4 h-4" />
@@ -110,23 +111,28 @@ export default function MyEvents() {
                     <PencilLine className="w-6 h-6" />
                     View Event
                   </button>
-                  {/* <button
-                    className="btn btn-outline border-error text-error gap-4 text-xl hover:bg-orange-400 hover:text-black mt-3 py-6"
-                    type="button"
-                    onClick={async () => {
-                      await dispatrch(
-                        updateEvent({ id: event.id, status: "cancelled" }),
-                      ).unwrap();
-                      dispatrch(getMyEvents());
-                    }}
-                  >
-                    <Ban className="w-6 h-6 text-error" />
-                    Cancel Event
-                  </button> */}
                 </div>
               </div>
             ))}
           </div>
+          {myEvents.length === 0 && (
+            <div className="flex flex-col items-center justify-center text-center py-16">
+              <h2 className="text-3xl font-bold text-primary">No events yet</h2>
+
+              <p className="text-primary opacity-60 text-lg mt-3 mb-8 max-w-lg leading-relaxed">
+                Create your first event and start meeting amazing people around
+                you
+              </p>
+
+              <button
+                className="btn btn-outline border-orange-351 text-orange-350 w-full sm:w-auto py-3 lg:py-6 px-5 lg:px-9 text-base lg:text-xl gap-3 lg:gap-4"
+                onClick={() => navigate("/event/create")}
+              >
+                <SquarePlus className="w-5 h-5" />
+                Create an Event
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </>
