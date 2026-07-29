@@ -57,7 +57,7 @@ export default function EventDetails() {
   }, [dispatch, id]);
 
   if (status === "loading")
-    return <span className="loading loading-spinner"> Loading events...</span>;
+    return <span className="loading loading-spinner"> Loading event details...</span>;
   if (status === "failed") return <p className="text-red-500">{error}</p>;
   if (showToast)
     return (

@@ -21,7 +21,7 @@ export default function ViewAllProfiles() {
   };
 
   if (status === "loading")
-    return <span className="loading loading-spinner"> Loading events...</span>;
+    return <span className="loading loading-spinner"> Loading people...</span>;
 
   if (status === "failed") return <p className="text-red-500">{error}</p>;
 
