@@ -135,6 +135,23 @@ const saveResetToken = (user_id, token, expiresAt) => {
     .update({ reset_token: token, reset_token_expires_at: expiresAt });
 };
 
+const getUserByGoogleId = (google_id) => {
+  return db('users')
+  .where({google_id})
+  .first()
+}
+
+const createGoogleUser = async (username, email, first_name, last_name, google_id) => {
+  const [userGoogle] = await db("users")
+    .insert({ username, email, first_name, last_name, google_id,is_verified: true })
+    .returning("*");
+  return userGoogle;
+};
+
+const updateGoogleId = (user_id, google_id) => {
+  return db('users').where({ id: user_id }).update({ google_id })
+}
+
 module.exports = {
   getUserByUsername,
   getUserByEmail,
@@ -150,4 +167,7 @@ module.exports = {
   saveResetToken,
   clearResetToken,
   viewAllProfiles,
+  getUserByGoogleId,
+  updateGoogleId,
+  createGoogleUser
 };

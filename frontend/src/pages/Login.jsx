@@ -83,6 +83,13 @@ export default function Login() {
                 Login
               </button>
             </form>
+            <button
+              type="button"
+              className="btn btn-outline w-full mt-2"
+              onClick={() => window.location.href = `${import.meta.env.VITE_SERVER_URL}/api/auth/google`}
+            >
+              Sign in with Google
+            </button>
             <Link
               to="/forgot-password"
               className="text-sm text-primary hover:underline opacity-50"

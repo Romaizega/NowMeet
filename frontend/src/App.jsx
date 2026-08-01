@@ -1,4 +1,6 @@
 import { Routes, Route } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { useEffect } from "react"
 import Register from "./pages/Register"
 import Login from "./pages/Login"
 import Profile from "./pages/Profile"
@@ -23,8 +25,22 @@ import ForgotPassword from "./pages/ForgotPassword"
 import ResetPassword from "./pages/ResetPassword"
 import ViewAllProfiles from "./pages/ViewAllProfiles"
 import NoFound from "./pages/NoFound"
+import { getMe } from "./features/auth/authThunk"
+import { setCredentials } from "./features/auth/authSlice"
 
 function App() {
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+  const params = new URLSearchParams(window.location.search)
+  const token = params.get('token')
+  if (token) {
+    localStorage.setItem('token', token)
+    dispatch(setCredentials({ accessToken: token }))
+    dispatch(getMe())
+    window.history.replaceState({}, '', '/')
+  }
+}, [])
 
   return (
     <>
