@@ -26,12 +26,12 @@ export default function ResetPassword() {
       return;
     }
     if (
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/.test(
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&_^()-])[A-Za-z\d@.#$!%*?&_^()-]{8,}$/.test(
         newPassword,
       )
     ) {
       setLocalError(
-        "Password must be between 8 and 15 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., @, #, $, !)",
+        "Password must be minimum  8 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character",
       );
       return;
     }

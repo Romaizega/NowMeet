@@ -2,8 +2,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/users_model");
 const { sendverificationEmail } = require("../utild/sendEmail");
-const { first } = require("../../db/db");
-const crypto = require("crypto")
 
 const register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -26,11 +24,11 @@ const register = async (req, res) => {
   }
 
   const strongPassword =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&_^()-])[A-Za-z\d@.#$!%*?&_^()-]{8,}$/;
   if (!strongPassword.test(password)) {
     return res.status(400).json({
       message:
-        "Password must be between 8 and 15 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., @, #, $, !)",
+        "Password must be minimum  8 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character",
     });
   }
   try {
@@ -48,16 +46,14 @@ const register = async (req, res) => {
     await userModel.generateCode(newUser.id, code, expiresAt);
     await sendverificationEmail(email, code);
 
-    res
-      .status(201)
-      .json({
-        message: "New user created successfully",
-        user: {
-          id: newUser.id,
-          username: newUser.username,
-          email: newUser.email,
-        },
-      });
+    res.status(201).json({
+      message: "New user created successfully",
+      user: {
+        id: newUser.id,
+        username: newUser.username,
+        email: newUser.email,
+      },
+    });
   } catch (error) {
     return res
       .status(500)
@@ -84,8 +80,10 @@ const login = async (req, res) => {
     if (!isCorrectPassword) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
-    if(!user.is_verified) {
-      return res.status(403).json({message: "Please verify your email first"})
+    if (!user.is_verified) {
+      return res
+        .status(403)
+        .json({ message: "Please verify your email first" });
     }
 
     const getToken = jwt.sign(
@@ -121,7 +119,7 @@ const getMe = async (req, res) => {
         photo: user.photo,
         about: user.about,
         country: user.country,
-        city: user.city
+        city: user.city,
       },
     });
   } catch (error) {
@@ -188,8 +186,10 @@ const forgotPassword = async (req, res) => {
     const code = Math.floor(100000 + Math.random() * 900000);
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
     const user = await userModel.getUserByEmail(email);
-    if(!user) {
-      return res.status(404).json({message: "User with this email not found"})
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User with this email not found" });
     }
     await userModel.saveResetToken(user.id, code, expiresAt);
     await sendverificationEmail(user.email, code);
@@ -205,8 +205,10 @@ const resetPassword = async (req, res) => {
   const { email, code, newPassword } = req.body;
   try {
     const user = await userModel.getUserByEmail(email);
-    if(!user) {
-      return res.status(404).json({message: "User with this email not found"})
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User with this email not found" });
     }
     if (!code) {
       return res
@@ -222,11 +224,11 @@ const resetPassword = async (req, res) => {
         .json({ message: "Your verification code expired" });
     }
     const strongPassword =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/;
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&_^()-])[A-Za-z\d@.#$!%*?&_^()-]{8,}$/;
     if (!strongPassword.test(newPassword)) {
       return res.status(400).json({
         message:
-          "Password must be at least 8 characters long and include at least one capital letter and one number",
+          "Password must be minimum  8 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character",
       });
     }
     const hashNewPassword = await bcrypt.hash(newPassword, 10);
@@ -240,6 +242,26 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const googleCallback = (req, res) => {
+  try {
+    const user = req.user;
+    const getToken = jwt.sign(
+      {
+        user_id: user.id,
+        username: user.username,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_DAY },
+    );
+    return res
+      .redirect(`${process.env.FRONTEND_URL}?token=${getToken}`)
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Server error", error: error.message });
+  }
+};
 
 module.exports = {
   register,
@@ -249,4 +271,5 @@ module.exports = {
   verifyCode,
   forgotPassword,
   resetPassword,
+  googleCallback,
 };

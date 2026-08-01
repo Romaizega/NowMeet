@@ -12,10 +12,10 @@ export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [localError, setLocalError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,16 +31,16 @@ export default function Register() {
     }
 
     if (
-      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&])[A-Za-z\d@.#$!%*?&]{8,15}$/.test(
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@.#$!%*?&_^()-])[A-Za-z\d@.#$!%*?&_^()-]{8,}$/.test(
         password,
       )
     ) {
       setLocalError(
-        "Password must be between 8 and 15 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character (e.g., @, #, $, !)",
+        "Password must be minimum  8 characters long, and include at least one uppercase letter, one lowercase letter, one number, and one special character",
       );
       return;
     }
-    if (password !== confirPassword) {
+    if (password !== confirmPassword) {
       setLocalError("Passwords do not match");
       return;
     }
@@ -116,7 +116,7 @@ export default function Register() {
                 <input
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="Confirm password"
-                  value={confirPassword}
+                  value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
                 {showConfirmPassword ? (
@@ -135,6 +135,15 @@ export default function Register() {
                 Sign Up
               </button>
             </form>
+            <button
+              type="button"
+              className="btn btn-outline w-full mt-2"
+              onClick={() =>
+                (window.location.href = `${import.meta.env.VITE_SERVER_URL}/api/auth/google`)
+              }
+            >
+              Sign up with Google
+            </button>
           </div>
         </div>
       </div>

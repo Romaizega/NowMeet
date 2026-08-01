@@ -14,6 +14,7 @@ const socketAuth = require('./src/socket/socketAuth')
 const socketHandlers = require('./src/socket/socketHandlers')
 const { checkDate } = require('./cron/eventScheduler')
 const {limiterCommon} = require('./src/middleware/rateLimiter')
+const passport = require('./src/utild/passport')
 
 
 const app = express()
@@ -36,6 +37,7 @@ socketHandlers(io)
 app.use(cors())
 app.use(express.json())
 app.use(limiterCommon)
+app.use(passport.initialize())
 app.use('/api/auth', authRouter)
 app.use('/api/event', eventRouter)
 app.use('/api/interests', interestRouter)
@@ -43,7 +45,6 @@ app.use('/api/profiles', profileRouter)
 app.use('/api/ai', aiRouter)
 app.use("/uploads", express.static("uploads"))
 app.use('/api/messages', messageRouter)
-
 
 // Test db connection
 app.get('/db-test', async (req, res) =>{
