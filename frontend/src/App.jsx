@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { useEffect } from "react"
 import Register from "./pages/Register"
@@ -30,6 +30,7 @@ import { setCredentials } from "./features/auth/authSlice"
 
 function App() {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
   const params = new URLSearchParams(window.location.search)
@@ -39,6 +40,7 @@ function App() {
     dispatch(setCredentials({ accessToken: token }))
     dispatch(getMe())
     window.history.replaceState({}, '', '/')
+    navigate('/profile')
   }
 }, [])
 
