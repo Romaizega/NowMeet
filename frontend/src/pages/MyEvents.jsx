@@ -14,12 +14,12 @@ import getStatusColor from "../utils/getStatusColor";
 
 export default function MyEvents() {
   const { status, error, myEvents } = useSelector((state) => state.event);
-  const dispatrch = useDispatch();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatrch(getMyEvents());
-  }, [dispatrch]);
+    dispatch(getMyEvents());
+  }, [dispatch]);
 
   const handleViewEvent = (id) => {
     navigate(`/event/${id}`);

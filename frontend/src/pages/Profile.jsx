@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getMe } from "../features/auth/authThunk";
 import heroImgProfile from "../assests/hero_profile.webp";
 import {
@@ -10,10 +10,9 @@ import {
   HatGlasses,
   Mail,
   CalendarDays,
-  Image,
-  NotebookPen,
+  Camera,
   Building2,
-  MapPinHouse 
+  MapPinHouse,
 } from "lucide-react";
 import api from "../services/axios";
 import AccountSettings from "../pages/AccountSettings";
@@ -24,7 +23,6 @@ import {
   getUserInterests,
 } from "../features/interest/interestThunk";
 import groupByCategory from "../utils/groupByCategory";
-import { use } from "react";
 
 export default function Profile() {
   const dispatch = useDispatch();
@@ -47,8 +45,11 @@ export default function Profile() {
     city: "",
   });
   const [photo, setPhoto] = useState(null);
+  const [previewURL, setPreviewURL] = useState(null);
   const [activeTab, setActiveTab] = useState("profile");
+  const [cacheKey, setCacheKey] = useState(Date.now());
   const grouped = groupByCategory(allInterests);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     dispatch(getMe());
@@ -100,6 +101,8 @@ export default function Profile() {
       dispatch(getMe());
       setEdit(false);
       setLocalError("");
+      setCacheKey(Date.now());
+      setPreviewURL(null);
     } catch (error) {
       setLocalError(
         error.response?.data?.message || "Failed to update profile",
@@ -108,7 +111,11 @@ export default function Profile() {
   };
 
   const handleFileChange = (e) => {
-    setPhoto(e.target.files[0]);
+    const file = e.target.files[0];
+    setPhoto(file);
+    if (file) {
+      setPreviewURL(URL.createObjectURL(file));
+    }
   };
 
   const handleInterest = async (interestId) => {
@@ -119,6 +126,14 @@ export default function Profile() {
     }
     dispatch(getUserInterests(user.id));
   };
+
+  useEffect(() => {
+    return () => {
+      if (previewURL) {
+        URL.revokeObjectURL(previewURL);
+      }
+    };
+  }, [previewURL]);
 
   return (
     <>
@@ -133,16 +148,30 @@ export default function Profile() {
         <div className="absolute inset-0 bg-black/50"></div>
         <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-center justify-between gap-6 p-4 sm:p-6 lg:p-8 h-full">
           <div className="flex flex-col sm:flex-row items-center sm:items-center gap-4 lg:gap-6 text-center sm:text-left">
+            <div className="tooltip tooltip-right before:text-lg before:text-white" data-tip="Click Edit Profile Button to change your avatar and informations">
             <div className="avatar">
-              <div className="w-24 sm:w-32 lg:w-40 rounded-full">
+              <div className="w-24 sm:w-32 lg:w-40 rounded-full cursor-pointer">
                 <img
                   src={
-                    user?.photo
-                      ? `/uploads/${user.photo}`
-                      : "https://img.daisyui.com/images/profile/demo/gordon@192.webp"
+                    previewURL
+                      ? previewURL
+                      : user?.photo
+                        ? `/uploads/${user.photo}?t=${cacheKey}`
+                        : "https://img.daisyui.com/images/profile/demo/gordon@192.webp"
                   }
+                  className="cursor-pointer"
                 />
               </div>
+              {edit && (
+                <div
+                  className="absolute bottom-0 right-0 bg-black/60 rounded-full p-2 cursor-pointer"
+                  onClick={() => edit && fileInputRef.current.click()}
+                >
+                  <Camera className="w-7 h-7 text-white" />
+                </div>
+              )}
+            </div>
+
             </div>
             <div>
               <h2 className="text-2xl lg:text-3xl font-bold">My Profile</h2>
@@ -154,7 +183,10 @@ export default function Profile() {
             </div>
           </div>
           <button
-            onClick={() => setEdit(!edit)}
+            onClick={() => {
+              setEdit(!edit);
+              setPreviewURL(null);
+            }}
             className="btn btn-outline btn-primary w-full sm:w-auto self-auto sm:self-end"
           >
             <Pencil className="w-4 h-16" />
@@ -298,7 +330,7 @@ export default function Profile() {
                     />
                   </label>
                 </div>
-                <div className="form-control">
+                {/* <div className="form-control">
                   <label className="label">
                     <span className="label-text text-primary">Photo</span>
                   </label>
@@ -312,14 +344,21 @@ export default function Profile() {
                       className="grow"
                     />
                   </label>
-                </div>
+                </div> */}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
 
                 <div className="form-control">
                   <label className="label">
                     <span className="label-text text-primary">Country</span>
                   </label>
                   <label className="input input-bordered flex items-center gap-2">
-                    <MapPinHouse  className="w-5 h-5 lg:w-7 lg:h-7" />
+                    <MapPinHouse className="w-5 h-5 lg:w-7 lg:h-7" />
                     <input
                       onChange={handleChange}
                       name="country"
@@ -336,7 +375,7 @@ export default function Profile() {
                     <span className="label-text text-primary">City</span>
                   </label>
                   <label className="input input-bordered flex items-center gap-2">
-                    <Building2  className="w-5 h-5 lg:w-7 lg:h-7" />
+                    <Building2 className="w-5 h-5 lg:w-7 lg:h-7" />
                     <input
                       onChange={handleChange}
                       name="city"
