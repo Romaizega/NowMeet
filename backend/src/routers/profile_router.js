@@ -1,5 +1,5 @@
 const express = require('express')
-const upload = require('../middleware/upload')
+const {upload, uploadSingle} = require('../middleware/upload')
 
 const authenticateJWT = require('../middleware/auth_middleware')
 const {
@@ -18,7 +18,7 @@ const { getPrivateMessage} = require('../controllers/message_controller')
 
 const router = express.Router()
 
-router.put('/profile', authenticateJWT, upload.single("photo"), updateProfileUser)
+router.put('/profile', authenticateJWT, uploadSingle, updateProfileUser)
 router.put('/username', authenticateJWT, updateUsername)
 router.put('/email', authenticateJWT, updateEmail)
 router.put('/password', authenticateJWT, updatePassword)

@@ -17,4 +17,22 @@ const upload = multer({
   },
 });
 
-module.exports = upload
+const uploadSingle = (req, res, next) => {
+  upload.single("photo")(req, res, (err) => {
+    console.log('Multer error:', err) 
+    if (err instanceof multer.MulterError) {
+      if (err.code === "LIMIT_FILE_SIZE") {
+        return res
+          .status(400)
+          .json({ message: "File too large. Max 5MB allowed" });
+      }
+      return res.status(400).json({ message: err.message });
+    }
+    if (err) {
+      return res.status(400).json({ message: err.message });
+    }
+    next();
+  });
+};
+
+module.exports = { upload, uploadSingle };

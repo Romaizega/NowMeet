@@ -13,7 +13,7 @@ const {
 const {joinEvent, cancelEvent} = require('../controllers/event_participant_controller')
 const { sendMessage, getMessage } = require('../controllers/message_controller')
 const authenticateJWT = require('../middleware/auth_middleware')
-const upload = require('../middleware/upload')
+const {upload} = require('../middleware/upload')
 
 
 const router = express.Router()
