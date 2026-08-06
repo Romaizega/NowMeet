@@ -89,29 +89,51 @@ const getAiMatch = async (req, res) => {
                 - The current user is from ${city}. Prioritize users and events 
                  from the same city with higher matchScore. If from a different
                  city, mention it in the reason field.
-                - Prioritize shared interests.
-                - Prefer users with multiple overlapping interests.
-                - Prefer events that match multiple interests.
+                - A compatible user is a user who shares at least one interest with the current user.
+                - A relevant event is an event that matches at least one interest of the current user.
+                - Recommend users with at least one shared interest.
+                - Users with more shared interests should receive a higher matchScore.
+                - Recommend events with at least one matched interest.
+                - Events with more matched interests should receive a higher matchScore.
+                - If compatible users exist, add them to recommendedUsers.
+                - If no compatible users exist, return recommendedUsers as an empty array.
+                - If relevant events exist, add them to recommendedEvents.
+                - If no relevant events exist, return recommendedEvents as an empty array.
+                - If both compatible users and relevant events exist, return recommendations in both arrays.
+                - Do not leave recommendedUsers empty when at least one compatible user exists.
+                - Do not leave recommendedEvents empty when at least one relevant event exists.
                 - Do not recommend the current user.
                 - Return only JSON.
-                - Also display title of event and event start
+                - Also display title of event and event start.
                 - Each event must appear only once by eventId.
                 - If the same event matches multiple interests, put all matched interests into matchedInterests array.
                 - recommendedEvents must be grouped by eventId.
-                - Always return both recommendedUsers and recommendedEvents arrays, even if empty.
+                - Always include both recommendedUsers and recommendedEvents arrays in the JSON response, even when one of them is empty.
 
-                Return exactly:
-                {
-                  "recommendedEvents": [
-                    {
-                      "eventId": 17,
-                      "title": "Tech talk and coffee",
-                      "matchScore": 90,
-                      "matchedInterests": ["Programming", "AI Tools", "Web Development"],
-                      "reason": "This event matches several of your tech interests..."
-                    }
-                  ]
-                }
+                  Return exactly:
+                  {
+                    "recommendedUsers": [
+                      {
+                        "userId": 12,
+                        "username": "alex",
+                        "photo": "avatar.webp",
+                        "matchScore": 85,
+                        "sharedInterests": ["Programming", "AI Tools"],
+                        "reason": "You share several technology interests."
+                      }
+                    ],
+                    "recommendedEvents": [
+                      {
+                        "eventId": 17,
+                        "title": "Tech talk and coffee",
+                        "event_start": "2026-09-10T18:00:00.000Z",
+                        "place_name": "Tech Cafe",
+                        "matchScore": 90,
+                        "matchedInterests": ["Programming", "AI Tools", "Web Development"],
+                        "reason": "This event matches several of your tech interests."
+                      }
+                    ]
+                  }
                 `,
         },
         {
@@ -125,6 +147,12 @@ const getAiMatch = async (req, res) => {
 
           Events:
           ${JSON.stringify(eventArray)}
+
+          Important:
+          - Evaluate users and events independently.
+          - Do not return only events when compatible users exist.
+          - Do not return only users when relevant events exist.
+          - If both exist, fill both arrays.
 
           Return:
 
