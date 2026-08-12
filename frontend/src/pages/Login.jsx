@@ -32,6 +32,15 @@ export default function Login() {
     }
   };
 
+  const handleDemo = () => {
+    setEmail("alex.morgan@nowmeet.test");
+    setPassword("Test1234!")
+    dispatch(login({email: "alex.morgan@nowmeet.test", password: "Test1234!"}))
+    .then((result) =>{
+      if(login.fulfilled.match(result)) navigate("/profile")
+    })
+  };
+
   useEffect(() => {
     if (localError) {
       const timer = setTimeout(() => setLocalError(""), 10000);
@@ -83,6 +92,7 @@ export default function Login() {
                 Login
               </button>
             </form>
+
             <button
               type="button"
               className="btn btn-neutral  w-full"
@@ -118,6 +128,14 @@ export default function Login() {
                 </g>
               </svg>
               Login with Google
+            </button>
+            <div className="divider text-xs opacity-50">or</div>
+            <button
+              type="button"
+              onClick={handleDemo}
+              className="btn btn-neutral w-full mt-2"
+            >
+              Try Demo Account
             </button>
             <Link
               to="/forgot-password"
