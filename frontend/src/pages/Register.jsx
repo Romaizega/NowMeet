@@ -51,6 +51,7 @@ export default function Register() {
       navigate("/verify-email");
     }
   };
+
   useEffect(() => {
     if (localError) {
       const timer = setTimeout(() => setLocalError(""), 10000);
@@ -170,6 +171,14 @@ export default function Register() {
                 </g>
               </svg>
               Register with Google
+            </button>
+             <div className="divider text-xs opacity-50">or</div>
+            <button
+              type="button"
+              onClick={() => navigate('/login')}
+              className="btn btn-neutral w-full mt-2"
+            >
+              Try Demo Account
             </button>
           </div>
         </div>
