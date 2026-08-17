@@ -290,6 +290,13 @@ export default function Header() {
             AI Match
           </Link>
           <Link
+            to="/all-profiles"
+            onClick={() => setBurgerOpen(false)}
+            className="py-3 border-b"
+          >
+            People
+          </Link>
+          <Link
             to="/inbox"
             onClick={() => setBurgerOpen(false)}
             className="py-3 border-b"
