@@ -262,7 +262,11 @@ export default function Header() {
             className="md:hidden btn btn-ghost btn-circle"
             onClick={() => setBurgerOpen(!burgerOpen)}
           >
-            {burgerOpen ? <X className="h-8 w-8"/> : <Menu  className="h-8 w-8"/>}
+            {burgerOpen ? (
+              <X className="h-8 w-8" />
+            ) : (
+              <Menu className="h-8 w-8" />
+            )}
           </button>
         </div>
       </div>
@@ -288,6 +292,13 @@ export default function Header() {
             className="py-3 border-b"
           >
             AI Match
+          </Link>
+          <Link
+            to="/all-profiles"
+            onClick={() => setBurgerOpen(false)}
+            className="py-3 border-b"
+          >
+            People
           </Link>
           <Link
             to="/inbox"
@@ -321,8 +332,11 @@ export default function Header() {
                 Profile
               </Link>
               <a
-                onClick={() => {setBurgerOpen(false);
-                  handleLogout();}}>
+                onClick={() => {
+                  setBurgerOpen(false);
+                  handleLogout();
+                }}
+              >
                 Logout
               </a>
             </div>
